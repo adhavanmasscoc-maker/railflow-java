@@ -1,0 +1,21 @@
+{
+  "name": "railflow",
+  "version": "1.0.0",
+  "description": "RailFlow — Smart Railway Crowd Monitoring & Platform Optimization System",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve frontend -p 3000",
+    "start": "npx serve frontend -p 3000",
+    "build": "echo 'RailFlow ready for static deployment'"
+  },
+  "keywords": [
+    "railflow",
+    "railway",
+    "crowd-monitoring",
+    "java",
+    "platform-optimization",
+    "dsa"
+  ],
+  "author": "RailFlow Architecture Team",
+  "license": "MIT"
+}
