@@ -477,7 +477,7 @@ function renderPnrTicketCard(pnr, pnrData, resultEl) {
 
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border)">
                 <div style="font-size:0.75rem;color:var(--text-muted)">
-                    Official CRIS / PRS Reservation Record • Verified with RailFlow SQLite Engine
+                    Official CRIS / PRS PRS Reservation Record • Verified with RailFlow SQLite Engine
                 </div>
                 <button class="btn-primary btn-sm" onclick="window.print()">🖨️ Print Ticket / Save PDF</button>
             </div>
@@ -674,7 +674,7 @@ function initJourneyPlannerHandlers() {
 // ─── CSV DATASET EXPLORER (SQLITE 13,849 ROWS) ────────────────────────────────
 
 function initCsvExplorerHandlers() {
-    // Add pagination and filter controls
+    // Add pagination and filter controls if they exist or dynamically render
 }
 
 async function fetchCsvDataFromBackend() {

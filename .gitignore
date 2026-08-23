@@ -40,3 +40,6 @@ Thumbs.db
 *.log
 *.tmp
 *.bak
+
+.vercel
+.env*

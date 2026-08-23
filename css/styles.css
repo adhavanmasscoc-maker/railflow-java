@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   RAILFLOW — Master Design System & RF-FAST Framework
+   RAILFLOW — Master Design System
    Dark Station Aesthetic: Electric Indigo, Signal Amber, Glassmorphism
    ═══════════════════════════════════════════════════════════════ */
 
@@ -52,21 +52,6 @@
 
     --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
-
-    /* RF-FAST Tokens */
-    --rf-bg:        var(--bg-base);
-    --rf-surface:   var(--bg-surface);
-    --rf-card:      var(--bg-card);
-    --rf-elevated:  var(--bg-elevated);
-    --rf-border:    var(--border);
-    --rf-text:      var(--text-primary);
-    --rf-muted:     var(--text-muted);
-    --rf-primary:   var(--indigo);
-    --rf-success:   var(--green);
-    --rf-warning:   var(--amber);
-    --rf-danger:    var(--red);
-    --rf-cyan:      var(--cyan);
-    --rf-purple:    var(--purple);
 }
 
 /* ─── Global Reset & Layout ──────────────────────────────────── */
@@ -922,8 +907,8 @@ body {
     border: 1px solid var(--border-mid);
     border-radius: var(--radius-xl);
     width: 100%;
-    max-width: 580px;
-    max-height: 88vh;
+    max-width: 540px;
+    max-height: 85vh;
     overflow-y: auto;
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8);
 }
@@ -972,6 +957,23 @@ body {
 .toast.error { border-color: var(--red); color: var(--red); }
 .toast.info { border-color: var(--indigo); color: var(--indigo); }
 @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ─── Data Provenance Tags & RF-FAST Design System ───────────── */
+:root {
+    --rf-bg:        var(--bg-base);
+    --rf-surface:   var(--bg-surface);
+    --rf-card:      var(--bg-card);
+    --rf-elevated:  var(--bg-elevated);
+    --rf-border:    var(--border);
+    --rf-text:      var(--text-primary);
+    --rf-muted:     var(--text-muted);
+    --rf-primary:   var(--indigo);
+    --rf-success:   var(--green);
+    --rf-warning:   var(--amber);
+    --rf-danger:    var(--red);
+    --rf-cyan:      var(--cyan);
+    --rf-purple:    var(--purple);
+}
 
 /* ─── Unified Data Provenance Badges ──────────────────────────── */
 .rf-badge, .tag-real, .tag-simulated, .tag-derived, .tag-api, .tag-algo {

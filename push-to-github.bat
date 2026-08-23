@@ -24,7 +24,8 @@ echo Staging files...
 git add .
 
 echo Committing changes...
-git commit -m "feat: complete RailFlow Java-Core Web Application, DSA engine, and Vercel setup" 2>nul
+git commit -m "feat(railflow): enterprise SaaS UI, SQLite 13849-row CSV ingestion, RFC-7807 exception hierarchy, and sub-ms fast responses"
+
 
 echo.
 echo ============================================================

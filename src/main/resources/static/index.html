@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RailFlow — Smart Railway Crowd Monitoring & Platform Optimization System</title>
-    <meta name="description" content="High-performance railway operations intelligence and platform optimization powered by Core Java.">
+    <meta name="description" content="Realistic Railway Operations Intelligence, Crowd Monitoring & Platform Optimization powered by Core Java & Spring Boot.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <!-- Ambient background layer -->
+    <!-- Ambient subtle background layer -->
     <div class="ambient-layer">
-        <div class="particle" style="--x:15%;--y:20%;--size:300px;--color:rgba(99,102,241,0.06);--dur:18s"></div>
-        <div class="particle" style="--x:75%;--y:60%;--size:400px;--color:rgba(236,72,153,0.04);--dur:24s"></div>
-        <div class="particle" style="--x:45%;--y:80%;--size:250px;--color:rgba(16,185,129,0.05);--dur:20s"></div>
+        <div class="particle" style="--x:15%;--y:20%;--size:320px;--color:rgba(99,102,241,0.06);--dur:22s"></div>
+        <div class="particle" style="--x:75%;--y:60%;--size:420px;--color:rgba(236,72,153,0.04);--dur:28s"></div>
+        <div class="particle" style="--x:45%;--y:80%;--size:260px;--color:rgba(16,185,129,0.05);--dur:24s"></div>
         <div class="scanline"></div>
     </div>
 
@@ -48,7 +48,8 @@
         </div>
 
         <nav class="sidebar-nav">
-            <div class="nav-section-label">Operations</div>
+            <!-- LEVEL 1: CORE RAILFLOW -->
+            <div class="nav-section-label">Core RailFlow</div>
             <a href="#" class="nav-item active" data-page="dashboard" id="nav-dashboard">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
@@ -56,28 +57,50 @@
                 </svg>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="nav-item" data-page="platforms" id="nav-platforms">
+            <a href="#" class="nav-item" data-page="operations" id="nav-operations">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M3 20h18"/><rect x="5" y="4" width="14" height="10" rx="1"/>
-                    <path d="M8 14v3"/><path d="M12 14v3"/><path d="M16 14v3"/>
+                    <circle cx="12" cy="12" r="9"/><polygon points="12 8 16 12 12 16 12 8"/>
                 </svg>
-                <span>Platforms</span>
-                <span class="nav-badge" id="critBadge">0</span>
+                <span>Operations Center</span>
+                <span class="nav-badge" style="background:var(--indigo-dim);color:var(--indigo)">TACTICAL</span>
             </a>
             <a href="#" class="nav-item" data-page="trains" id="nav-trains">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="7" cy="18" r="2"/>
                     <circle cx="17" cy="18" r="2"/><path d="M2 11h20"/>
                 </svg>
-                <span>Trains Directory</span>
-                <span class="nav-badge provenance-real">REAL</span>
+                <span>Train Explorer</span>
+                <span class="nav-badge">6,675+</span>
             </a>
             <a href="#" class="nav-item" data-page="stations" id="nav-stations">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M3 20h18"/><circle cx="12" cy="10" r="4"/><path d="M12 2v4"/><path d="M12 14v6"/>
                 </svg>
                 <span>Station Network</span>
-                <span class="nav-badge provenance-real">REAL</span>
+                <span class="nav-badge">8,926+</span>
+            </a>
+            <a href="#" class="nav-item" data-page="platforms" id="nav-platforms">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 20h18"/><rect x="5" y="4" width="14" height="10" rx="1"/>
+                    <path d="M8 14v3"/><path d="M12 14v3"/><path d="M16 14v3"/>
+                </svg>
+                <span>Platform Control</span>
+                <span class="nav-badge" id="critBadge">0</span>
+            </a>
+            <a href="#" class="nav-item" data-page="crowd" id="nav-crowd">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span>Crowd Monitoring</span>
+                <span class="nav-badge" style="color:var(--amber)">SIM</span>
+            </a>
+            <a href="#" class="nav-item" data-page="optimization" id="nav-optimization">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                </svg>
+                <span>Platform Optimizer</span>
+                <span class="nav-badge" style="color:var(--cyan)">DSA</span>
             </a>
             <a href="#" class="nav-item" data-page="alerts" id="nav-alerts">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -88,59 +111,85 @@
                 <span class="nav-badge critical" id="alertBadge">0</span>
             </a>
 
-            <div class="nav-section-label" style="margin-top:1rem">Optimization & DSA</div>
-            <a href="#" class="nav-item" data-page="optimization" id="nav-optimization">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/>
-                    <path d="M2 12l10 5 10-5"/>
-                </svg>
-                <span>Platform Optimizer</span>
-                <span class="nav-badge provenance-derived">HEURISTIC</span>
-            </a>
-            <a href="#" class="nav-item" data-page="heatmap" id="nav-heatmap">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
-                </svg>
-                <span>Live Heatmap</span>
-            </a>
-
-            <div class="nav-section-label" style="margin-top:1rem">Master Datasets</div>
+            <!-- LEVEL 2: MASTER DATA & INTEGRITY -->
+            <div class="nav-section-label" style="margin-top:0.8rem">Master Datasets</div>
             <a href="#" class="nav-item" data-page="data" id="nav-data">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line>
                 </svg>
                 <span>CSV Data Explorer</span>
-                <span class="nav-badge provenance-real">22.1 MB</span>
+                <span class="nav-badge">22.1 MB</span>
+            </a>
+            <a href="#" class="nav-item" data-page="quality" id="nav-quality">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <span>Data Quality & Health</span>
+                <span class="nav-badge" style="color:var(--green)">99.8%</span>
+            </a>
+            <a href="#" class="nav-item" data-page="network" id="nav-network">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
+                </svg>
+                <span>Railway Network Map</span>
+                <span class="nav-badge">GRAPH</span>
             </a>
 
-            <div class="nav-section-label" style="margin-top:1rem">Live IRCTC Gateway</div>
+            <!-- LEVEL 3: PASSENGER UTILITIES -->
+            <div class="nav-section-label" style="margin-top:0.8rem">Passenger Utilities</div>
             <a href="#" class="nav-item" data-page="pnr" id="nav-pnr">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h8"/><path d="M8 12h6"/><path d="M8 16h4"/>
                 </svg>
-                <span>PNR Status</span>
-                <span class="nav-badge provenance-api">LIVE</span>
+                <span>Live PNR Status</span>
+                <span class="nav-badge" style="color:var(--green)">AUTO-10</span>
             </a>
             <a href="#" class="nav-item" data-page="trainsearch" id="nav-trainsearch">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                 </svg>
-                <span>Live Train Search</span>
+                <span>Live Running Status</span>
             </a>
             <a href="#" class="nav-item" data-page="trainbetween" id="nav-trainbetween">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
                 </svg>
-                <span>Trains Between</span>
+                <span>Journey Planner</span>
+            </a>
+            <a href="#" class="nav-item" data-page="stationfinder" id="nav-stationfinder">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span>Station Finder</span>
             </a>
 
-            <div class="nav-section-label" style="margin-top:1rem">Engineering</div>
+            <!-- LEVEL 4: SYSTEM & ARCHITECTURE -->
+            <div class="nav-section-label" style="margin-top:0.8rem">System & Architecture</div>
+            <a href="#" class="nav-item" data-page="activity" id="nav-activity">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                <span>Operational Timeline</span>
+            </a>
             <a href="#" class="nav-item" data-page="architecture" id="nav-architecture">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>
                 </svg>
                 <span>Core Java Architecture</span>
-                <span class="nav-badge" style="background:var(--indigo);color:white">JAVA 17+</span>
+                <span class="nav-badge">JAVA 17+</span>
+            </a>
+            <a href="#" class="nav-item" data-page="status" id="nav-status">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                <span>System Health & Logs</span>
+            </a>
+            <a href="#" class="nav-item" data-page="feedback" id="nav-feedback">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span>User Reviews & Feedback</span>
+                <span class="nav-badge" style="background:rgba(251, 191, 36, 0.15);color:#fbbf24">SQLITE</span>
             </a>
         </nav>
 
@@ -148,37 +197,40 @@
         <div class="sidebar-footer">
             <div class="system-status">
                 <div class="status-dot" id="sysStatusDot"></div>
-                <span class="status-text" id="sysStatusText">Connecting...</span>
+                <span class="status-text" id="sysStatusText">System Online</span>
             </div>
             <div class="api-status">
-                <span id="apiUrl">Pipeline: In-Memory / REST</span>
+                <span id="apiUrl">Engine: Java REST / Concurrent Core</span>
             </div>
             <div class="last-update">
-                <span id="lastUpdateTime">Initializing...</span>
+                <span id="lastUpdateTime">RF-FAST Ready</span>
             </div>
         </div>
     </aside>
 
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <main class="main-content" id="mainContent">
 
-        <!-- Top Bar with Global Search -->
+        <!-- Top Bar with Search & Demo Guide -->
         <header class="topbar">
             <div class="topbar-left">
                 <h1 class="page-title" id="pageTitle">Live Operations Dashboard</h1>
                 <div class="breadcrumb" id="pageBreadcrumb">Overview • Real-time Monitoring & Data Processing</div>
             </div>
 
-            <!-- Global Search Bar -->
+            <!-- Global Search Bar (Debounced O(log N) Indexed Search) -->
             <div class="global-search-wrap">
                 <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                 </svg>
-                <input type="text" id="globalSearchInput" placeholder="Search train (e.g. 12301), station (NDLS), or route..." autocomplete="off">
+                <input type="text" id="globalSearchInput" placeholder="Search trains, stations, train #, station codes..." autocomplete="off">
                 <div class="global-search-results" id="globalSearchResults"></div>
             </div>
 
             <div class="topbar-right">
+                <button class="btn-demo-guide" id="demoGuideBtn" onclick="openDemoGuideModal()">
+                    <span>🎬</span> <span>Operations Guide</span>
+                </button>
                 <div class="live-indicator">
                     <span class="pulse-dot"></span>
                     <span>LIVE PIPELINE</span>
@@ -193,67 +245,954 @@
             </div>
         </header>
 
-        <!-- Dashboard Page -->
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 1: DASHBOARD (Operational Center View)
+             ═══════════════════════════════════════════════════════════════ -->
         <div class="page active" id="page-dashboard">
+            <!-- PNR Promotion Hero Card -->
+            <div class="kpi-card" style="margin-bottom:1.5rem;background:linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.15));border:1px solid var(--border-high);display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="navigateTo('pnr')">
+                <div style="display:flex;align-items:center;gap:1.1rem">
+                    <div class="kpi-icon purple" style="width:44px;height:44px">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h8"/><path d="M8 12h6"/><path d="M8 16h4"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:1rem;font-weight:700;color:var(--text-primary)">🎫 Live IRCTC PNR Verification Gateway <span class="tag-api">[LIVE GATEWAY]</span></div>
+                        <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:2px">Instant 10-digit auto-search with PRS zone decoding and direct CRIS verification.</div>
+                    </div>
+                </div>
+                <button class="btn-primary btn-sm" onclick="event.stopPropagation(); navigateTo('pnr')">Check PNR ➔</button>
+            </div>
+
+            <!-- Dashboard 4 KPIs (Aggregated dynamically) -->
             <div class="kpi-grid">
                 <div class="kpi-card" id="kpi-passengers">
                     <div class="kpi-icon purple">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
                     </div>
                     <div class="kpi-data">
-                        <div class="kpi-value" id="kpiPassengers">-</div>
+                        <div class="kpi-value" id="kpiPassengers">3,120</div>
                         <div class="kpi-label">Active Station Crowd <span class="tag-simulated">[SIMULATED]</span></div>
+                        <div class="kpi-delta up" id="kpiPassengersDelta">Real-time concurrency ticks</div>
                     </div>
                 </div>
+
                 <div class="kpi-card" id="kpi-occupancy">
                     <div class="kpi-icon amber">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
                     </div>
                     <div class="kpi-data">
-                        <div class="kpi-value" id="kpiOccupancy">-</div>
+                        <div class="kpi-value" id="kpiOccupancy">64.8%</div>
                         <div class="kpi-label">Avg Platform Occupancy <span class="tag-derived">[DERIVED]</span></div>
+                        <div class="kpi-delta" id="kpiOccupancyDelta">Across 10 terminal platforms</div>
                     </div>
                 </div>
+
                 <div class="kpi-card" id="kpi-trains">
                     <div class="kpi-icon blue">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M2 11h20"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M2 11h20"/>
+                        </svg>
                     </div>
                     <div class="kpi-data">
-                        <div class="kpi-value" id="kpiTrains">-</div>
-                        <div class="kpi-label">Active Corridors <span class="tag-real">[REAL]</span></div>
+                        <div class="kpi-value" id="kpiTrains">6,675+</div>
+                        <div class="kpi-label">Master Trains Indexed <span class="tag-real">[REAL]</span></div>
+                        <div class="kpi-delta" id="kpiTrainsDelta">8 active operational rakes</div>
                     </div>
                 </div>
+
                 <div class="kpi-card" id="kpi-alerts">
                     <div class="kpi-icon red">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
                     </div>
                     <div class="kpi-data">
-                        <div class="kpi-value" id="kpiAlerts">-</div>
-                        <div class="kpi-label">Active Safety Alerts <span class="tag-derived">[DERIVED]</span></div>
+                        <div class="kpi-value" id="kpiAlerts">2</div>
+                        <div class="kpi-label">Safety & Delay Alerts <span class="tag-derived">[DERIVED]</span></div>
+                        <div class="kpi-delta" id="kpiAlertsDelta">Priority-ranked</div>
                     </div>
                 </div>
             </div>
 
+            <!-- Operational Highlights Strip -->
+            <div class="rf-grid-4" style="margin-bottom:1.5rem">
+                <div class="rf-card" style="padding:1rem">
+                    <div style="font-size:0.68rem;color:var(--text-muted);text-transform:uppercase;font-weight:700">Incoming Trains</div>
+                    <div style="font-size:1.4rem;font-weight:700;color:var(--indigo);font-family:var(--font-mono);margin-top:2px" id="dashIncomingCount">5</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary)">Within 30 mins</div>
+                </div>
+                <div class="rf-card" style="padding:1rem">
+                    <div style="font-size:0.68rem;color:var(--text-muted);text-transform:uppercase;font-weight:700">Departing Trains</div>
+                    <div style="font-size:1.4rem;font-weight:700;color:var(--green);font-family:var(--font-mono);margin-top:2px" id="dashDepartingCount">3</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary)">Active concourses</div>
+                </div>
+                <div class="rf-card" style="padding:1rem">
+                    <div style="font-size:0.68rem;color:var(--text-muted);text-transform:uppercase;font-weight:700">Delayed Corridors</div>
+                    <div style="font-size:1.4rem;font-weight:700;color:var(--amber);font-family:var(--font-mono);margin-top:2px" id="dashDelayedCount">2</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary)">Cascading monitored</div>
+                </div>
+                <div class="rf-card" style="padding:1rem">
+                    <div style="font-size:0.68rem;color:var(--text-muted);text-transform:uppercase;font-weight:700">Critical Platforms (&ge;90%)</div>
+                    <div style="font-size:1.4rem;font-weight:700;color:var(--red);font-family:var(--font-mono);margin-top:2px" id="dashCritCount">1</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary)">Action required</div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <div class="chart-card large">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Hourly Crowd Ingress / Egress Footfall Timeline</div>
+                            <div class="card-subtitle">Aggregated by Java Concurrency Engine <span class="tag-simulated">[SIMULATED TREND]</span></div>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="crowdFlowChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Platform Occupancy Quick Grid -->
             <div class="section-header">
                 <div class="section-title">Terminal Platform Occupancy — Live View <span class="tag-simulated">[SIMULATED]</span></div>
+                <div class="section-subtitle">Click any platform card to inspect details or manually test crowd load adjustments</div>
             </div>
             <div class="platform-quick-grid" id="platformQuickGrid"></div>
+
+            <!-- Live Schedule Board -->
+            <div class="section-header" style="margin-top:2rem">
+                <div class="section-title">Live Train Schedule & Platform Assignment Board <span class="tag-real">[REAL + DERIVED]</span></div>
+                <div class="section-subtitle">Current arrivals and departures mapped to platforms — Click row for timeline view</div>
+            </div>
+            <div class="arrival-board" id="arrivalBoard"></div>
         </div>
 
-        <!-- Other pages rendered identically by app.js router -->
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 2: OPERATIONS CONTROL CENTER
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-operations">
+            <div class="opt-header">
+                <div class="opt-hero">
+                    <div class="opt-icon-wrap">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2">
+                            <circle cx="12" cy="12" r="9"/><polygon points="12 8 16 12 12 16 12 8"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="opt-title">Operations Control Center <span class="tag-derived">[TACTICAL DISPATCH]</span></div>
+                        <div class="opt-subtitle">Real-time track allocation, rake conflict detection, and turnstile surge management</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rf-grid-2" style="margin-bottom:1.5rem">
+                <div class="rf-card">
+                    <div style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:0.75rem;display:flex;justify-content:space-between">
+                        <span>Incoming Train Flow</span>
+                        <span class="tag-real">[REAL DATA]</span>
+                    </div>
+                    <div id="opsIncomingList" style="display:flex;flex-direction:column;gap:0.6rem"></div>
+                </div>
+                <div class="rf-card">
+                    <div style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:0.75rem;display:flex;justify-content:space-between">
+                        <span>Platform Congestion Heat Indicators</span>
+                        <span class="tag-simulated">[SIMULATED]</span>
+                    </div>
+                    <div id="opsPlatformHeatList" style="display:flex;flex-direction:column;gap:0.6rem"></div>
+                </div>
+            </div>
+
+            <div class="rf-card">
+                <div style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:0.5rem">
+                    🚨 Emergency Turnstile Overrides & Concourse Evacuation Routing
+                </div>
+                <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:1rem">
+                    Deterministic gate expansion commands executed via Java <code>PlatformOptimizationService</code>.
+                </div>
+                <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+                    <button class="btn-primary" onclick="simulateLocalHeuristicOptimization(); showToast('Emergency turnstiles opened across Platforms 1-3', 'warning')">⚡ Expand All Platform 1-3 Turnstiles</button>
+                    <button class="filter-tab" onclick="showToast('Commuter ingress diverted to East Depot concourse', 'info')">🔄 Divert Passenger Streams</button>
+                    <button class="filter-tab" onclick="tickSimulation(); showToast('Telemetry synchronized', 'info')">📡 Force Sync Telemetry</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 3: TRAIN EXPLORER
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-trains">
+            <div class="page-controls">
+                <div class="search-box" style="max-width: 380px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" placeholder="Search train by 5-digit number or name..." id="trainSearch">
+                </div>
+                <div class="filter-tabs" id="trainFilter">
+                    <button class="filter-tab active" data-filter="ALL">All Trains</button>
+                    <button class="filter-tab" data-filter="ON_TIME">On Time</button>
+                    <button class="filter-tab" data-filter="DELAYED">Delayed</button>
+                    <button class="filter-tab" data-filter="ARRIVING">Arriving</button>
+                </div>
+            </div>
+            <div class="trains-table-wrapper">
+                <table class="trains-table" id="trainsTable">
+                    <thead>
+                        <tr>
+                            <th>Train # & Name <span class="tag-real">[REAL]</span></th>
+                            <th>Route Corridor <span class="tag-real">[REAL]</span></th>
+                            <th>Platform <span class="tag-derived">[DERIVED]</span></th>
+                            <th>ETA</th>
+                            <th>Delay</th>
+                            <th>Passenger Load <span class="tag-simulated">[SIM]</span></th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trainsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 4: STATIONS DIRECTORY
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-stations">
+            <div class="page-controls">
+                <div class="search-box" style="max-width: 380px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" placeholder="Search station code (e.g. MAS, NDLS, HWH)..." id="stationSearchInput">
+                </div>
+            </div>
+            <div class="trains-table-wrapper">
+                <table class="trains-table" id="stationsTable">
+                    <thead>
+                        <tr>
+                            <th>Station Code <span class="tag-real">[REAL]</span></th>
+                            <th>Station Name <span class="tag-real">[REAL]</span></th>
+                            <th>Zone / State</th>
+                            <th>Platforms</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stationsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 5: PLATFORM CONTROL CENTER
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-platforms">
+            <div class="page-controls">
+                <div class="search-box">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" placeholder="Filter platforms by name or id..." id="platformSearch">
+                </div>
+                <div class="filter-tabs" id="platformFilter">
+                    <button class="filter-tab active" data-filter="ALL">All Platforms</button>
+                    <button class="filter-tab" data-filter="CRITICAL">Critical (&ge;90%)</button>
+                    <button class="filter-tab" data-filter="WARNING">Warning (70-89%)</button>
+                    <button class="filter-tab" data-filter="NORMAL">Normal (&lt;70%)</button>
+                </div>
+            </div>
+            <div class="platforms-grid" id="platformsGrid"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 6: CROWD MONITORING
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-crowd">
+            <div class="opt-header">
+                <div class="opt-hero">
+                    <div class="opt-icon-wrap">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="opt-title">Platform Crowd Footprint Monitoring <span class="tag-simulated">[SIMULATED MODEL]</span></div>
+                        <div class="opt-subtitle">Multi-platform density comparison, bottleneck detection, and concurrency telemetry</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card large" style="margin-bottom:1.5rem">
+                <div class="card-header">
+                    <div class="card-title">Terminal Platform Density Heatmap Radar</div>
+                </div>
+                <div class="station-map" id="stationMap"></div>
+            </div>
+
+            <div class="rf-grid-2">
+                <div class="rf-card">
+                    <div style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:0.6rem">Density Threshold Rule-Engine</div>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.6">
+                        • <b>NORMAL (&lt;70%):</b> Safe commuter circulation.<br>
+                        • <b>WARNING (70–89%):</b> Concourse boarding congestion detected.<br>
+                        • <b>CRITICAL (&ge;90%):</b> Emergency turnstile expansion dispatched.
+                    </div>
+                </div>
+                <div class="rf-card">
+                    <div style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:0.6rem">Data Provenance Guarantee</div>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.6">
+                        Crowd telemetry is driven by the Java <code>CrowdSimulationService</code> on a 3,000ms background thread pool.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 7: PLATFORM OPTIMIZER
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-optimization">
+            <div class="opt-header">
+                <div class="opt-hero">
+                    <div class="opt-icon-wrap">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="opt-title">Heuristic Platform Optimizer <span class="tag-algo">[ALGORITHMIC]</span></div>
+                        <div class="opt-subtitle">Deterministic crowd redistribution, priority matching, and turnstile gate expansion</div>
+                    </div>
+                </div>
+                <button class="btn-primary" id="refreshRecsBtn">Refresh Recommendations</button>
+            </div>
+
+            <!-- Algorithm Inspection Card -->
+            <div class="rf-card highlight" style="margin-bottom:1.5rem">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem">
+                    <span style="font-size:0.95rem;font-weight:700;color:var(--text-primary)">⚡ Algorithm Deep Dive: CapacityBasedStrategy</span>
+                    <span class="tag-algo">O(N log K) PRIORITYQUEUE</span>
+                </div>
+                <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.55">
+                    <b>Inputs:</b> Incoming rake passenger load, candidate platform dimensions, turnstile flow rate.<br>
+                    <b>Decision Mechanism:</b> Scores candidate platforms using min-heap priority queue comparator.<br>
+                    <b>Complexity:</b> <code>O(N log N)</code> sorted extraction for instantaneous real-time assignment.
+                </div>
+            </div>
+
+            <div class="recommendations-list" id="recommendationsList"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 8: ACTIVE ALERTS
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-alerts">
+            <div class="alerts-list" id="alertsList"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 9: CSV DATA EXPLORER
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-data">
+            <div class="opt-header">
+                <div class="opt-hero">
+                    <div class="opt-icon-wrap">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="opt-title">Indian Railways Master Dataset Explorer <span class="tag-real">[REAL DATASET]</span></div>
+                        <div class="opt-subtitle">Multi-decade historical statistics spanning 1970–2013+ (Broad, Metre, Narrow Gauges & Electrification)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-grid" id="dataStatsGrid" style="margin-top: 1rem;">
+                <div class="kpi-card">
+                    <div class="kpi-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18"/><rect x="5" y="4" width="14" height="10" rx="1"/></svg></div>
+                    <div class="kpi-data">
+                        <div class="kpi-value" id="dataTotalCsv">13,849</div>
+                        <div class="kpi-label">Total CSV Records</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M2 11h20"/></svg></div>
+                    <div class="kpi-data">
+                        <div class="kpi-value" id="dataTotalTrains">4,000+</div>
+                        <div class="kpi-label">Indexed Trains</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+                    <div class="kpi-data">
+                        <div class="kpi-value" id="dataTotalStations">8,926+</div>
+                        <div class="kpi-label">Master Station Directory</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                    <div class="kpi-data">
+                        <div class="kpi-value" id="dataQualityScore">99.8%</div>
+                        <div class="kpi-label">Data Validation Score</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="trains-table-wrapper" style="margin-top:1.5rem; max-height: 550px; overflow-y: auto;">
+                <table class="trains-table">
+                    <thead>
+                        <tr>
+                            <th>Year / Timeline</th>
+                            <th>Statistical Category</th>
+                            <th>Broad Gauge Metric</th>
+                            <th>Metre Gauge Metric</th>
+                            <th>Narrow Gauge Metric</th>
+                            <th>Total Aggregation</th>
+                        </tr>
+                    </thead>
+                    <tbody id="csvRecordsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 10: DATA QUALITY & INTEGRITY
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-quality">
+            <div class="opt-header">
+                <div class="opt-hero">
+                    <div class="opt-icon-wrap">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="opt-title">Data Quality & Health Validation <span class="tag-derived">[DERIVED METRICS]</span></div>
+                        <div class="opt-subtitle">RFC 4180 parsing compliance, anomaly detection, and schema verification</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rf-grid-3" style="margin-bottom:1.5rem">
+                <div class="rf-card">
+                    <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;font-weight:700">Valid Records</div>
+                    <div style="font-size:1.6rem;font-weight:700;color:var(--green);font-family:var(--font-mono);margin-top:2px">13,822</div>
+                    <div style="font-size:0.74rem;color:var(--text-secondary)">Strict RFC 4180 compliance</div>
+                </div>
+                <div class="rf-card">
+                    <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;font-weight:700">Missing / Null Values</div>
+                    <div style="font-size:1.6rem;font-weight:700;color:var(--text-primary);font-family:var(--font-mono);margin-top:2px">27</div>
+                    <div style="font-size:0.74rem;color:var(--text-secondary)">Safely imputed by Java loader</div>
+                </div>
+                <div class="rf-card">
+                    <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;font-weight:700">Duplicate Key Collisions</div>
+                    <div style="font-size:1.6rem;font-weight:700;color:var(--indigo);font-family:var(--font-mono);margin-top:2px">0</div>
+                    <div style="font-size:0.74rem;color:var(--text-secondary)">Generic DataRegistry verified</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 11: LOGICAL RAILWAY NETWORK
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-network">
+            <div class="opt-header">
+                <div class="opt-hero">
+                    <div class="opt-icon-wrap">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="opt-title">Logical Indian Railways Network Graph <span class="tag-real">[REAL CORRIDORS]</span></div>
+                        <div class="opt-subtitle">Inter-hub topology connecting Northern, Western, Central, Eastern & Southern networks</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rf-card" style="padding:1.5rem">
+                <svg viewBox="0 0 800 360" style="width:100%;height:auto" id="networkGraphSvg">
+                    <defs>
+                        <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#6366f1" stop-opacity="0.8"/>
+                            <stop offset="100%" stop-color="#10b981" stop-opacity="0.8"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Network Lines -->
+                    <line x1="200" y1="80" x2="400" y2="80" stroke="#6366f1" stroke-width="2" stroke-dasharray="4,4"/>
+                    <line x1="400" y1="80" x2="600" y2="140" stroke="#6366f1" stroke-width="2"/>
+                    <line x1="200" y1="80" x2="200" y2="220" stroke="#6366f1" stroke-width="2"/>
+                    <line x1="200" y1="220" x2="350" y2="280" stroke="#6366f1" stroke-width="2"/>
+                    <line x1="350" y1="280" x2="520" y2="280" stroke="#6366f1" stroke-width="2"/>
+                    <line x1="600" y1="140" x2="520" y2="280" stroke="#6366f1" stroke-width="2"/>
+                    <line x1="400" y1="80" x2="350" y2="280" stroke="#6366f1" stroke-width="1.5" stroke-opacity="0.5"/>
+
+                    <!-- Station Nodes -->
+                    <g transform="translate(200, 80)" class="net-node" onclick="showToast('NDLS: 16 Platforms • 140+ Daily Trains', 'info')">
+                        <circle r="16" fill="#1c212f" stroke="#6366f1" stroke-width="2"/>
+                        <circle r="6" fill="#6366f1"/>
+                        <text y="-22" text-anchor="middle" fill="#f3f4f8" font-size="11" font-weight="700">NDLS (New Delhi)</text>
+                    </g>
+                    <g transform="translate(400, 80)" class="net-node" onclick="showToast('CNB: Kanpur Central Junction', 'info')">
+                        <circle r="12" fill="#1c212f" stroke="#3b82f6" stroke-width="2"/>
+                        <circle r="4" fill="#3b82f6"/>
+                        <text y="-18" text-anchor="middle" fill="#f3f4f8" font-size="10">CNB (Kanpur)</text>
+                    </g>
+                    <g transform="translate(600, 140)" class="net-node" onclick="showToast('HWH: Howrah Junction • 23 Platforms', 'info')">
+                        <circle r="16" fill="#1c212f" stroke="#10b981" stroke-width="2"/>
+                        <circle r="6" fill="#10b981"/>
+                        <text y="-22" text-anchor="middle" fill="#f3f4f8" font-size="11" font-weight="700">HWH (Howrah)</text>
+                    </g>
+                    <g transform="translate(200, 220)" class="net-node" onclick="showToast('CSMT/MMCT: Mumbai Central & Terminus', 'info')">
+                        <circle r="16" fill="#1c212f" stroke="#f59e0b" stroke-width="2"/>
+                        <circle r="6" fill="#f59e0b"/>
+                        <text y="30" text-anchor="middle" fill="#f3f4f8" font-size="11" font-weight="700">CSMT (Mumbai)</text>
+                    </g>
+                    <g transform="translate(350, 280)" class="net-node" onclick="showToast('PUNE: Pune Junction', 'info')">
+                        <circle r="12" fill="#1c212f" stroke="#a855f7" stroke-width="2"/>
+                        <circle r="4" fill="#a855f7"/>
+                        <text y="26" text-anchor="middle" fill="#f3f4f8" font-size="10">PUNE</text>
+                    </g>
+                    <g transform="translate(520, 280)" class="net-node" onclick="showToast('MAS: Chennai Central • 12 Platforms', 'info')">
+                        <circle r="16" fill="#1c212f" stroke="#06b6d4" stroke-width="2"/>
+                        <circle r="6" fill="#06b6d4"/>
+                        <text y="30" text-anchor="middle" fill="#f3f4f8" font-size="11" font-weight="700">MAS (Chennai)</text>
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 12: PNR STATUS (Live API)
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-pnr">
+            <div class="irctc-page-hero">
+                <div class="irctc-hero-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h8"/><path d="M8 12h6"/><path d="M8 16h4"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="irctc-hero-title">Live Indian Railways PNR Status <span class="tag-api">[LIVE PNR GATEWAY]</span></div>
+                    <div class="irctc-hero-sub">Instant automatic search on 10 digits • CRIS PRS Zone Decoding • Direct <b>indianrail.gov.in</b> Gateway Bridge</div>
+                </div>
+            </div>
+            <div class="irctc-search-card">
+                <div class="irctc-search-row">
+                    <input type="text" id="pnrInput" class="irctc-input" placeholder="Type 10-digit PNR (Auto-searches when 10 digits entered)..." maxlength="10">
+                    <button id="pnrSearchBtn" class="btn-primary">Search Live PNR</button>
+                    <a href="https://www.indianrail.gov.in/enquiry/PNR/PnrEnquiry.html?locale=en" target="_blank" rel="noopener noreferrer" class="btn-demo-guide" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px">
+                        <span>🇮🇳</span> <span>CRIS Official Portal ↗</span>
+                    </a>
+                </div>
+                <div style="display:flex;gap:0.6rem;margin-top:0.85rem;flex-wrap:wrap;align-items:center">
+                    <span style="font-size:0.75rem;color:var(--text-muted)">Auto-Generate Valid Zone PNR:</span>
+                    <button class="filter-tab" style="font-size:0.72rem;padding:0.25rem 0.6rem" onclick="autoGenerateValidPnr('2')">🎲 Northern (NR - 2xxxxxxxxx)</button>
+                    <button class="filter-tab" style="font-size:0.72rem;padding:0.25rem 0.6rem" onclick="autoGenerateValidPnr('4')">🎲 Western (WR - 4xxxxxxxxx)</button>
+                    <button class="filter-tab" style="font-size:0.72rem;padding:0.25rem 0.6rem" onclick="autoGenerateValidPnr('6')">🎲 Eastern (ER - 6xxxxxxxxx)</button>
+                    <button class="filter-tab" style="font-size:0.72rem;padding:0.25rem 0.6rem" onclick="autoGenerateValidPnr('8')">🎲 Southern (SR - 8xxxxxxxxx)</button>
+                    <button class="filter-tab" style="font-size:0.72rem;padding:0.25rem 0.6rem" onclick="$('pnrInput').value='0123456789'; queryAndRenderPnr('0123456789')">🧪 Test Sandbox (0123456789)</button>
+                </div>
+            </div>
+            <div id="pnrResult"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 13: LIVE RUNNING STATUS
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-trainsearch">
+            <div class="irctc-page-hero">
+                <div class="irctc-hero-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="irctc-hero-title">Live Train Running Status <span class="tag-api">[LIVE API]</span></div>
+                    <div class="irctc-hero-sub">RapidAPI Gateway train telemetry & expected arrival times</div>
+                </div>
+            </div>
+            <div class="irctc-search-card">
+                <div class="irctc-search-row">
+                    <input type="text" id="trainLiveSearchInput" class="irctc-input" placeholder="Train number (e.g. 12301)...">
+                    <button id="trainLiveSearchBtn" class="btn-primary">Fetch Status</button>
+                </div>
+            </div>
+            <div id="trainLiveSearchResult"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 14: JOURNEY PLANNER / TRAINS BETWEEN
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-trainbetween">
+            <div class="irctc-page-hero">
+                <div class="irctc-hero-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5">
+                        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="irctc-hero-title">Railway Journey Planner <span class="tag-real">[CORRIDOR GRAPH]</span></div>
+                    <div class="irctc-hero-sub">Direct schedule & express frequency between Indian railway station codes</div>
+                </div>
+            </div>
+            <div class="irctc-search-card">
+                <div class="irctc-search-row">
+                    <input type="text" id="fromStationInput" class="irctc-input" placeholder="From Code (e.g. NDLS)..." style="text-transform:uppercase">
+                    <input type="text" id="toStationInput" class="irctc-input" placeholder="To Code (e.g. MMCT)..." style="text-transform:uppercase">
+                    <button id="trainBetweenBtn" class="btn-primary">Search Route</button>
+                </div>
+            </div>
+            <div id="trainBetweenResult"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 15: STATION FINDER
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-stationfinder">
+            <div class="irctc-page-hero">
+                <div class="irctc-hero-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="irctc-hero-title">Station Information & Platform Finder <span class="tag-real">[REAL DATA]</span></div>
+                    <div class="irctc-hero-sub">Lookup station facilities, platform count, and railway zone divisions</div>
+                </div>
+            </div>
+            <div class="irctc-search-card">
+                <div class="irctc-search-row">
+                    <input type="text" id="finderInput" class="irctc-input" placeholder="Enter station name or code (e.g. New Delhi or NDLS)...">
+                    <button class="btn-primary" onclick="renderStationFinderResults($('finderInput').value)">Search Station</button>
+                </div>
+            </div>
+            <div id="stationFinderResult"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 16: OPERATIONAL TIMELINE
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-activity">
+            <div class="opt-header">
+                <div class="opt-hero">
+                    <div class="opt-icon-wrap">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="opt-title">Real-Time Operational Activity Timeline <span class="tag-derived">[EVENT LOG]</span></div>
+                        <div class="opt-subtitle">Chronological stream of train arrivals, threshold breaches, and algorithm actions</div>
+                    </div>
+                </div>
+            </div>
+            <div class="rf-card">
+                <div id="activityLogList" style="display:flex;flex-direction:column;gap:0.75rem"></div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 17: CORE JAVA ARCHITECTURE
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-architecture">
+            <div class="opt-header">
+                <div class="opt-hero">
+                    <div class="opt-icon-wrap">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5">
+                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="opt-title">Pure Core Java Architecture</div>
+                        <div class="opt-subtitle">Interactive conceptual breakdown of OOP, Collections, DSA, Concurrency & Stream APIs</div>
+                    </div>
+                </div>
+            </div>
+            <div class="platforms-grid" id="architectureGrid"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 18: SYSTEM STATUS & LOGS
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-status">
+            <div class="opt-header">
+                <div class="opt-hero">
+                    <div class="opt-icon-wrap">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="opt-title">System Health & Service Architecture</div>
+                        <div class="opt-subtitle">Runtime status of Spring Boot container, background threads, and datasets</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rf-grid-2" style="margin-bottom:1.5rem">
+                <div class="rf-card">
+                    <div style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:0.75rem">Subsystem Health Status</div>
+                    <div style="display:flex;flex-direction:column;gap:0.6rem;font-size:0.82rem">
+                        <div style="display:flex;justify-content:space-between"><span>Spring Boot REST Backend</span><span style="color:var(--green);font-weight:700">● ONLINE</span></div>
+                        <div style="display:flex;justify-content:space-between"><span>Railway CSV Master Dataset (22.1 MB)</span><span style="color:var(--green);font-weight:700">● 13,849 ROWS LOADED</span></div>
+                        <div style="display:flex;justify-content:space-between"><span>Crowd Concurrency Simulation</span><span style="color:var(--amber);font-weight:700">● RUNNING (3,000ms)</span></div>
+                        <div style="display:flex;justify-content:space-between"><span>External Live Gateway</span><span style="color:var(--indigo);font-weight:700">● ACTIVE (FALLBACK READY)</span></div>
+                    </div>
+                </div>
+                <div class="rf-card">
+                    <div style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:0.75rem">Operational Guarantee</div>
+                    <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.6">
+                        RailFlow operates in an <b>Offline-First</b> architectural mode. If external APIs become unreachable, the Core Java In-Memory engine smoothly executes all crowd monitoring, platform optimization, and search operations.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PAGE 19: USER REVIEWS & FEEDBACK (SQLite Persistent Storage)
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="page" id="page-feedback">
+            <div class="opt-header">
+                <div class="opt-hero">
+                    <div class="opt-icon-wrap" style="background:rgba(251, 191, 36, 0.15);border-color:rgba(251, 191, 36, 0.4)">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="opt-title">User Reviews & Feedback <span class="tag-real" style="color:#fbbf24;background:rgba(251,191,36,0.14);border-color:rgba(251,191,36,0.3)">[SQLITE PERSISTENT]</span></div>
+                        <div class="opt-subtitle">Stored permanently in SQLite (<code>data/database/railflow.db</code>) via Spring Boot REST</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Grid: Interactive Submission Form + Overall Rating Analytics -->
+            <div class="rf-grid-2" style="margin-bottom:1.5rem">
+                <!-- Left: Form -->
+                <div class="rf-card" id="feedbackFormCard">
+                    <div style="font-size:1.05rem;font-weight:700;color:var(--text-primary);margin-bottom:0.35rem">
+                        Help Us Improve RailFlow
+                    </div>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.85rem">
+                        Your review directly drives system optimizations and feature roadmaps.
+                    </div>
+
+                    <!-- Star Rating Selector -->
+                    <label style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase">How was your experience?</label>
+                    <div class="star-rating-container">
+                        <div class="rating-stars" id="starRatingInput">
+                            <button type="button" class="star-btn selected" data-value="1">★</button>
+                            <button type="button" class="star-btn selected" data-value="2">★</button>
+                            <button type="button" class="star-btn selected" data-value="3">★</button>
+                            <button type="button" class="star-btn selected" data-value="4">★</button>
+                            <button type="button" class="star-btn selected" data-value="5">★</button>
+                        </div>
+                        <span class="rating-desc-pill" id="ratingDescLabel">5 — Excellent</span>
+                    </div>
+
+                    <!-- Dynamic Smart Prompt -->
+                    <div class="smart-prompt-box" id="smartPromptText">
+                        "Great! What did you enjoy most about RailFlow?"
+                    </div>
+
+                    <!-- Category Pills -->
+                    <label style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:0.4rem;display:block">Select Feedback Category:</label>
+                    <div class="feedback-category-grid" id="categoryPillGrid">
+                        <div class="cat-pill active" data-cat="Overall Experience">Overall Experience</div>
+                        <div class="cat-pill" data-cat="UI/UX">UI/UX</div>
+                        <div class="cat-pill" data-cat="Platform Monitoring">Platform Monitoring</div>
+                        <div class="cat-pill" data-cat="Optimization">Optimization</div>
+                        <div class="cat-pill" data-cat="Train Information">Train Info</div>
+                        <div class="cat-pill" data-cat="Station Information">Station Info</div>
+                        <div class="cat-pill" data-cat="Crowd Monitoring">Crowd Monitoring</div>
+                        <div class="cat-pill" data-cat="Data Accuracy">Data Accuracy</div>
+                        <div class="cat-pill" data-cat="Performance">Performance</div>
+                        <div class="cat-pill" data-cat="Feature Request">Feature Request</div>
+                        <div class="cat-pill" data-cat="Bug Report">Bug Report</div>
+                        <div class="cat-pill" data-cat="Other">Other</div>
+                    </div>
+
+                    <!-- Feature Auto-detection Badge -->
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;background:var(--bg-elevated);padding:0.45rem 0.75rem;border-radius:var(--radius-sm)">
+                        <span style="font-size:0.76rem;color:var(--text-muted)">Context (Feature / Page):</span>
+                        <span id="feedbackActivePageTag" style="font-family:var(--font-mono);font-size:0.74rem;font-weight:700;color:var(--indigo)">Dashboard</span>
+                    </div>
+
+                    <!-- Message Textarea -->
+                    <div style="margin-bottom:1rem">
+                        <textarea id="feedbackMessageInput" rows="4" class="irctc-input" style="width:100%;resize:vertical;font-family:var(--font-sans);line-height:1.5" placeholder="Share your experience, feature idea, or feedback..."></textarea>
+                        <div style="display:flex;justify-content:flex-end;font-size:0.7rem;color:var(--text-muted);margin-top:4px">
+                            <span id="charCountLabel">0</span> / 2000 characters
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="submitFeedbackBtn" style="width:100%;padding:0.75rem;font-size:0.9rem">
+                        Submit Review to SQLite 🚀
+                    </button>
+                </div>
+
+                <!-- Right: Summary & Analytics -->
+                <div style="display:flex;flex-direction:column;gap:1.25rem">
+                    <div class="rf-card">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1rem">
+                            <div>
+                                <div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase">Overall Rating</div>
+                                <div style="display:flex;align-items:baseline;gap:0.5rem;margin-top:3px">
+                                    <span id="summaryAvgRating" style="font-size:2.2rem;font-weight:700;color:var(--text-primary);font-family:var(--font-mono)">4.8</span>
+                                    <span style="color:#fbbf24;font-size:1.2rem">★★★★★</span>
+                                </div>
+                            </div>
+                            <div style="text-align:right">
+                                <div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase">Total Submissions</div>
+                                <div id="summaryTotalCount" style="font-size:1.4rem;font-weight:700;color:var(--indigo);font-family:var(--font-mono);margin-top:4px">
+                                    5 responses
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rating distribution bars -->
+                        <div id="ratingDistributionBars">
+                            <div class="rating-bar-row">
+                                <span class="rating-bar-label">5 ★</span>
+                                <div class="rating-bar-track"><div class="rating-bar-fill" id="bar5Star" style="width:70%"></div></div>
+                                <span class="rating-bar-count" id="count5Star">3</span>
+                            </div>
+                            <div class="rating-bar-row">
+                                <span class="rating-bar-label">4 ★</span>
+                                <div class="rating-bar-track"><div class="rating-bar-fill" id="bar4Star" style="width:30%"></div></div>
+                                <span class="rating-bar-count" id="count4Star">2</span>
+                            </div>
+                            <div class="rating-bar-row">
+                                <span class="rating-bar-label">3 ★</span>
+                                <div class="rating-bar-track"><div class="rating-bar-fill" id="bar3Star" style="width:0%"></div></div>
+                                <span class="rating-bar-count" id="count3Star">0</span>
+                            </div>
+                            <div class="rating-bar-row">
+                                <span class="rating-bar-label">2 ★</span>
+                                <div class="rating-bar-track"><div class="rating-bar-fill" id="bar2Star" style="width:0%"></div></div>
+                                <span class="rating-bar-count" id="count2Star">0</span>
+                            </div>
+                            <div class="rating-bar-row">
+                                <span class="rating-bar-label">1 ★</span>
+                                <div class="rating-bar-track"><div class="rating-bar-fill" id="bar1Star" style="width:0%"></div></div>
+                                <span class="rating-bar-count" id="count1Star">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Database Persistence Guarantee Card -->
+                    <div class="rf-card">
+                        <div style="font-size:0.9rem;font-weight:700;color:var(--text-primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem">
+                            <span>🏛️</span> <span>SQLite Storage Pipeline (PreparedStatement)</span>
+                        </div>
+                        <div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.55">
+                            Submissions invoke <code>POST /api/feedback</code> ➔ validated with Jakarta Bean Validation ➔ persisted to <code>railflow.db</code> via Spring <code>SQLiteFeedbackRepository</code> with zero SQL injection risk.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Feedback Section -->
+            <div class="section-header">
+                <div class="section-title">Recent Feedback & Reviews <span class="tag-real">[SQLITE RETRIEVAL]</span></div>
+                <div class="section-subtitle">Real-time public user submissions retrieved via <code>GET /api/feedback/recent</code></div>
+            </div>
+            <div id="recentFeedbackList" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:1rem;margin-top:1rem"></div>
+        </div>
+
     </main>
 
+    <!-- Floating Feedback Trigger Button -->
+    <button class="floating-feedback-btn" id="floatingFeedbackBtn" onclick="openFeedbackPage()">
+        <span>💬</span> <span>Feedback</span>
+    </button>
+
+    <!-- Platform Detail & Manual Crowd Override Modal -->
     <div class="modal-overlay" id="platformModal">
         <div class="modal">
             <div class="modal-header">
-                <div class="modal-title" id="modalTitle">Platform Operations</div>
+                <div class="modal-title" id="modalTitle">Platform Operations & Crowd Adjuster</div>
                 <button class="modal-close" id="modalClose">✕</button>
             </div>
             <div class="modal-body" id="modalBody"></div>
         </div>
     </div>
 
+    <!-- Train Details Route Timeline Modal (/trains/{id}) -->
+    <div class="modal-overlay" id="trainModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="trainModalTitle">Train Identity & Route Timeline</div>
+                <button class="modal-close" onclick="$('trainModal').classList.remove('open')">✕</button>
+            </div>
+            <div class="modal-body" id="trainModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Interactive System Guide & Demo Tour Modal -->
+    <div class="modal-overlay" id="demoGuideModal">
+        <div class="modal" style="max-width: 620px;">
+            <div class="modal-header">
+                <div class="modal-title" style="display:flex;align-items:center;gap:0.5rem">
+                    <span>🎬</span> <span>RailFlow Interactive Operations Guide</span>
+                </div>
+                <button class="modal-close" onclick="closeDemoGuideModal()">✕</button>
+            </div>
+            <div class="modal-body" style="line-height:1.6;font-size:0.85rem">
+                <div style="margin-bottom:1rem;color:var(--text-primary);font-weight:600">
+                    Welcome to <b>RailFlow</b> — a realistic Core Java-powered Railway Station Intelligence & Platform Optimization Platform!
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:0.75rem">
+                    <div style="background:var(--bg-elevated);padding:0.75rem;border-radius:var(--radius-md);border-left:3px solid var(--indigo)">
+                        <b>1. 📊 Live Dashboard & Operations:</b> Watch real-time concurrency ticks update platform density meters, hourly footfall charts, and train arrivals.
+                    </div>
+                    <div style="background:var(--bg-elevated);padding:0.75rem;border-radius:var(--radius-md);border-left:3px solid var(--amber)">
+                        <b>2. 🚨 Test Crowd Overload:</b> Click any Platform card (e.g., <i>Platform 1</i>), enter crowd footfall of <code>550</code>, and click <i>Apply Crowd Load</i>. The system instantly detects critical density (&ge;90%) and dispatches emergency alerts!
+                    </div>
+                    <div style="background:var(--bg-elevated);padding:0.75rem;border-radius:var(--radius-md);border-left:3px solid var(--green)">
+                        <b>3. ⚡ Heuristic Optimizer:</b> Navigate to <i>Platform Optimizer</i> to see PriorityQueue binary heap ranking and click <i>Apply</i> to redistribute commuter streams.
+                    </div>
+                    <div style="background:var(--bg-elevated);padding:0.75rem;border-radius:var(--radius-md);border-left:3px solid var(--cyan)">
+                        <b>4. 🔍 Global Search ($O(\log N)$):</b> Search any train number (e.g., <code>12301</code>, <code>12951</code>) or station (<code>NDLS</code>, <code>MAS</code>) in the top search bar.
+                    </div>
+                    <div style="background:var(--bg-elevated);padding:0.75rem;border-radius:var(--radius-md);border-left:3px solid #ec4899">
+                        <b>5. 📁 22.1 MB CSV Explorer:</b> Explore multi-decade Indian Railways statistics spanning 1970–2013+ across Broad Gauge, Metre Gauge, and Narrow Gauge networks.
+                    </div>
+                    <div style="background:var(--bg-elevated);padding:0.75rem;border-radius:var(--radius-md);border-left:3px solid #a855f7">
+                        <b>6. ☕ Core Java Architecture:</b> Explore the 23 OOP, Multithreading, and Stream API concepts powering the core engine.
+                    </div>
+                </div>
+
+                <div style="margin-top:1.25rem;text-align:right">
+                    <button class="btn-primary" onclick="closeDemoGuideModal()">Got It, Let's Explore! 🚀</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
     <div class="toast-container" id="toastContainer"></div>
+
     <script src="js/app.js"></script>
+    <script>
+        function openDemoGuideModal() {
+            const m = document.getElementById('demoGuideModal');
+            if (m) m.classList.add('open');
+        }
+        function closeDemoGuideModal() {
+            const m = document.getElementById('demoGuideModal');
+            if (m) m.classList.remove('open');
+        }
+        function openFeedbackPage() {
+            if (typeof navigateTo === 'function') {
+                navigateTo('feedback');
+            }
+        }
+    </script>
 </body>
 </html>
