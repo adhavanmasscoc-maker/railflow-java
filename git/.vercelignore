@@ -1,0 +1,14 @@
+# Vercel Ignore - Only upload frontend and metadata
+target/
+.git/
+.mvn/
+bin/
+*.jar
+*.class
+*.pdf
+*.zip
+*.tar.gz
+*.exe
+data/
+scripts/
+docs/
