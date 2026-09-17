@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +24,16 @@ public class TrainRegistry extends DataRegistry<String, Train> {
                 .filter(Train::isDelayed)
                 .sorted(Comparator.comparingInt(Train::getDelayMinutes).reversed())
                 .collect(Collectors.toList());
+    }
+
+    public void save(Train t) {
+        if (t != null) {
+            put(t.getTrainNumber(), t);
+        }
+    }
+
+    public Optional<Train> findByTrainNumber(String trainNumber) {
+        return get(trainNumber);
     }
 
     public List<Train> findByStatus(TrainStatus status) {
