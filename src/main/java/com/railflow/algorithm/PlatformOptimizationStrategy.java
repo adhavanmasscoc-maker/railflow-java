@@ -21,4 +21,8 @@ public interface PlatformOptimizationStrategy {
     Optional<Platform> selectOptimalPlatform(Train train, List<Platform> candidatePlatforms);
 
     String getStrategyName();
+
+    default String getStrategyDescription() {
+        return "";
+    }
 }
