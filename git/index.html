@@ -49,58 +49,63 @@
 
         <nav class="sidebar-nav">
             <div class="nav-section-label">Operations Console</div>
-            <a href="#" class="nav-item active" data-page="dashboard" id="nav-dashboard">
+            <a href="/dashboard" class="nav-item active" data-page="dashboard" id="nav-dashboard">
                 <span class="nav-emoji">📊</span>
                 <span>Dashboard</span>
                 <span class="nav-badge" style="background:var(--emerald-dim); color:var(--emerald);">LIVE</span>
             </a>
-            <a href="#" class="nav-item" data-page="network" id="nav-network">
+            <a href="/console" class="nav-item" data-page="console" id="nav-console">
+                <span class="nav-emoji">💻</span>
+                <span>Console</span>
+                <span class="nav-badge" style="background:var(--purple-dim); color:var(--purple);">TERMINAL</span>
+            </a>
+            <a href="/network" class="nav-item" data-page="network" id="nav-network">
                 <span class="nav-emoji">🌐</span>
                 <span>RailRadar Network</span>
                 <span class="nav-badge">SVG</span>
             </a>
-            <a href="#" class="nav-item" data-page="journey" id="nav-journey">
+            <a href="/journey" class="nav-item" data-page="journey" id="nav-journey">
                 <span class="nav-emoji">🧭</span>
                 <span>Journey Planner</span>
                 <span class="nav-badge" style="background:var(--rail-red-dim); color:var(--rail-red);">ROUTER</span>
             </a>
-            <a href="#" class="nav-item" data-page="stations" id="nav-stations">
+            <a href="/stations" class="nav-item" data-page="stations" id="nav-stations">
                 <span class="nav-emoji">🚉</span>
                 <span>Station Network</span>
                 <span class="nav-badge" id="navStationCount">25 Hubs</span>
             </a>
-            <a href="#" class="nav-item" data-page="trains" id="nav-trains">
+            <a href="/trains" class="nav-item" data-page="trains" id="nav-trains">
                 <span class="nav-emoji">🚆</span>
                 <span>Train Explorer</span>
                 <span class="nav-badge">REAL DATA</span>
             </a>
-            <a href="#" class="nav-item" data-page="crowd" id="nav-crowd">
+            <a href="/crowd" class="nav-item" data-page="crowd" id="nav-crowd">
                 <span class="nav-emoji">👥</span>
                 <span>Crowd Monitoring</span>
                 <span class="nav-badge" style="background:var(--amber-dim); color:var(--amber);">3000ms</span>
             </a>
-            <a href="#" class="nav-item" data-page="commuter" id="nav-commuter">
+            <a href="/commuter" class="nav-item" data-page="commuter" id="nav-commuter">
                 <span class="nav-emoji">📱</span>
                 <span>Commuter Portal</span>
                 <span class="nav-badge" style="background:var(--cyan-dim); color:var(--cyan);">PASSENGER</span>
             </a>
 
             <div class="nav-section-label">Intelligence & Data Layer</div>
-            <a href="#" class="nav-item" data-page="quality" id="nav-quality">
+            <a href="/quality" class="nav-item" data-page="quality" id="nav-quality">
                 <span class="nav-emoji">📈</span>
                 <span>Data Quality</span>
                 <span class="nav-badge">DERIVED</span>
             </a>
-            <a href="#" class="nav-item" data-page="architecture" id="nav-architecture">
+            <a href="/architecture" class="nav-item" data-page="architecture" id="nav-architecture">
                 <span class="nav-emoji">🏛️</span>
                 <span>Architecture</span>
             </a>
-            <a href="#" class="nav-item" data-page="database" id="nav-database">
+            <a href="/database" class="nav-item" data-page="database" id="nav-database">
                 <span class="nav-emoji">🗄️</span>
                 <span>Database Explorer</span>
                 <span class="nav-badge">JDBC</span>
             </a>
-            <a href="#" class="nav-item" data-page="feedback" id="nav-feedback">
+            <a href="/feedback" class="nav-item" data-page="feedback" id="nav-feedback">
                 <span class="nav-emoji">💬</span>
                 <span>User Feedback</span>
             </a>
@@ -468,6 +473,67 @@
                         </div>
 
                     </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════════════════════
+                 PAGE 1.5: CONSOLE APPLICATION — Interactive Terminal
+                 ═══════════════════════════════════════════════════════════ -->
+            <section class="page-view" id="page-console">
+                <div class="view-header">
+                    <div class="view-title-group">
+                        <div class="view-subtitle">
+                            <span class="pulse-dot" style="background:var(--purple);"></span>
+                            INTERACTIVE COMMAND & CONTROL TERMINAL
+                        </div>
+                        <h1 class="view-title">RailFlow Operations Console</h1>
+                        <p class="view-desc">
+                            Full interactive terminal with real-time station queries, train lookups, AI-powered route planning, crowd telemetry, and system diagnostics. Type <code>help</code> for commands.
+                        </p>
+                    </div>
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+                        <span class="badge badge-ai">GEMINI 2.5 FLASH</span>
+                        <span class="badge" style="background:var(--purple-dim); color:var(--purple);">INTERACTIVE</span>
+                        <span class="badge badge-real">REAL DATA</span>
+                    </div>
+                </div>
+
+                <!-- Console Terminal Window -->
+                <div class="console-terminal-window" id="consoleTerminalWindow">
+                    <div class="console-titlebar">
+                        <div class="console-titlebar-dots">
+                            <span class="console-dot console-dot-red"></span>
+                            <span class="console-dot console-dot-yellow"></span>
+                            <span class="console-dot console-dot-green"></span>
+                        </div>
+                        <span class="console-titlebar-text">railflow@ops — Railway Operations Terminal</span>
+                        <div class="console-titlebar-actions">
+                            <span class="console-status-indicator">
+                                <span class="pulse-dot" style="background:var(--emerald); width:6px; height:6px;"></span>
+                                <span style="font-size:0.68rem; color:var(--emerald);">CONNECTED</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="console-output-area" id="consoleOutput">
+                        <!-- Terminal output rendered by JS boot sequence -->
+                    </div>
+                    <div class="console-input-row">
+                        <span class="console-prompt">railflow@ops:~$</span>
+                        <input type="text" class="console-input" id="consoleInput" placeholder="Type a command... (help, status, query, stations, route ALU MS)" autocomplete="off" spellcheck="false" disabled>
+                    </div>
+                </div>
+
+                <!-- Quick Command Chips -->
+                <div class="console-quick-chips">
+                    <span class="console-chip-label">Quick Commands:</span>
+                    <button class="console-chip" onclick="document.getElementById('consoleInput').value='help'; document.getElementById('consoleInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}));">help</button>
+                    <button class="console-chip" onclick="document.getElementById('consoleInput').value='status'; document.getElementById('consoleInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}));">status</button>
+                    <button class="console-chip" onclick="document.getElementById('consoleInput').value='stations'; document.getElementById('consoleInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}));">stations</button>
+                    <button class="console-chip" onclick="document.getElementById('consoleInput').value='trains'; document.getElementById('consoleInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}));">trains</button>
+                    <button class="console-chip" onclick="document.getElementById('consoleInput').value='corridors'; document.getElementById('consoleInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}));">corridors</button>
+                    <button class="console-chip" onclick="document.getElementById('consoleInput').value='route ALU MS'; document.getElementById('consoleInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}));">route ALU MS</button>
+                    <button class="console-chip" onclick="document.getElementById('consoleInput').value='crowd'; document.getElementById('consoleInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}));">crowd</button>
+                    <button class="console-chip" onclick="document.getElementById('consoleInput').value='query Pandian Express timetable'; document.getElementById('consoleInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}));">AI: Pandian Express</button>
                 </div>
             </section>
 

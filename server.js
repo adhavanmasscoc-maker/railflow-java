@@ -992,6 +992,12 @@ const server = http.createServer((req, res) => {
             return handleApiRequest(pathname, parsedUrl.searchParams, res, req);
         }
 
+        // SPA Clean URL Routing — serve index.html for all page routes
+        const SPA_ROUTES = ['/dashboard','/console','/network','/journey','/stations','/trains','/crowd','/commuter','/quality','/architecture','/database','/feedback'];
+        if (SPA_ROUTES.includes(pathname)) {
+            pathname = '/index.html';
+        }
+
         if (pathname === '/' || pathname === '') {
             pathname = '/index.html';
         }

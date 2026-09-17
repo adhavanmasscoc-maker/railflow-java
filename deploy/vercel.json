@@ -5,6 +5,18 @@
     { "source": "/api/trains", "destination": "/DATA/train_catalog.json" },
     { "source": "/api/trains/search", "destination": "/DATA/train_catalog.json" },
     { "source": "/api/stations", "destination": "/DATA/stations.json" },
-    { "source": "/api/stations/search", "destination": "/DATA/stations.json" }
+    { "source": "/api/stations/search", "destination": "/DATA/stations.json" },
+    { "source": "/dashboard", "destination": "/index.html" },
+    { "source": "/console", "destination": "/index.html" },
+    { "source": "/network", "destination": "/index.html" },
+    { "source": "/journey", "destination": "/index.html" },
+    { "source": "/stations", "destination": "/index.html" },
+    { "source": "/trains", "destination": "/index.html" },
+    { "source": "/crowd", "destination": "/index.html" },
+    { "source": "/commuter", "destination": "/index.html" },
+    { "source": "/quality", "destination": "/index.html" },
+    { "source": "/architecture", "destination": "/index.html" },
+    { "source": "/database", "destination": "/index.html" },
+    { "source": "/feedback", "destination": "/index.html" }
   ]
 }
