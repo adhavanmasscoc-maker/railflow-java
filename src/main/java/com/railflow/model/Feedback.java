@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class Feedback {
 
     private Long id;
+    private String name = "Operations Controller";
     private int rating;
     private FeedbackCategory category;
     private String message;
@@ -25,7 +26,8 @@ public class Feedback {
 
     public Feedback() {}
 
-    public Feedback(int rating, FeedbackCategory category, String message, String page) {
+    public Feedback(String name, int rating, FeedbackCategory category, String message, String page) {
+        this.name = (name != null && !name.isBlank()) ? name.trim() : "Operations Controller";
         this.rating = rating;
         this.category = category;
         this.message = message;
@@ -34,10 +36,17 @@ public class Feedback {
         this.status = FeedbackStatus.NEW;
     }
 
+    public Feedback(int rating, FeedbackCategory category, String message, String page) {
+        this("Operations Controller", rating, category, message, page);
+    }
+
     // ─── Getters & Setters ────────────────────────────────────────────────────
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public int getRating() { return rating; }
     public void setRating(int rating) { this.rating = rating; }

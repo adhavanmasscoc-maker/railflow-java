@@ -62,6 +62,20 @@ public class Platform {
         }
     }
 
+    public Platform(String id, int platformNumber, String stationCode, int capacity, int gateCount) {
+        this(id, "Platform " + platformNumber, stationCode, stationCode, capacity, "EXPRESS");
+    }
+
+    public String getStationCode() { return stationId; }
+    public void setStationCode(String stationCode) { this.stationId = stationCode; }
+    public int getPlatformNumber() {
+        try {
+            return Integer.parseInt(name.replaceAll("\\D+", ""));
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
     /**
      * Updates platform crowd count with validation and automatic occupancy recalculation.
      */

@@ -47,6 +47,24 @@ public class Train implements Comparable<Train> {
         this.lastUpdated = LocalDateTime.now();
     }
 
+    private int expectedPlatform = 1;
+
+    public Train(String id, String trainNumber, String name, String type,
+                 String sourceStation, String destinationStation,
+                 TrainStatus status, int delayMinutes, int minutesToArrival,
+                 int currentPassengers, int totalCapacity, int coachCount, String assignedPlatformId) {
+        this(id, trainNumber, name, sourceStation + " -> " + destinationStation, sourceStation, destinationStation, type, totalCapacity, coachCount);
+        this.status = status != null ? status : TrainStatus.ON_TIME;
+        this.delayMinutes = delayMinutes;
+        this.minutesToArrival = minutesToArrival;
+        this.currentPassengers = currentPassengers;
+        this.assignedPlatformId = assignedPlatformId;
+    }
+
+    public int getExpectedPlatform() { return expectedPlatform; }
+    public void setExpectedPlatform(int expectedPlatform) { this.expectedPlatform = expectedPlatform; }
+    public String getTrainType() { return type; }
+
     public boolean isDelayed() {
         return delayMinutes > 0 || status == TrainStatus.DELAYED;
     }
@@ -83,6 +101,8 @@ public class Train implements Comparable<Train> {
     public void setType(String type) { this.type = type; }
     public int getTotalCapacity() { return totalCapacity; }
     public void setTotalCapacity(int totalCapacity) { this.totalCapacity = totalCapacity; }
+    public int getTotalSeats() { return totalCapacity; }
+    public void setTotalSeats(int totalSeats) { this.totalCapacity = totalSeats; }
     public int getCoachCount() { return coachCount; }
     public void setCoachCount(int coachCount) { this.coachCount = coachCount; }
     public int getCurrentPassengers() { return currentPassengers; }
