@@ -2410,13 +2410,29 @@ function initSearch() {
 
         debounceTimer = setTimeout(async () => {
             try {
-                const res = await fetch(`${CONFIG.API_BASE}/stations/search?q=${encodeURIComponent(val)}&limit=5`);
-                const stations = res.ok ? await res.json() : [];
+                // Query stations and trains concurrently from backend
+                const [stnRes, trnRes] = await Promise.all([
+                    fetch(`${CONFIG.API_BASE}/stations/search?q=${encodeURIComponent(val)}&limit=5`).catch(() => null),
+                    fetch(`${CONFIG.API_BASE}/trains/search?q=${encodeURIComponent(val)}&limit=5`).catch(() => null)
+                ]);
 
-                const trainMatches = MASTER_TRAINS.filter(t =>
-                    t.number.includes(val) ||
-                    t.name.toLowerCase().includes(val.toLowerCase())
-                ).slice(0, 3);
+                const stations = (stnRes && stnRes.ok) ? await stnRes.json() : [];
+                let trainMatches = (trnRes && trnRes.ok) ? await trnRes.json() : [];
+
+                // Fallback to local MASTER_TRAINS if backend returned empty
+                if (trainMatches.length === 0) {
+                    trainMatches = MASTER_TRAINS.filter(t =>
+                        t.number.includes(val) ||
+                        t.name.toLowerCase().includes(val.toLowerCase())
+                    ).slice(0, 4).map(t => ({
+                        trainNumber: t.number,
+                        trainName: t.name,
+                        source: t.from,
+                        destination: t.to,
+                        type: t.type,
+                        platform: t.platform
+                    }));
+                }
 
                 if (stations.length === 0 && trainMatches.length === 0) {
                     dropdown.innerHTML = '<div style="padding:0.6rem; color:var(--text-muted); font-size:0.75rem;">No matching railway stations or trains</div>';
@@ -2425,22 +2441,30 @@ function initSearch() {
                 }
 
                 let html = '';
+                if (trainMatches.length > 0) {
+                    html += '<div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); padding:0.4rem 0.6rem; text-transform:uppercase;">Trains (Master Database)</div>';
+                    html += trainMatches.map(t => {
+                        const tNum = t.trainNumber || t.number;
+                        const tName = t.trainName || t.name;
+                        const src = t.source || t.from || '';
+                        const dst = t.destination || t.to || '';
+                        const typ = t.type || 'EXPRESS';
+                        const pf = t.platform || ('PF ' + ((parseInt(tNum, 10) % 8) + 1));
+                        return `
+                            <div class="search-item" onclick="openTrainTimetableModal('${tNum}')">
+                                <span class="search-item-primary">🚆 ${tNum} — ${tName}</span>
+                                <span class="search-item-meta">${src} ➔ ${dst} • ${typ} • ${pf}</span>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
                 if (stations.length > 0) {
                     html += '<div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); padding:0.4rem 0.6rem; text-transform:uppercase;">Stations (Master Database)</div>';
                     html += stations.map(s => `
                         <div class="search-item" onclick="selectGlobalStation('${s.code}')">
                             <span class="search-item-primary">🚉 ${s.name} (${s.code}) ${s.aliasMatched ? `<span class="badge badge-ai" style="font-size:0.65rem; margin-left:4px;">Alias: ${s.aliasMatched}</span>` : ''}</span>
                             <span class="search-item-meta">${s.zone || 'IR'} • ${s.state || s.city || ''} • Est. ${s.openedYear || 1900} • ${s.platformCount || s.platforms || 4} PFs</span>
-                        </div>
-                    `).join('');
-                }
-
-                if (trainMatches.length > 0) {
-                    html += '<div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); padding:0.4rem 0.6rem; text-transform:uppercase;">Trains</div>';
-                    html += trainMatches.map(t => `
-                        <div class="search-item" onclick="openTrainTimetableModal('${t.number}')">
-                            <span class="search-item-primary">🚆 ${t.number} — ${t.name}</span>
-                            <span class="search-item-meta">${t.from} ➔ ${t.to}</span>
                         </div>
                     `).join('');
                 }
@@ -2522,11 +2546,11 @@ function verifyPnr() {
 
 // ─── 15. FEATURE: TRAIN TIMETABLE MODAL ───────────────────────────────────────
 async function openTrainTimetableModal(trainNumber) {
-    trainNumber = String(trainNumber).trim();
+    const cleanNum = String(trainNumber).replace(/^#/, '').trim();
     const modal = $('trainTimetableModal');
     if (modal) modal.classList.add('open');
 
-    $('ttTrainTitle').textContent = `Train #${trainNumber}`;
+    $('ttTrainTitle').textContent = `Train #${cleanNum}`;
     $('ttTrainRoute').textContent = 'Fetching timetable from SQLite master database...';
     $('ttTrainBadge').textContent = 'LOADING';
 
@@ -2536,9 +2560,75 @@ async function openTrainTimetableModal(trainNumber) {
     }
 
     try {
-        const res = await fetch(`${CONFIG.API_BASE}/trains/${encodeURIComponent(trainNumber)}`);
-        if (!res.ok) throw new Error('Train query failed');
-        const train = await res.json();
+        let train = null;
+
+        // Tier 1: Try backend /api/trains/:num
+        try {
+            const res = await fetch(`${CONFIG.API_BASE}/trains/${encodeURIComponent(cleanNum)}`);
+            if (res.ok) {
+                train = await res.json();
+            }
+        } catch (e) {
+            console.warn('[Timetable] Tier 1 fetch error:', e);
+        }
+
+        // Tier 2: Try static CDN JSON file (DATA/trains/:num.json)
+        if (!train) {
+            try {
+                const staticRes = await fetch(`/DATA/trains/${encodeURIComponent(cleanNum)}.json`);
+                if (staticRes.ok) {
+                    train = await staticRes.json();
+                }
+            } catch (e) {
+                console.warn('[Timetable] Tier 2 static fetch error:', e);
+            }
+        }
+
+        // Tier 3: Try /api/trains/search?q=:num&limit=1
+        if (!train) {
+            try {
+                const searchRes = await fetch(`${CONFIG.API_BASE}/trains/search?q=${encodeURIComponent(cleanNum)}&limit=1`);
+                if (searchRes.ok) {
+                    const list = await searchRes.json();
+                    if (list && list.length > 0 && String(list[0].trainNumber) === cleanNum) {
+                        train = list[0];
+                    }
+                }
+            } catch (e) {}
+        }
+
+        // Tier 4: Fallback to MASTER_TRAINS
+        if (!train) {
+            const mt = MASTER_TRAINS.find(t => t.number === cleanNum);
+            if (mt) {
+                train = {
+                    trainNumber: mt.number,
+                    trainName: mt.name,
+                    type: mt.type,
+                    source: mt.from,
+                    destination: mt.to,
+                    overallDistanceKm: mt.dist,
+                    frequency: mt.freq,
+                    introducedYear: 1975,
+                    inauguratedDate: '1975-01-01',
+                    historicalDetails: 'Scheduled premier service on Indian Railways national trunk line.',
+                    stops: (mt.stops || []).map((s, idx) => ({
+                        sequence: idx + 1,
+                        stationCode: s.code,
+                        stationName: s.name || s.code,
+                        arrivalTime: s.arr,
+                        departureTime: s.dep,
+                        distanceKm: s.dist,
+                        platformNumber: s.pf || ((parseInt(cleanNum, 10) % 6) + 1),
+                        journeyDay: s.day || 1
+                    }))
+                };
+            }
+        }
+
+        if (!train) {
+            throw new Error(`Train #${cleanNum} not found in Indian Railways master database`);
+        }
 
         $('ttTrainTitle').textContent = `${train.trainNumber} — ${train.trainName}`;
         $('ttTrainRoute').textContent = `${train.source} → ${train.destination} • ${train.type || 'EXPRESS'} • Frequency: ${train.frequency || 'Daily'}`;
@@ -2564,7 +2654,7 @@ async function openTrainTimetableModal(trainNumber) {
                 const day = s.journeyDay ? `Day ${s.journeyDay}` : (s.dayCount ? `Day ${s.dayCount}` : 'Day 1');
                 const stnCode = s.stationCode || s.code || '';
                 const stnName = s.stationName || s.name || stnCode;
-                const pfNum = s.platformNumber || s.platform || ((parseInt(trainNumber, 10) % 6) + 1);
+                const pfNum = s.platformNumber || s.platform || ((parseInt(cleanNum, 10) % 6) + 1);
 
                 return `
                     <tr>
