@@ -49,3 +49,8 @@ database/*.db
 database/*.db-wal
 database/*.db-shm
 *.db
+
+# Redundant duplicate train JSON mirrors (canonical stored in DATA/trains/)
+deploy/DATA/trains/
+git/DATA/trains/
+

@@ -1,3 +1,10 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/api/trains/:num", "destination": "/DATA/trains/:num.json" },
+    { "source": "/api/trains", "destination": "/DATA/train_catalog.json" },
+    { "source": "/api/trains/search", "destination": "/DATA/train_catalog.json" },
+    { "source": "/api/stations", "destination": "/DATA/stations.json" },
+    { "source": "/api/stations/search", "destination": "/DATA/stations.json" }
+  ]
 }

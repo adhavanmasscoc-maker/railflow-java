@@ -59,6 +59,8 @@ function Sync-Folder($folderRel, $targetFolder, $excludePatterns = @()) {
 # 1. Sync to deploy/
 Write-Host "`n1. Copying assets to deploy/..."
 Sync-File "index.html" $deployDir
+Sync-File "server.js" $deployDir
+Sync-File "vercel.json" $deployDir
 Sync-File "README.md" $deployDir
 Sync-File "pbl.md" $deployDir
 Sync-File "pblv1.md" $deployDir
@@ -71,10 +73,15 @@ Sync-Folder "docs" $deployDir
 Sync-File "DATA\aliases.json" $deployDir
 Sync-File "DATA\station_heritage.json" $deployDir
 Sync-File "DATA\train_heritage.json" $deployDir
+Sync-File "DATA\stations.json" $deployDir
+Sync-File "DATA\train_catalog.json" $deployDir
+Sync-Folder "DATA\trains" $deployDir
 
 # 2. Sync to git/
 Write-Host "`n2. Copying assets to git/..."
 Sync-File "index.html" $gitDir
+Sync-File "server.js" $gitDir
+Sync-File "vercel.json" $gitDir
 Sync-File "README.md" $gitDir
 Sync-File "pbl.md" $gitDir
 Sync-File "pblv1.md" $gitDir
@@ -91,5 +98,8 @@ Sync-Folder "scripts" $gitDir
 Sync-File "DATA\aliases.json" $gitDir
 Sync-File "DATA\station_heritage.json" $gitDir
 Sync-File "DATA\train_heritage.json" $gitDir
+Sync-File "DATA\stations.json" $gitDir
+Sync-File "DATA\train_catalog.json" $gitDir
+Sync-Folder "DATA\trains" $gitDir
 
 Write-Host "`n=== SYNCHRONIZATION COMPLETE ==="
