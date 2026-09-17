@@ -19,10 +19,12 @@ import java.util.List;
 public class TrainController {
 
     private final TrainService trainService;
+    private final com.railflow.dao.TrainDAO trainDAO;
 
     @Autowired
-    public TrainController(TrainService trainService) {
+    public TrainController(TrainService trainService, com.railflow.dao.TrainDAO trainDAO) {
         this.trainService = trainService;
+        this.trainDAO = trainDAO;
     }
 
     /** GET /api/trains - Retrieve all scheduled trains */
@@ -53,6 +55,12 @@ public class TrainController {
     @GetMapping("/search")
     public ResponseEntity<List<TrainResponse>> searchTrains(@RequestParam String query) {
         return ResponseEntity.ok(trainService.searchTrains(query));
+    }
+
+    /** GET /api/trains/routes/{trainNumber} - Retrieve sequence stops for a train from SQLite */
+    @GetMapping("/routes/{trainNumber}")
+    public ResponseEntity<List<com.railflow.model.TrainRoute>> getTrainRoutes(@PathVariable String trainNumber) {
+        return ResponseEntity.ok(trainDAO.getRoutesForTrain(trainNumber));
     }
 
     /** PUT /api/trains/{id}/delay - Update train delay minutes */
