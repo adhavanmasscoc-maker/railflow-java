@@ -282,7 +282,7 @@ public class IrctcApiService {
         root.put("status", "SUCCESS");
         root.put("trainNumber", trainNo);
 
-        Train train = trainRegistry.findByTrainNumber(trainNo);
+        Train train = trainRegistry.findByTrainNumber(trainNo).orElse(null);
         String name = train != null ? train.getName() : "EXPRESS SPECIAL " + trainNo;
         String source = train != null ? train.getSourceStation() : "NDLS (New Delhi)";
         String dest = train != null ? train.getDestinationStation() : "HWH (Howrah Jn)";
@@ -335,7 +335,7 @@ public class IrctcApiService {
         root.put("status", "SUCCESS");
         root.put("stationCode", cleanCode);
 
-        Station stn = stationRegistry.findByCode(cleanCode);
+        Station stn = stationRegistry.findByCode(cleanCode).orElse(null);
         root.put("stationName", stn != null ? stn.getName() : cleanCode + " RAILWAY STATION");
         root.put("totalPlatforms", stn != null ? stn.getTotalPlatforms() : 10);
 
