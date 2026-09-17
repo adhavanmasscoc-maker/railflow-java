@@ -1414,12 +1414,16 @@ body {
 }
 
 .drawer-body {
-    flex: 1;
-    overflow-y: hidden;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto !important;
+    overflow-x: hidden;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
 }
 
 /* AI Assistant Drawer Specifics */
@@ -1430,16 +1434,21 @@ body {
     align-items: center;
     justify-content: space-between;
     background: #142136;
+    flex-shrink: 0;
 }
 
 .ai-messages-container {
-    flex: 1;
-    overflow-y: hidden;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto !important;
+    overflow-x: hidden;
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     background: #0B1220;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
 }
 
 .ai-bubble {
@@ -1473,6 +1482,7 @@ body {
     gap: 0.4rem;
     border-top: 1px solid #2A3A55;
     background: #142136;
+    flex-shrink: 0;
 }
 
 .ai-chip {
@@ -1499,6 +1509,7 @@ body {
     display: flex;
     gap: 0.6rem;
     background: #142136;
+    flex-shrink: 0;
 }
 
 /* â”€â”€â”€ Modals (Command Center Overlays) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */

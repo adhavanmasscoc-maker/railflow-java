@@ -41,10 +41,22 @@ function getGeminiKeys() {
     ].filter(Boolean);
 }
 
+function cleanAIResponse(text) {
+    if (!text) return '';
+    return text.replace(/^(\s*[-–—*#]{2,}\s*)+/g, '').trim();
+}
+
 function getSystemDirective() {
     return `You are "RAILFLOW AI", the authoritative Indian Railways Operations Copilot, Network Dispatcher, and Crowd Intelligence Engine.
 Role: Autonomous Railway Intelligence, Central Operations Control (COC) Copilot, and Commuter Guide.
 Persona: Highly knowledgeable, operationally precise, and professional.
+
+CRITICAL FORMATTING RULES:
+- NEVER start your response with horizontal rules ('---' or '--'), ascii dividers, or decorative bracket tags.
+- When greeted (e.g. "hi", "hello"), start directly with:
+  "Hi! I am RailFlow AI. What may I assist you with today?"
+  Followed by operational capabilities on crowd dispatch, route planning, platform telemetry, and express train schedules.
+- Always use professional, clean Markdown with bold station codes, route arrows (➔), and bullet points.
 
 CORE SPECIALIZATIONS & GROUND TRUTH:
 1. Real-Time Crowd Dispatch & Telemetry:
@@ -61,24 +73,19 @@ CORE SPECIALIZATIONS & GROUND TRUTH:
 
 3. Safety & Signalling:
    - Kavach (TCAS) Automatic Train Protection, continuous cab-signalling, SPAD prevention, and automatic braking.
-   - Automatic Block Signalling (ABS), Electronic Interlocking (EI), axle counters, 25 kV AC traction.
-
-RESPONSE STYLE:
-- Professional, concise, high-tech Markdown with bullet points, train numbers, timings, and actionable dispatch intel.
-- When greeted (e.g. "hi", "hello"), introduce yourself as RailFlow AI, report nominal network status, and offer assistance on crowd dispatch, route planning, platform telemetry, or train scheduling.`;
+   - Automatic Block Signalling (ABS), Electronic Interlocking (EI), axle counters, 25 kV AC traction.`;
 }
 
 function getLocalDeterministicResponse(query) {
     const q = (query || '').toLowerCase().trim();
 
     if (q === 'hi' || q === 'hello' || q === 'hey' || q.startsWith('hi ') || q.startsWith('hello ')) {
-        return `**RAILFLOW AI // System Initialized**\n\n` +
-               `Greetings, Operations Controller! I am **RailFlow AI**, your autonomous Indian Railways Operations Copilot, Network Dispatcher, and Crowd Intelligence Engine.\n\n` +
+        return `Hi! I am **RailFlow AI**. What may I assist you with today?\n\n` +
                `### Current System Diagnostics\n` +
                `* **Active Network Hubs:** Chennai Central (MAS), Chennai Egmore (MS), Tiruchirappalli (TPJ), Ariyalur (ALU), Madurai (MDU), Coimbatore (CBE).\n` +
                `* **Telemetry Status:** Turnstiles, FOB density meters, and block signalling reporting nominal.\n` +
                `* **Southern Main Chord Corridor:** Double electrified broad gauge with Automatic Block Signalling active.\n\n` +
-               `### How Can I Assist You Today?\n` +
+               `### Operations & Dispatch Capabilities\n` +
                `1. **Crowd Dispatch & Telemetry:** Influx rates, platform density management, and relief rake dispatch.\n` +
                `2. **Corridor Routing:** Verified stop sequences, timings, and express train schedules (e.g. ALU ➔ MS).\n` +
                `3. **Signalling & Safety:** Kavach (TCAS) compliance, braking curves, and headway management.\n\n` +
@@ -183,7 +190,7 @@ module.exports = async (req, res) => {
                         const data = await response.json();
                         const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
                         if (answer && answer.trim()) {
-                            return res.status(200).json({ answer, status: 'success', model: model, ok: true });
+                            return res.status(200).json({ answer: cleanAIResponse(answer), status: 'success', model: model, ok: true });
                         }
                     }
                 } catch (err) {}
@@ -222,7 +229,7 @@ module.exports = async (req, res) => {
                         const data = await orRes.json();
                         const answer = data.choices?.[0]?.message?.content;
                         if (answer && answer.trim()) {
-                            return res.status(200).json({ answer, status: 'success', model: model, ok: true });
+                            return res.status(200).json({ answer: cleanAIResponse(answer), status: 'success', model: model, ok: true });
                         }
                     }
                 } catch (err) {}
@@ -259,7 +266,7 @@ module.exports = async (req, res) => {
                         const data = await groqRes.json();
                         const answer = data.choices?.[0]?.message?.content;
                         if (answer && answer.trim()) {
-                            return res.status(200).json({ answer, status: 'success', model: model, ok: true });
+                            return res.status(200).json({ answer: cleanAIResponse(answer), status: 'success', model: model, ok: true });
                         }
                     }
                 } catch (err) {}
@@ -267,12 +274,12 @@ module.exports = async (req, res) => {
         }
 
         // ─── TIER 4: Deterministic Local Railway Engine Fallback ───
-        const localAnswer = getLocalDeterministicResponse(promptText);
+        const localAnswer = cleanAIResponse(getLocalDeterministicResponse(promptText));
         return res.status(200).json({ answer: localAnswer, status: 'success', model: 'railflow-deterministic-v2', ok: true });
 
     } catch (error) {
         console.error('Serverless RailFlow AI critical catch:', error);
-        const fallback = getLocalDeterministicResponse(req.query?.q || 'Railway');
+        const fallback = cleanAIResponse(getLocalDeterministicResponse(req.query?.q || 'Railway'));
         return res.status(200).json({ answer: fallback, status: 'success', model: 'railflow-fallback-safe', ok: true });
     }
 };

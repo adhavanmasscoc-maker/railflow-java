@@ -45,10 +45,22 @@ function getGeminiKeys() {
     ].filter(Boolean);
 }
 
+function cleanAIResponse(text) {
+    if (!text) return '';
+    return text.replace(/^(\s*[-–—*#]{2,}\s*)+/g, '').trim();
+}
+
 function getSystemDirective() {
     return `You are "RAILFLOW AI", the authoritative Indian Railways Operations Copilot, Network Dispatcher, and Crowd Intelligence Engine.
 Role: Autonomous Railway Intelligence, Central Operations Control (COC) Copilot, and Commuter Guide.
 Persona: Highly knowledgeable, operationally precise, and professional.
+
+CRITICAL FORMATTING RULES:
+- NEVER start your response with horizontal rules ('---' or '--'), ascii dividers, or decorative bracket tags.
+- When greeted (e.g. "hi", "hello"), start directly with:
+  "Hi! I am RailFlow AI. What may I assist you with today?"
+  Followed by operational capabilities on crowd dispatch, route planning, platform telemetry, and express train schedules.
+- Always use professional, clean Markdown with bold station codes, route arrows (➔), and bullet points.
 
 CORE SPECIALIZATIONS & GROUND TRUTH:
 1. Real-Time Crowd Dispatch & Telemetry:
@@ -68,11 +80,7 @@ CORE SPECIALIZATIONS & GROUND TRUTH:
    - Automatic Block Signalling (ABS), Electronic Interlocking (EI), axle counters, 25 kV AC traction.
 
 4. Commuter & IRCTC Guidance:
-   - Live running status, PNR confirmation probabilities, Tatkal timings, platform amenities.
-
-RESPONSE STYLE:
-- Professional, concise, high-tech Markdown with bullet points, train numbers, timings, and actionable dispatch intel.
-- When greeted (e.g. "hi", "hello"), introduce yourself as RailFlow AI, report nominal network status, and offer assistance on crowd dispatch, route planning, platform telemetry, or train scheduling.`;
+   - Live running status, PNR confirmation probabilities, Tatkal timings, platform amenities.`;
 }
 
 /**
@@ -129,7 +137,7 @@ async function askRailFlowAI(userQuery) {
                     const data = await response.json();
                     const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
                     if (answer && answer.trim()) {
-                        return answer;
+                        return cleanAIResponse(answer);
                     }
                 }
             } catch (err) {
@@ -169,7 +177,7 @@ async function askRailFlowAI(userQuery) {
                 if (orRes.ok) {
                     const data = await orRes.json();
                     const answer = data.choices?.[0]?.message?.content;
-                    if (answer && answer.trim()) return answer;
+                    if (answer && answer.trim()) return cleanAIResponse(answer);
                 }
             } catch (err) {
                 // Continue to Groq
@@ -206,7 +214,7 @@ async function askRailFlowAI(userQuery) {
                 if (groqRes.ok) {
                     const data = await groqRes.json();
                     const answer = data.choices?.[0]?.message?.content;
-                    if (answer && answer.trim()) return answer;
+                    if (answer && answer.trim()) return cleanAIResponse(answer);
                 }
             } catch (err) {
                 // Continue to Tier 4
@@ -215,7 +223,7 @@ async function askRailFlowAI(userQuery) {
     }
 
     // ─── TIER 4: Local High-Fidelity Conversational Intelligence (Fail-Safe) ───
-    return fallbackLocalAI(query);
+    return cleanAIResponse(fallbackLocalAI(query));
 }
 
 function fallbackLocalAI(query) {
@@ -223,13 +231,12 @@ function fallbackLocalAI(query) {
 
     // Greeting handling
     if (q === 'hi' || q === 'hello' || q === 'hey' || q.startsWith('hi ') || q.startsWith('hello ')) {
-        return `**RAILFLOW AI // System Initialized**\n\n` +
-               `Greetings, Operations Controller! I am **RailFlow AI**, your autonomous Indian Railways Operations Copilot, Network Dispatcher, and Crowd Intelligence Engine.\n\n` +
+        return `Hi! I am **RailFlow AI**. What may I assist you with today?\n\n` +
                `### Current System Diagnostics\n` +
                `* **Active Network Hubs:** Chennai Central (MAS), Chennai Egmore (MS), Tiruchirappalli (TPJ), Ariyalur (ALU), Madurai (MDU), Coimbatore (CBE).\n` +
                `* **Telemetry Status:** Turnstiles, FOB density meters, and block signalling reporting nominal.\n` +
                `* **Southern Main Chord Corridor:** Double electrified broad gauge with Automatic Block Signalling active.\n\n` +
-               `### How Can I Assist You Today?\n` +
+               `### Operations & Dispatch Capabilities\n` +
                `1. **Crowd Dispatch & Telemetry:** Influx rates, platform density management, and relief rake dispatch.\n` +
                `2. **Corridor Routing:** Verified stop sequences, timings, and express train schedules (e.g. ALU ➔ MS).\n` +
                `3. **Signalling & Safety:** Kavach (TCAS) compliance, braking curves, and headway management.\n\n` +

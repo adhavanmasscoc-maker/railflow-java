@@ -512,6 +512,28 @@ function handleApiRequest(pathname, searchParams, res, req) {
         }
     }
 
+    // India Rail Info Live Atlas HTML Fetch / Proxy
+    if (pathname === '/api/atlas-proxy' || pathname === '/api/atlas-html') {
+        (async () => {
+            try {
+                const atlasRes = await fetch('https://indiarailinfo.com/atlas', {
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                    }
+                });
+                const html = await atlasRes.text();
+                res.setHeader('Content-Type', 'text/html; charset=utf-8');
+                res.statusCode = 200;
+                return res.end(html);
+            } catch (err) {
+                res.statusCode = 502;
+                return res.end(`Failed to fetch India Rail Info Atlas: ${err.message}`);
+            }
+        })();
+        return;
+    }
+
     // 0. Unified Global Search (Stations + Trains)
     if (pathname === '/api/search') {
         const q = (searchParams.get('q') || searchParams.get('query') || '').trim();

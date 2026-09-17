@@ -56,42 +56,42 @@
 
         <nav class="sidebar-nav">
             <div class="nav-section-label">Operations Console</div>
-            <a href="/dashboard" class="nav-item active" data-page="dashboard" id="nav-dashboard" onclick="switchPage('dashboard'); return false;">
+            <a href="/dashboard" class="nav-item active" data-page="dashboard" id="nav-dashboard">
                 <span class="nav-emoji">📊</span>
                 <span>Dashboard</span>
                 <span class="nav-badge" style="background:var(--emerald-dim); color:var(--emerald);">LIVE</span>
             </a>
-            <a href="/console" class="nav-item" data-page="console" id="nav-console" onclick="switchPage('console'); return false;">
+            <a href="/console" class="nav-item" data-page="console" id="nav-console">
                 <span class="nav-emoji">🖥️</span>
                 <span>Console</span>
                 <span class="nav-badge" style="background:var(--purple-dim); color:var(--purple);">TERMINAL</span>
             </a>
-            <a href="/network" class="nav-item" data-page="network" id="nav-network" onclick="switchPage('network'); return false;">
+            <a href="/network" class="nav-item" data-page="network" id="nav-network">
                 <span class="nav-emoji">🗺️</span>
                 <span>RailRadar Network</span>
                 <span class="nav-badge">SVG</span>
             </a>
-            <a href="/journey" class="nav-item" data-page="journey" id="nav-journey" onclick="switchPage('journey'); return false;">
+            <a href="/journey" class="nav-item" data-page="journey" id="nav-journey">
                 <span class="nav-emoji">🧭</span>
                 <span>Journey Planner</span>
                 <span class="nav-badge" style="background:var(--rail-red-dim); color:var(--rail-red);">ROUTER</span>
             </a>
-            <a href="/stations" class="nav-item" data-page="stations" id="nav-stations" onclick="switchPage('stations'); return false;">
+            <a href="/stations" class="nav-item" data-page="stations" id="nav-stations">
                 <span class="nav-emoji">🚉</span>
                 <span>Station Network</span>
                 <span class="nav-badge" id="navStationCount">25 Hubs</span>
             </a>
-            <a href="/trains" class="nav-item" data-page="trains" id="nav-trains" onclick="switchPage('trains'); return false;">
+            <a href="/trains" class="nav-item" data-page="trains" id="nav-trains">
                 <span class="nav-emoji">🚆</span>
                 <span>Train Explorer</span>
                 <span class="nav-badge">REAL DATA</span>
             </a>
-            <a href="/crowd" class="nav-item" data-page="crowd" id="nav-crowd" onclick="switchPage('crowd'); return false;">
+            <a href="/crowd" class="nav-item" data-page="crowd" id="nav-crowd">
                 <span class="nav-emoji">👥</span>
                 <span>Crowd Monitoring</span>
                 <span class="nav-badge" style="background:var(--amber-dim); color:var(--amber);">3000ms</span>
             </a>
-            <a href="/commuter" class="nav-item" data-page="commuter" id="nav-commuter" onclick="switchPage('commuter'); return false;">
+            <a href="/commuter" class="nav-item" data-page="commuter" id="nav-commuter">
                 <span class="nav-emoji">📱</span>
                 <span>Commuter Portal</span>
                 <span class="nav-badge" style="background:var(--cyan-dim); color:var(--cyan);">PASSENGER</span>
@@ -103,21 +103,21 @@
                 <span>RailFlow AI Copilot</span>
                 <span class="nav-badge" style="background:linear-gradient(135deg,#2563EB,#7C3AED); color:#fff; font-weight:700;">GEMINI</span>
             </a>
-            <a href="/quality" class="nav-item" data-page="quality" id="nav-quality" onclick="switchPage('quality'); return false;">
+            <a href="/quality" class="nav-item" data-page="quality" id="nav-quality">
                 <span class="nav-emoji">📈</span>
                 <span>Data Quality</span>
                 <span class="nav-badge">DERIVED</span>
             </a>
-            <a href="/architecture" class="nav-item" data-page="architecture" id="nav-architecture" onclick="switchPage('architecture'); return false;">
+            <a href="/architecture" class="nav-item" data-page="architecture" id="nav-architecture">
                 <span class="nav-emoji">🏛️</span>
                 <span>Architecture</span>
             </a>
-            <a href="/database" class="nav-item" data-page="database" id="nav-database" onclick="switchPage('database'); return false;">
+            <a href="/database" class="nav-item" data-page="database" id="nav-database">
                 <span class="nav-emoji">🗄️</span>
                 <span>Database Explorer</span>
                 <span class="nav-badge">JDBC</span>
             </a>
-            <a href="/feedback" class="nav-item" data-page="feedback" id="nav-feedback" onclick="switchPage('feedback'); return false;">
+            <a href="/feedback" class="nav-item" data-page="feedback" id="nav-feedback">
                 <span class="nav-emoji">💬</span>
                 <span>User Feedback</span>
             </a>
@@ -376,12 +376,25 @@
                 <!-- Split Content: Topology Preview & Quick Corridor Selector -->
                 <div style="display:grid; grid-template-columns: 2fr 1fr; gap:1.5rem;">
                     <div class="panel">
-                        <div class="panel-header">
-                            <span class="panel-title">Interactive Corridors Topology Map</span>
-                            <button class="btn btn-secondary" onclick="switchPage('network')">Open Full Graph &rarr;</button>
+                        <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <span class="panel-title">🇮🇳 India Rail Info &mdash; Live Railway Network Atlas</span>
+                                <span class="badge" style="background:var(--emerald-dim); color:var(--emerald); font-weight:700;">LIVE ATLAS</span>
+                            </div>
+                            <div style="display:flex; gap:0.4rem; align-items:center;">
+                                <button class="btn btn-secondary" id="btnToggleAtlasMode" onclick="toggleAtlasMapMode()" style="font-size:0.72rem; padding:4px 8px;" title="Toggle between Live Atlas and Vector Topology">Topology SVG</button>
+                                <button class="btn btn-secondary" onclick="reloadAtlasFrame()" style="font-size:0.72rem; padding:4px 8px;" title="Reload Live Atlas">&#x21bb; Reload</button>
+                                <a href="https://indiarailinfo.com/atlas" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size:0.72rem; padding:4px 8px; text-decoration:none;" title="Open on indiarailinfo.com">Open Full &nearr;</a>
+                                <button class="btn btn-secondary" onclick="switchPage('network')" style="font-size:0.72rem; padding:4px 8px;">RailRadar &rarr;</button>
+                            </div>
                         </div>
-                        <div class="panel-body" style="padding:0;">
-                            <div class="graph-viewport" style="height:440px; border:none; border-radius:0; position:relative;">
+                        <div class="panel-body" style="padding:0; position:relative; overflow:hidden; background:#0a0a0a; border-radius:0 0 var(--radius-md) var(--radius-md);">
+                            <!-- Real India Rail Info Atlas iframe -->
+                            <div id="atlasFrameContainer" style="width:100%; height:460px; position:relative; background:#0a0a0a;">
+                                <iframe id="indiaRailAtlasFrame" src="https://indiarailinfo.com/atlas" width="100%" height="100%" frameborder="0" style="width:100%; height:100%; border:none; display:block; background:#0a0a0a;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="India Rail Info Live Atlas"></iframe>
+                            </div>
+                            <!-- Vector SVG Topology Map (switchable) -->
+                            <div id="atlasSvgContainer" class="graph-viewport" style="height:460px; border:none; border-radius:0; position:relative; display:none;">
                                 <svg class="graph-canvas" id="dashGraphSvg"></svg>
                             </div>
                         </div>
@@ -1997,12 +2010,12 @@
         <!-- Chat messages container -->
         <div class="ai-messages-container" id="aiMessagesContainer">
             <div class="ai-bubble assistant">
-                Hello Station Master & Controller! I am <strong>RailFlow AI</strong>, powered by Google Gemini 2.5 Flash and grounded in canonical Southern Railway Chord Line topology, master train records, and live Indian Railways network intelligence across the web.
+                Hi! I am <strong>RailFlow AI</strong>, your Indian Railways Operations Copilot, Network Dispatcher, and Crowd Intelligence Engine. What may I assist you with today?
                 <div style="margin-top:0.5rem; font-size:0.80rem; color:var(--text-secondary);">
                     <strong>Key Capabilities:</strong><br>
                     • <strong>CHORD LINE & TRUNK ROUTING:</strong> Accurate station sequences (ALU, TPJ, VRI, VM, MS, MAS).<br>
                     • <strong>REAL-TIME EXPRESS TIMETABLES:</strong> Superfast trains, platform assignments, and halts.<br>
-                    • <strong>SAFETY & SIGNALLING INTELLIGENCE:</strong> Kavach TCAS, Automatic Block Signalling, and crowd dispatch.
+                    • <strong>CROWD DISPATCH & SIGNALLING:</strong> Influx telemetry, FOB queue mitigation, relief rakes, and Kavach TCAS.
                 </div>
             </div>
         </div>

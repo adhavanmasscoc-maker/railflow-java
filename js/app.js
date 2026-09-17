@@ -869,57 +869,93 @@ function initNavigation() {
     }
 }
 
+let lastNavSwitchTime = 0;
+
 function switchPage(pageId, pushUrl) {
     if (!pageId) return;
+
+    const targetView = document.getElementById(`page-${pageId}`);
+    if (!targetView) return;
+
+    // Avoid redundant work if already on active page and target view is active
+    if (STATE.activePage === pageId && targetView.classList.contains('active')) {
+        return;
+    }
+
     STATE.activePage = pageId;
 
-    // Update browser URL (pushState — no page reload)
+    // 1. Update browser URL safely with try...catch
     if (pushUrl !== false) {
-        const route = PAGE_ROUTES[pageId] || '/dashboard';
-        const currentPath = window.location.pathname.replace(/\/+$/, '') || '/dashboard';
-        if (currentPath !== route) {
-            window.history.pushState({ page: pageId }, '', route);
+        try {
+            const route = PAGE_ROUTES[pageId] || '/dashboard';
+            const currentPath = window.location.pathname.replace(/\/+$/, '') || '/dashboard';
+            if (currentPath !== route) {
+                window.history.pushState({ page: pageId }, '', route);
+            }
+        } catch (e) {
+            // Silently handle any pushState domain/origin or rate-limit exceptions
         }
     }
 
-    $$('.nav-item').forEach(el => {
-        el.classList.toggle('active', el.dataset.page === pageId);
-    });
-
-    $$('.page-view').forEach(el => {
-        el.classList.toggle('active', el.id === `page-${pageId}`);
-    });
-
-    // Sub-actions on page switch
-    if (pageId === 'network') {
-        switchNetworkView('radar');
-    } else if (pageId === 'dashboard') {
-        renderNetworkGraph('dashGraphSvg', false);
-    } else if (pageId === 'console') {
-        initConsoleTerminal();
-    }
-
-    // Synchronize Dual-View Mode Switcher buttons
-    const btnController = $('btnModeController');
-    const btnCommuter = $('btnModeCommuter');
-    if (btnController && btnCommuter) {
-        if (pageId === 'commuter') {
-            btnCommuter.classList.add('active');
-            btnController.classList.remove('active');
-            STATE.viewMode = 'commuter';
+    // 2. Guaranteed atomic, synchronous class switching (never leaves multiple views active)
+    document.querySelectorAll('.nav-item').forEach(el => {
+        if (el.dataset.page === pageId) {
+            el.classList.add('active');
         } else {
-            btnController.classList.add('active');
-            btnCommuter.classList.remove('active');
-            STATE.viewMode = 'controller';
+            el.classList.remove('active');
         }
+    });
+
+    document.querySelectorAll('.page-view').forEach(el => {
+        if (el === targetView) {
+            el.classList.add('active');
+        } else {
+            el.classList.remove('active');
+        }
+    });
+
+    // 3. Sub-actions wrapped safely so an error in one never freezes navigation
+    try {
+        if (pageId === 'network') {
+            switchNetworkView('radar');
+        } else if (pageId === 'dashboard') {
+            const svgEl = $('dashGraphSvg');
+            if (svgEl && (!targetView.dataset.graphRendered || svgEl.children.length === 0)) {
+                renderNetworkGraph('dashGraphSvg', false);
+                targetView.dataset.graphRendered = 'true';
+            }
+        } else if (pageId === 'console') {
+            initConsoleTerminal();
+        }
+    } catch (subErr) {
+        console.warn('[Navigation] Non-fatal sub-action notice:', subErr.message);
     }
 
-    // Scroll viewport to top
+    // 4. Synchronize Dual-View Mode Switcher buttons
+    try {
+        const btnController = $('btnModeController');
+        const btnCommuter = $('btnModeCommuter');
+        if (btnController && btnCommuter) {
+            if (pageId === 'commuter') {
+                btnCommuter.classList.add('active');
+                btnController.classList.remove('active');
+                STATE.viewMode = 'commuter';
+            } else {
+                btnController.classList.add('active');
+                btnCommuter.classList.remove('active');
+                STATE.viewMode = 'controller';
+            }
+        }
+    } catch (e) {}
+
+    // 5. Scroll viewport to top
     const viewport = $('mainViewport');
     if (viewport) viewport.scrollTop = 0;
 
-    // Update Machina HUD Telemetry
-    updateHudTelemetry(pageId);
+    // 6. Update Machina HUD Telemetry
+    try {
+        updateHudTelemetry(pageId);
+    } catch (e) {}
 }
 window.switchPage = switchPage;
 window.navigateTo = switchPage;
@@ -969,18 +1005,27 @@ function initMachinaHud() {
     updateHudLiveClock();
     setInterval(updateHudLiveClock, 47);
 
-    // 2. HUD arrow navigation
+    // 2. HUD arrow navigation with rapid-click debounce
+    let lastArrowClick = 0;
     const btnUp = $('arrow-up');
     const btnDown = $('arrow-down');
     if (btnUp) {
-        btnUp.onclick = () => {
+        btnUp.onclick = (e) => {
+            if (e) e.preventDefault();
+            const now = Date.now();
+            if (now - lastArrowClick < 100) return;
+            lastArrowClick = now;
             const idx = HUD_PAGES.indexOf(STATE.activePage);
             const prevIdx = (idx <= 0) ? HUD_PAGES.length - 1 : idx - 1;
             switchPage(HUD_PAGES[prevIdx]);
         };
     }
     if (btnDown) {
-        btnDown.onclick = () => {
+        btnDown.onclick = (e) => {
+            if (e) e.preventDefault();
+            const now = Date.now();
+            if (now - lastArrowClick < 100) return;
+            lastArrowClick = now;
             const idx = HUD_PAGES.indexOf(STATE.activePage);
             const nextIdx = (idx < 0 || idx >= HUD_PAGES.length - 1) ? 0 : idx + 1;
             switchPage(HUD_PAGES[nextIdx]);
@@ -4215,10 +4260,16 @@ async function handleAISend() {
 
 function formatAIMarkdown(md) {
     if (!md) return '';
-    let html = md
+    // Strip any leading horizontal rules, dashes, or decorative ASCII symbols
+    let cleaned = md.replace(/^(\s*[-–—*#]{2,}\s*)+/g, '').trim();
+
+    let html = cleaned
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
+
+    // Format horizontal rules
+    html = html.replace(/^\s*[-–—]{3,}\s*$/gim, '<hr style="border:none; border-top:1px solid #2A3A55; margin:0.75rem 0;">');
     
     html = html.replace(/^### (.*$)/gim, '<h4 style="margin:0.4rem 0 0.2rem; font-size:0.92rem; color:var(--rail-red); font-weight:700;">$1</h4>');
     html = html.replace(/^## (.*$)/gim, '<h3 style="margin:0.5rem 0 0.25rem; font-size:1.0rem; color:var(--text-primary); font-weight:700;">$1</h3>');
@@ -4249,7 +4300,15 @@ function appendAIMessage(sender, text) {
 }
 
 function generateAIResponse(query) {
-    const q = query.toLowerCase();
+    const q = query.toLowerCase().trim();
+
+    // Natural greeting without leading dashes
+    if (q === 'hi' || q === 'hello' || q === 'hey' || q.startsWith('hi ') || q.startsWith('hello ')) {
+        return "Hi! I am **RailFlow AI**. What may I assist you with today?\n\n" +
+               "* **Crowd Dispatch & Telemetry:** Influx rates, platform density monitoring, and standby rake deployment.\n" +
+               "* **Corridor Routing:** Tamil Nadu Chord Line (ALU ➔ MS / TPJ) and national trunk schedules.\n" +
+               "* **Signalling & Safety:** Kavach (TCAS) compliance and Automatic Block Signalling.";
+    }
 
     if ((q.includes('alu') || q.includes('ariyalur')) && (q.includes('ms') || q.includes('chennai') || q.includes('egmore') || q.includes('route') || q.includes('to'))) {
         return `### Direct Express Route: Ariyalur (ALU) ➔ Chennai Egmore (MS)\n\n` +
@@ -5250,6 +5309,35 @@ async function processConsoleCommand(cmd) {
             break;
     }
 }
+
+// ─── INDIA RAIL INFO ATLAS VIEWER CONTROLLER ──────────────────────────
+function toggleAtlasMapMode() {
+    const frameContainer = document.getElementById('atlasFrameContainer');
+    const svgContainer = document.getElementById('atlasSvgContainer');
+    const btn = document.getElementById('btnToggleAtlasMode');
+    if (!frameContainer || !svgContainer) return;
+
+    if (frameContainer.style.display === 'none') {
+        frameContainer.style.display = 'block';
+        svgContainer.style.display = 'none';
+        if (btn) btn.textContent = 'Topology SVG';
+    } else {
+        frameContainer.style.display = 'none';
+        svgContainer.style.display = 'block';
+        if (btn) btn.textContent = 'Live Atlas';
+        renderNetworkGraph('dashGraphSvg', false);
+    }
+}
+window.toggleAtlasMapMode = toggleAtlasMapMode;
+
+function reloadAtlasFrame() {
+    const frame = document.getElementById('indiaRailAtlasFrame');
+    if (frame) {
+        const currentSrc = frame.src.split('?')[0];
+        frame.src = currentSrc + '?t=' + Date.now();
+    }
+}
+window.reloadAtlasFrame = reloadAtlasFrame;
 
 // Record boot time for uptime tracking
 window._RAILFLOW_BOOT_TIME = window._RAILFLOW_BOOT_TIME || Date.now();
