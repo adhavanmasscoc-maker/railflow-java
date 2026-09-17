@@ -49,4 +49,10 @@ public class PdfReader {
         }
         return cleaned;
     }
+
+    public static List<String> extractTextLines(String pathStr) {
+        if (pathStr == null) return Collections.emptyList();
+        PdfReader reader = new PdfReader();
+        return reader.extractLines(Path.of(pathStr));
+    }
 }
