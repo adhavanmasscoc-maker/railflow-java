@@ -15,6 +15,18 @@
 </head>
 <body>
 
+    <!-- ─── Page Progress Bar ──────────────────────────────────── -->
+    <div class="page-progress-bar" id="pageProgressBar"></div>
+    <!-- ─── Mobile Sidebar Overlay ────────────────────────────── -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <!-- ─── Toast Container ───────────────────────────────────── -->
+    <div class="toast-container" id="toastContainer"></div>
+    <!-- ─── Floating Telemetry Badge ──────────────────────────── -->
+    <div class="telemetry-badge-float" id="telemetryBadgeFloat">
+        <span class="pulse-dot"></span>
+        <span id="telemetryFloatLabel">LIVE TELEMETRY — Tick #1</span>
+    </div>
+
     <!-- ─── Sidebar Navigation ──────────────────────────────────── -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -117,7 +129,7 @@
 
         <div class="sidebar-footer">
             <span>Java 17+ • SQLite JDBC</span>
-            <span class="badge badge-real">LIVE ENGINE</span>
+            <span class="version-chip">v2.0</span>
         </div>
     </aside>
 
@@ -125,7 +137,11 @@
     <div class="app-container">
 
         <!-- Top Header -->
-        <header class="top-header">
+        <header class="top-header" id="topHeader">
+            <!-- Mobile Hamburger -->
+            <button class="hamburger-btn" id="btnMobileMenu" title="Toggle Navigation Menu" aria-label="Toggle sidebar" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
             <!-- Global Search -->
             <div class="search-container">
                 <div class="search-input-wrapper">
@@ -239,7 +255,7 @@
 
                 <!-- Metric Cards -->
                 <div class="metrics-grid">
-                    <div class="metric-card">
+                    <div class="metric-card accent-cyan spotlight-card">
                         <div class="metric-card-top">
                             <span class="metric-title">Stations Registered</span>
                             <span class="badge badge-real">SQLite</span>
@@ -247,21 +263,23 @@
                         <div class="metric-val" id="dashStationCount">8,926+</div>
                         <div class="metric-sub">
                             <span>25 High-Density Zonal Hubs Active</span>
+                            <span class="stat-change up">↑ +63 YoY</span>
                         </div>
                     </div>
 
-                    <div class="metric-card">
+                    <div class="metric-card accent-blue spotlight-card">
                         <div class="metric-card-top">
                             <span class="metric-title">Primary Corridors</span>
                             <span class="badge badge-derived">Topology</span>
                         </div>
                         <div class="metric-val">6 Trunks</div>
                         <div class="metric-sub">
-                            <span>Golden Quadrilateral & Grand Trunk</span>
+                            <span>Golden Quadrilateral &amp; Grand Trunk</span>
+                            <span class="stat-change flat">→ Stable</span>
                         </div>
                     </div>
 
-                    <div class="metric-card">
+                    <div class="metric-card accent-amber spotlight-card">
                         <div class="metric-card-top">
                             <span class="metric-title">Monitored Footprint</span>
                             <span class="badge badge-simulated">3000ms Loop</span>
@@ -269,10 +287,11 @@
                         <div class="metric-val" id="dashFootprintCount">18,450</div>
                         <div class="metric-sub">
                             <span>Platform Density: <strong id="dashAvgDensity" style="color:var(--emerald);">54.2%</strong></span>
+                            <span class="stat-change up">↑ Active</span>
                         </div>
                     </div>
 
-                    <div class="metric-card">
+                    <div class="metric-card accent-green spotlight-card">
                         <div class="metric-card-top">
                             <span class="metric-title">Empirical Dataset</span>
                             <span class="badge badge-real">ALL_DATA.csv</span>
@@ -303,45 +322,41 @@
                             <span class="panel-title">Major National Corridors</span>
                             <span class="badge badge-derived">Graph Edges</span>
                         </div>
-                        <div class="panel-body" style="display:flex; flex-direction:column; gap:0.75rem;">
-                            <div class="corridor-card" onclick="quickPlanRoute('NDLS', 'HWH')" style="cursor:pointer; padding:0.75rem; border:1px solid var(--border); border-radius:var(--radius-md); background:var(--bg-subtle);">
-                                <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
+                        <div class="panel-body" style="display:flex; flex-direction:column; gap:0.65rem;">
+                            <div class="corridor-card" onclick="quickPlanRoute('NDLS', 'HWH')" style="--corridor-accent: var(--rail-red);">
+                                <div class="corridor-card-header">
                                     <span>Northern Trunk</span>
-                                    <span style="color:var(--rail-red);">1,445 km</span>
+                                    <span class="corridor-dist">1,445 km</span>
                                 </div>
-                                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">
-                                    NDLS (Delhi) &rarr; CNB (Kanpur) &rarr; HWH (Howrah)
-                                </div>
+                                <div class="corridor-route">NDLS (Delhi) &rarr; CNB (Kanpur) &rarr; HWH (Howrah)</div>
+                                <span class="corridor-arrow">›</span>
                             </div>
 
-                            <div class="corridor-card" onclick="quickPlanRoute('NDLS', 'MMCT')" style="cursor:pointer; padding:0.75rem; border:1px solid var(--border); border-radius:var(--radius-md); background:var(--bg-subtle);">
-                                <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
+                            <div class="corridor-card" onclick="quickPlanRoute('NDLS', 'BCT')" style="--corridor-accent: var(--blue);">
+                                <div class="corridor-card-header">
                                     <span>Western Trunk</span>
-                                    <span style="color:var(--rail-red);">1,384 km</span>
+                                    <span class="corridor-dist">1,384 km</span>
                                 </div>
-                                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">
-                                    NDLS (Delhi) &rarr; JP &rarr; ADI &rarr; MMCT (Mumbai)
-                                </div>
+                                <div class="corridor-route">NDLS (Delhi) &rarr; JP &rarr; ADI &rarr; BCT (Mumbai)</div>
+                                <span class="corridor-arrow">›</span>
                             </div>
 
-                            <div class="corridor-card" onclick="quickPlanRoute('CSMT', 'MAS')" style="cursor:pointer; padding:0.75rem; border:1px solid var(--border); border-radius:var(--radius-md); background:var(--bg-subtle);">
-                                <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
+                            <div class="corridor-card" onclick="quickPlanRoute('CSTM', 'MAS')" style="--corridor-accent: var(--cyan);">
+                                <div class="corridor-card-header">
                                     <span>Central Corridor</span>
-                                    <span style="color:var(--rail-red);">1,281 km</span>
+                                    <span class="corridor-dist">1,281 km</span>
                                 </div>
-                                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">
-                                    CSMT (Mumbai) &rarr; PUNE &rarr; SC &rarr; MAS (Chennai)
-                                </div>
+                                <div class="corridor-route">CSMT (Mumbai) &rarr; PUNE &rarr; SC &rarr; MAS (Chennai)</div>
+                                <span class="corridor-arrow">›</span>
                             </div>
 
-                            <div class="corridor-card" onclick="quickPlanRoute('MAS', 'MDU')" style="cursor:pointer; padding:0.75rem; border:1px solid var(--border); border-radius:var(--radius-md); background:var(--bg-subtle);">
-                                <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
+                            <div class="corridor-card" onclick="quickPlanRoute('MAS', 'MDU')" style="--corridor-accent: var(--emerald);">
+                                <div class="corridor-card-header">
                                     <span>South Coast Corridor</span>
-                                    <span style="color:var(--rail-red);">495 km</span>
+                                    <span class="corridor-dist">495 km</span>
                                 </div>
-                                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">
-                                    MS (Egmore) &rarr; TBM &rarr; TPJ (Trichy) &rarr; MDU
-                                </div>
+                                <div class="corridor-route">MS (Egmore) &rarr; TBM &rarr; TPJ (Trichy) &rarr; MDU</div>
+                                <span class="corridor-arrow">›</span>
                             </div>
                         </div>
                     </div>

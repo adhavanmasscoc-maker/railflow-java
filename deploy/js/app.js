@@ -2726,3 +2726,261 @@ function downloadFile(filename, text, mimeType) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// RAILFLOW 2.0 — PREMIUM UI ENHANCEMENT MODULE
+// Toast Notifications, Page Progress Bar, Mobile Nav, Telemetry Badge
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ─── TOAST NOTIFICATION SYSTEM ────────────────────────────────────────────────
+const Toast = {
+    container: null,
+    _getContainer() {
+        if (!this.container) this.container = document.getElementById('toastContainer');
+        return this.container;
+    },
+    show(title, msg = '', type = 'info', duration = 4000) {
+        const c = this._getContainer();
+        if (!c) return;
+        const icons = {
+            success: `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+            error:   `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
+            warn:    `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+            info:    `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`
+        };
+        const el = document.createElement('div');
+        el.className = `toast toast-${type}`;
+        el.style.setProperty('--toast-duration', `${duration}ms`);
+        el.innerHTML = `
+            ${icons[type] || icons.info}
+            <div class="toast-content">
+                <div class="toast-title">${escapeHtml ? escapeHtml(title) : title}</div>
+                ${msg ? `<div class="toast-msg">${escapeHtml ? escapeHtml(msg) : msg}</div>` : ''}
+            </div>
+            <button class="toast-close" onclick="Toast._remove(this.closest('.toast'))">&times;</button>
+        `;
+        c.appendChild(el);
+        setTimeout(() => Toast._remove(el), duration + 100);
+        return el;
+    },
+    success(title, msg, duration) { return this.show(title, msg, 'success', duration); },
+    error(title, msg, duration)   { return this.show(title, msg, 'error', duration || 6000); },
+    warn(title, msg, duration)    { return this.show(title, msg, 'warn', duration || 5000); },
+    info(title, msg, duration)    { return this.show(title, msg, 'info', duration); },
+    _remove(el) {
+        if (!el || el.classList.contains('removing')) return;
+        el.classList.add('removing');
+        setTimeout(() => el.remove(), 260);
+    }
+};
+window.Toast = Toast;
+
+// ─── PAGE PROGRESS BAR ────────────────────────────────────────────────────────
+const PageProgress = {
+    el: null,
+    _timer: null,
+    _getEl() {
+        if (!this.el) this.el = document.getElementById('pageProgressBar');
+        return this.el;
+    },
+    start() {
+        const bar = this._getEl();
+        if (!bar) return;
+        clearTimeout(this._timer);
+        bar.style.width = '0%';
+        bar.style.opacity = '1';
+        // Fast initial fill then slow down
+        setTimeout(() => { bar.style.transition = 'width 200ms ease'; bar.style.width = '25%'; }, 50);
+        setTimeout(() => { bar.style.transition = 'width 500ms ease'; bar.style.width = '55%'; }, 300);
+        setTimeout(() => { bar.style.transition = 'width 800ms ease'; bar.style.width = '80%'; }, 900);
+    },
+    done() {
+        const bar = this._getEl();
+        if (!bar) return;
+        bar.style.transition = 'width 150ms ease';
+        bar.style.width = '100%';
+        this._timer = setTimeout(() => {
+            bar.style.transition = 'opacity 250ms ease';
+            bar.style.opacity = '0';
+            setTimeout(() => { bar.style.width = '0%'; bar.style.opacity = '1'; }, 300);
+        }, 200);
+    }
+};
+window.PageProgress = PageProgress;
+
+// ─── MOBILE SIDEBAR TOGGLE ────────────────────────────────────────────────────
+function initMobileMenu() {
+    const btn = document.getElementById('btnMobileMenu');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (!btn || !sidebar) return;
+
+    function open() {
+        sidebar.classList.add('mobile-open');
+        if (overlay) overlay.classList.add('active');
+        btn.classList.add('active');
+        btn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function close() {
+        sidebar.classList.remove('mobile-open');
+        if (overlay) overlay.classList.remove('active');
+        btn.classList.remove('active');
+        btn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+
+    btn.addEventListener('click', () => {
+        if (sidebar.classList.contains('mobile-open')) close(); else open();
+    });
+
+    if (overlay) overlay.addEventListener('click', close);
+
+    // Close on nav item click (mobile)
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth <= 768) close();
+        });
+    });
+}
+
+// ─── ENHANCED SWITCH PAGE WITH PROGRESS BAR ───────────────────────────────────
+// Wrap the existing switchPage function to add progress bar & toast
+const _origSwitchPage = window.switchPage;
+window.switchPage = function(pageId) {
+    if (!pageId) return;
+    PageProgress.start();
+    _origSwitchPage(pageId);
+    setTimeout(() => PageProgress.done(), 350);
+};
+
+// ─── TELEMETRY BADGE FLOAT UPDATER ────────────────────────────────────────────
+function updateTelemetryBadgeFloat(tick) {
+    const el = document.getElementById('telemetryFloatLabel');
+    if (el) {
+        const now = new Date();
+        const t = now.toTimeString().split(' ')[0];
+        el.textContent = `LIVE TELEMETRY — Tick #${tick} @ ${t}`;
+    }
+}
+
+// ─── HOOK INTO TELEMETRY SCHEDULER TO UPDATE BADGE ───────────────────────────
+// Override startTelemetryScheduler after DOMContentLoaded to hook badge
+document.addEventListener('DOMContentLoaded', () => {
+    // Init mobile menu
+    initMobileMenu();
+
+    // Greet user with subtle info toast on first load
+    setTimeout(() => {
+        Toast.info(
+            'RailFlow 2.0 Ready',
+            'Indian Railways Intelligence Platform loaded. Press / to search.',
+            5000
+        );
+    }, 800);
+
+    // Hook into telemetry ticks to update float badge
+    const origStartTelemetry = window.startTelemetryScheduler;
+    if (origStartTelemetry) {
+        // Patch: wrap updateTelemetry to also update the badge
+        const origUpdateTelemetry = window.updatePlatformTelemetry;
+        if (origUpdateTelemetry) {
+            window.updatePlatformTelemetry = function(...args) {
+                origUpdateTelemetry.apply(this, args);
+                updateTelemetryBadgeFloat(STATE && STATE.telemetryTick ? STATE.telemetryTick : 1);
+            };
+        }
+    }
+
+    // Also hook tick badge from existing scheduler if it updates STATE.telemetryTick
+    const tickObserver = setInterval(() => {
+        if (typeof STATE !== 'undefined' && STATE.telemetryTick) {
+            updateTelemetryBadgeFloat(STATE.telemetryTick);
+        }
+    }, 3100);
+    // After 30 mins, clear the observer to avoid forever polling
+    setTimeout(() => clearInterval(tickObserver), 30 * 60 * 1000);
+}, { once: true });
+
+// ─── ENHANCED TIMETABLE MODAL: LOADING STATE & ORIGIN/TERMINUS ROWS ─────────
+// Patch openTrainTimetableModal to show spinner while loading
+const _origOpenTimetable = window.openTrainTimetableModal;
+window.openTrainTimetableModal = async function(trainNum, trainName) {
+    // Show modal immediately with loading state
+    const modal = document.getElementById('trainTimetableModal');
+    if (modal) modal.classList.add('open');
+    const tbody = document.querySelector('#ttStopsTable tbody');
+    if (tbody) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" style="padding:0; border:none;">
+                    <div class="tt-loading-state">
+                        <div class="spinner spinner-red spinner-sm"></div>
+                        <span>Loading timetable for Train #${escapeHtml ? escapeHtml(String(trainNum)) : trainNum}...</span>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+    // Call original with a slight delay for UX
+    try {
+        await _origOpenTimetable(trainNum, trainName);
+    } catch(e) {
+        console.warn('Timetable modal failed:', e);
+    }
+    // After render, apply origin/terminus row classes
+    setTimeout(() => {
+        const rows = document.querySelectorAll('#ttStopsTable tbody tr');
+        if (rows.length > 0) {
+            rows[0].classList.add('origin-row');
+            rows[rows.length - 1].classList.add('terminus-row');
+        }
+    }, 100);
+};
+
+// ─── ENHANCED GRAPH RENDERING: Animated pulse on trunk nodes ─────────────────
+// Patch renderNetworkGraph to add active pulse class to trunk hubs
+const _origRenderGraph = window.renderNetworkGraph || null;
+// Note: renderNetworkGraph is defined above in the file and not on window,
+// so we apply the trunk glow via the graph init sequence. The CSS class
+// .graph-node-active is applied here as a post-render pass:
+document.addEventListener('DOMContentLoaded', () => {
+    // After graphs render, highlight trunk nodes with pulse glow
+    function applyTrunkNodeGlow() {
+        const svgEl = document.getElementById('fullNetworkGraphSvg') ||
+                      document.getElementById('dashGraphSvg');
+        if (!svgEl) return;
+        const nodes = svgEl.querySelectorAll('.graph-node');
+        nodes.forEach(n => {
+            const circle = n.querySelector('circle');
+            if (!circle) return;
+            const fill = circle.getAttribute('fill');
+            // Trunk nodes are EF3340 (railway red)
+            if (fill && fill.toLowerCase() === '#ef3340') {
+                n.classList.add('graph-node-active');
+            }
+        });
+    }
+    // Apply after graph renders (initial delay)
+    setTimeout(applyTrunkNodeGlow, 800);
+    // Also re-apply after 3s for when user switches to network page
+    setTimeout(applyTrunkNodeGlow, 3000);
+}, { once: true });
+
+// ─── INLINE NAVIGATION SHORTCUTS TOAST HINT (one-time) ───────────────────────
+(function () {
+    const STORAGE_KEY = 'railflow_shortcut_hint_shown';
+    try {
+        if (!sessionStorage.getItem(STORAGE_KEY)) {
+            setTimeout(() => {
+                Toast.info(
+                    'Keyboard Navigation Ready',
+                    'Press 1–9 to switch pages. Press / or Ctrl+K to search.',
+                    6500
+                );
+                sessionStorage.setItem(STORAGE_KEY, '1');
+            }, 3500);
+        }
+    } catch (e) { /* ignore */ }
+})();
