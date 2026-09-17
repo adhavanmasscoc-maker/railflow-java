@@ -1,4 +1,4 @@
-﻿/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    RAILFLOW â€” Vibrant Railway Network Command Center Design System
    Visual Direction: Dark Blue-Gray Command Console, Cyber Telemetry,
                      Railway Crimson, Electric Blue, Cyan Network,
@@ -3739,4 +3739,112 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ─── NATIONAL INDIA RAILWAY MAP & RADAR ANIMATIONS ─────────────────────── */
+.india-outline {
+    fill: rgba(14, 28, 54, 0.45);
+    stroke: #1E3A8A;
+    stroke-width: 2.2;
+    stroke-dasharray: 6 3;
+    filter: drop-shadow(0 0 12px rgba(30, 58, 138, 0.4));
+    transition: all 0.3s ease;
+}
+
+.map-gridline {
+    stroke: rgba(255, 255, 255, 0.04);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+}
+
+.corridor-glow {
+    stroke: #3B82F6;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.6));
+}
+
+.chord-line-glow {
+    stroke: #10B981 !important;
+    stroke-width: 3 !important;
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.8)) !important;
+}
+
+.train-pulse-dot {
+    fill: #F59E0B;
+    stroke: #FFFFFF;
+    stroke-width: 2;
+    filter: drop-shadow(0 0 8px #F59E0B);
+    animation: trainPulse 2s infinite alternate;
+}
+
+@keyframes trainPulse {
+    0% { r: 5; opacity: 0.85; }
+    100% { r: 8; opacity: 1.0; filter: drop-shadow(0 0 12px #EF4444); }
+}
+
+.node-pulse-ring {
+    animation: ringGlow 3s infinite ease-out;
+    transform-origin: center;
+}
+
+@keyframes ringGlow {
+    0% { r: 8; opacity: 0.8; stroke-width: 2; }
+    50% { r: 16; opacity: 0.2; stroke-width: 1; }
+    100% { r: 22; opacity: 0; stroke-width: 0.5; }
+}
+
+/* ─── BOTTOM OPERATIONAL COMMAND DECK ──────────────────────────────────── */
+.dash-bottom-deck {
+    animation: fadeInDeck 0.6s ease-out;
+}
+
+@keyframes fadeInDeck {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fleet-row {
+    transition: background 0.2s ease;
+    border-radius: 4px;
+}
+
+.fleet-row:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.signal-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+    font-size: 0.72rem;
+}
+
+.signal-indicator.green { color: #10B981; }
+.signal-indicator.yellow { color: #F59E0B; }
+.signal-indicator.red { color: #EF4444; }
+
+.speed-gauge-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    margin-top: 2px;
+}
+
+.speed-gauge-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3B82F6, #10B981);
+    transition: width 0.5s ease;
+}
+
+/* AI Thinking Message */
+.ai-thinking {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.84rem;
+}
+
 

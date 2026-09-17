@@ -19,8 +19,8 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <!-- ─── Toast Container ───────────────────────────────────── -->
     <div class="toast-container" id="toastContainer"></div>
-    <!-- ─── Floating Telemetry Badge ──────────────────────────── -->
-    <div class="telemetry-badge-float" id="telemetryBadgeFloat">
+    <!-- ─── Floating Telemetry Badge (hidden from viewport per ops directive) ──────────────────────────── -->
+    <div class="telemetry-badge-float" id="telemetryBadgeFloat" style="display:none; visibility:hidden; pointer-events:none; position:fixed; bottom:-999px; left:-999px; opacity:0;">
         <span class="pulse-dot"></span>
         <span id="telemetryFloatLabel">LIVE TELEMETRY — Tick #1</span>
     </div>
@@ -172,9 +172,10 @@
                     <span>📖 Operations Guide</span>
                 </button>
 
-                <button class="btn btn-ai-toggle" id="btnToggleAI" title="Open RailFlow AI Operations Terminal">
-                    <span>🤖 Ask RailFlow AI</span>
-                    <span class="badge badge-ai-pulse">READY</span>
+                <button class="btn btn-ai-toggle" id="btnToggleAI" title="Open RailFlow AI Operations Terminal" style="padding:4px 8px; font-size:0.72rem; height:auto;">
+                    <span style="font-size:0.7rem;">🤖</span>
+                    <span style="font-size:0.7rem; letter-spacing:0.04em;">AI</span>
+                    <span class="badge badge-ai-pulse" style="font-size:9px; padding:1px 4px; min-width:0;">READY</span>
                 </button>
             </div>
         </header>
@@ -342,7 +343,7 @@
                             <button class="btn btn-secondary" onclick="switchPage('network')">Open Full Graph &rarr;</button>
                         </div>
                         <div class="panel-body" style="padding:0;">
-                            <div class="graph-viewport" style="height:380px; border:none; border-radius:0;">
+                            <div class="graph-viewport" style="height:440px; border:none; border-radius:0; position:relative;">
                                 <svg class="graph-canvas" id="dashGraphSvg"></svg>
                             </div>
                         </div>
@@ -390,6 +391,82 @@
                                 <span class="corridor-arrow">›</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- ─── BOTTOM OPERATIONAL COMMAND DECK (Eliminates Wasted Space) ─── -->
+                <div class="dash-bottom-deck" style="margin-top:1.25rem; display:flex; flex-direction:column; gap:1rem;">
+                    <!-- Deck Header -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; padding-bottom:0.4rem; border-bottom:1px solid var(--border);">
+                        <div style="display:flex; align-items:center; gap:0.6rem;">
+                            <span class="status-indicator live"></span>
+                            <span style="font-size:0.88rem; font-weight:700; color:var(--text-primary); letter-spacing:0.04em;">NATIONAL RAILWAY DISPATCH &amp; TRACTION SAFETY MATRIX</span>
+                            <span class="badge badge-real">KAVACH TCAS ACTIVE</span>
+                            <span class="badge badge-derived">25kV AC TRACTION</span>
+                        </div>
+                        <div style="display:flex; gap:0.5rem; font-size:0.75rem; color:var(--text-muted);">
+                            <span>Signalling: <strong style="color:var(--emerald);">AUTOMATIC BLOCK (100%)</strong></span>
+                            <span>•</span>
+                            <span>Chord Line: <strong style="color:var(--cyan);">ALU-TPJ-MS OPERATIONAL</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- 3-Column Command Grid -->
+                    <div style="display:grid; grid-template-columns: 1.5fr 1.1fr 1fr; gap:1.25rem;">
+                        
+                        <!-- Column 1: Live Active Express Fleet Telemetry Radar -->
+                        <div class="panel" style="margin:0;">
+                            <div class="panel-header" style="padding:0.65rem 0.9rem;">
+                                <div style="display:flex; align-items:center; gap:0.5rem;">
+                                    <span style="font-size:0.82rem;">🚆</span>
+                                    <span class="panel-title" style="font-size:0.82rem;">Live Express Fleet Telemetry Radar</span>
+                                </div>
+                                <span class="badge badge-simulated" style="font-size:0.68rem;">Continuous GPS Radar</span>
+                            </div>
+                            <div class="panel-body" style="padding:0.4rem; max-height:260px; overflow-y:auto;">
+                                <div class="fleet-telemetry-table" style="width:100%; font-size:0.74rem;">
+                                    <div class="fleet-row fleet-header" style="display:grid; grid-template-columns: 1.8fr 1.5fr 1fr 0.9fr 1fr; font-weight:700; color:var(--text-muted); padding:0.35rem 0.5rem; border-bottom:1px solid var(--border);">
+                                        <span>TRAIN / SERVICE</span>
+                                        <span>CURRENT BLOCK</span>
+                                        <span>SPEED</span>
+                                        <span>SIGNAL</span>
+                                        <span>STATUS</span>
+                                    </div>
+                                    <div id="fleetTelemetryRows">
+                                        <!-- Dynamically generated by JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Column 2: Zonal Hub Platform & Concourse Telemetry -->
+                        <div class="panel" style="margin:0;">
+                            <div class="panel-header" style="padding:0.65rem 0.9rem;">
+                                <div style="display:flex; align-items:center; gap:0.5rem;">
+                                    <span style="font-size:0.82rem;">🚉</span>
+                                    <span class="panel-title" style="font-size:0.82rem;">Zonal Hub Concourse &amp; Platform Load</span>
+                                </div>
+                                <span class="badge badge-real" style="font-size:0.68rem;">Real Sensors</span>
+                            </div>
+                            <div class="panel-body" style="padding:0.5rem 0.75rem; display:flex; flex-direction:column; gap:0.55rem; max-height:260px; overflow-y:auto;" id="platformSafetyDeck">
+                                <!-- Station platform crowd tiles rendered dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Column 3: Live Autonomous Dispatcher Event Log -->
+                        <div class="panel" style="margin:0;">
+                            <div class="panel-header" style="padding:0.65rem 0.9rem;">
+                                <div style="display:flex; align-items:center; gap:0.5rem;">
+                                    <span style="font-size:0.82rem;">📡</span>
+                                    <span class="panel-title" style="font-size:0.82rem;">Autonomous Dispatcher Log</span>
+                                </div>
+                                <span class="pulse-dot" style="background:var(--emerald);"></span>
+                            </div>
+                            <div class="panel-body" style="padding:0.5rem; font-family:var(--font-mono); font-size:0.70rem; display:flex; flex-direction:column; gap:0.4rem; max-height:260px; overflow-y:auto;" id="dispatchLiveFeed">
+                                <!-- Log stream rendered by JS -->
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </section>
@@ -595,6 +672,118 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- ─── FOB SAFETY INTERLOCK & COACH WALKING COMPASS ─── -->
+                <div id="fobInterlockPanel" style="margin-top:1.5rem;">
+
+                    <!-- 15-Minute FOB Interlock Alert System -->
+                    <div class="panel" id="fobInterlockCard" style="border-left:3px solid var(--amber); margin-bottom:1rem;">
+                        <div class="panel-header" style="background:rgba(245,158,11,0.06);">
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <span style="font-size:0.65rem; background:rgba(245,158,11,0.15); color:var(--amber); border:1px solid var(--amber); border-radius:4px; padding:1px 5px; font-family:var(--font-mono); font-weight:700;">FOB INTERLOCK</span>
+                                <span class="panel-title">15-Minute Pre-Signal FOB Safety Interlock</span>
+                                <span class="pulse-dot" style="background:var(--amber);"></span>
+                            </div>
+                            <div style="display:flex; gap:0.5rem;">
+                                <button class="btn btn-secondary" id="btnSimStampede" style="font-size:0.7rem; padding:3px 8px;">⚡ Simulate Stampede Risk</button>
+                                <button class="btn btn-secondary" id="btnAdvanceEta" style="font-size:0.7rem; padding:3px 8px;">⏩ Advance ETA</button>
+                                <button class="btn btn-secondary" id="btnResetFob" style="font-size:0.7rem; padding:3px 8px;">↺ Reset</button>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:0.75rem; margin-bottom:0.75rem;">
+                                <!-- Platform 1 -->
+                                <div id="fobPf1" style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; padding:0.75rem;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                                        <span style="font-size:0.78rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">PF 1</span>
+                                        <span id="fobPf1Badge" style="font-size:9px; padding:1px 5px; border-radius:3px; background:var(--emerald-dim); color:var(--emerald); font-family:var(--font-mono);">CLEAR</span>
+                                    </div>
+                                    <div style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);">FOB-A • <span id="fobPf1Train">No Active Train</span></div>
+                                    <div style="font-size:0.7rem; color:var(--cyan); margin-top:0.3rem;">ETA: <span id="fobPf1Eta">—</span></div>
+                                    <div style="margin-top:0.5rem; height:4px; border-radius:2px; background:var(--border);">
+                                        <div id="fobPf1Bar" style="height:4px; border-radius:2px; background:var(--emerald); width:0%; transition:width 0.4s;"></div>
+                                    </div>
+                                </div>
+                                <!-- Platform 2 -->
+                                <div id="fobPf2" style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; padding:0.75rem;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                                        <span style="font-size:0.78rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">PF 2</span>
+                                        <span id="fobPf2Badge" style="font-size:9px; padding:1px 5px; border-radius:3px; background:var(--emerald-dim); color:var(--emerald); font-family:var(--font-mono);">CLEAR</span>
+                                    </div>
+                                    <div style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);">FOB-A • <span id="fobPf2Train">No Active Train</span></div>
+                                    <div style="font-size:0.7rem; color:var(--cyan); margin-top:0.3rem;">ETA: <span id="fobPf2Eta">—</span></div>
+                                    <div style="margin-top:0.5rem; height:4px; border-radius:2px; background:var(--border);">
+                                        <div id="fobPf2Bar" style="height:4px; border-radius:2px; background:var(--emerald); width:0%; transition:width 0.4s;"></div>
+                                    </div>
+                                </div>
+                                <!-- Platform 3 -->
+                                <div id="fobPf3" style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; padding:0.75rem;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                                        <span style="font-size:0.78rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">PF 3</span>
+                                        <span id="fobPf3Badge" style="font-size:9px; padding:1px 5px; border-radius:3px; background:var(--emerald-dim); color:var(--emerald); font-family:var(--font-mono);">CLEAR</span>
+                                    </div>
+                                    <div style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);">FOB-B • <span id="fobPf3Train">No Active Train</span></div>
+                                    <div style="font-size:0.7rem; color:var(--cyan); margin-top:0.3rem;">ETA: <span id="fobPf3Eta">—</span></div>
+                                    <div style="margin-top:0.5rem; height:4px; border-radius:2px; background:var(--border);">
+                                        <div id="fobPf3Bar" style="height:4px; border-radius:2px; background:var(--emerald); width:0%; transition:width 0.4s;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FOB Clash Alert Banner -->
+                            <div id="fobClashBanner" style="display:none; background:rgba(239,68,68,0.08); border:1px solid var(--rail-red); border-radius:8px; padding:0.75rem; margin-bottom:0.75rem;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                                    <div>
+                                        <span style="font-size:0.72rem; color:var(--rail-red); font-weight:700; font-family:var(--font-mono);">⚠️ FOB CLASH HAZARD DETECTED</span>
+                                        <div id="fobClashMsg" style="font-size:0.78rem; color:var(--text-secondary); margin-top:0.25rem;"></div>
+                                    </div>
+                                    <button id="btnFobReallocate" class="btn btn-danger btn-reallocate-action" style="font-size:0.72rem; padding:4px 10px; white-space:nowrap;">⚡ One-Click Safe Reallocate</button>
+                                </div>
+                            </div>
+                            <!-- Audit Trail -->
+                            <div style="font-size:0.7rem; font-family:var(--font-mono); color:var(--text-muted); border-top:1px solid var(--border); padding-top:0.5rem;">
+                                <div style="font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">📋 AUDIT TRAIL</div>
+                                <div id="fobAuditTrail" style="max-height:70px; overflow-y:auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coach Walking Compass -->
+                    <div class="panel" style="border-left:3px solid var(--cyan);">
+                        <div class="panel-header" style="background:rgba(34,211,238,0.04);">
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <span style="font-size:0.65rem; background:rgba(34,211,238,0.15); color:var(--cyan); border:1px solid var(--cyan); border-radius:4px; padding:1px 5px; font-family:var(--font-mono); font-weight:700;">COMPASS</span>
+                                <span class="panel-title">Commuter Coach Walking Compass</span>
+                            </div>
+                            <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);">Bridge Staircase Landing: Coach S3/S4 • 23m per coach</span>
+                        </div>
+                        <div class="panel-body">
+                            <!-- Coach Selector Grid -->
+                            <div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:0.75rem;" id="coachSelectorGrid"></div>
+                            <!-- Result Display -->
+                            <div id="compassResult" style="display:none; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; padding:0.75rem; margin-bottom:0.75rem;">
+                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem;">
+                                    <div style="text-align:center;">
+                                        <div style="font-size:0.65rem; color:var(--text-muted); font-family:var(--font-mono); text-transform:uppercase;">Distance</div>
+                                        <div id="compassDistance" style="font-size:1.4rem; font-weight:800; color:var(--cyan); font-family:var(--font-mono);">0m</div>
+                                    </div>
+                                    <div style="text-align:center;">
+                                        <div style="font-size:0.65rem; color:var(--text-muted); font-family:var(--font-mono); text-transform:uppercase;">Direction</div>
+                                        <div id="compassDirection" style="font-size:0.95rem; font-weight:700; color:var(--text-primary); margin-top:0.25rem;">—</div>
+                                    </div>
+                                    <div style="text-align:center;">
+                                        <div style="font-size:0.65rem; color:var(--text-muted); font-family:var(--font-mono); text-transform:uppercase;">Walk Time</div>
+                                        <div id="compassWalkTime" style="font-size:1.4rem; font-weight:800; color:var(--emerald); font-family:var(--font-mono);">0s</div>
+                                    </div>
+                                </div>
+                                <div id="compassGuidance" style="font-size:0.78rem; color:var(--text-secondary); margin-top:0.5rem; padding-top:0.5rem; border-top:1px solid var(--border);"></div>
+                                <div id="compassBottleneck" style="display:none; font-size:0.72rem; background:rgba(245,158,11,0.08); border:1px solid var(--amber); border-radius:4px; padding:4px 8px; margin-top:0.4rem; color:var(--amber);">⚠️ Bottleneck Zone: This coach is near the main FOB staircase. Expect crowding — consider moving to S5+ for faster boarding.</div>
+                                <button id="btnSpeakCompass" style="margin-top:0.5rem; font-size:0.7rem; padding:3px 8px;" class="btn btn-secondary">🔊 Speak Guidance</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </section>
 
             <!-- ═══════════════════════════════════════════════════════════
@@ -1683,10 +1872,10 @@
         <div class="ai-drawer-header">
             <div>
                 <div style="display:flex; align-items:center; gap:0.4rem;">
-                    <span class="badge badge-ai">AI DEMO — LOCAL DATA MODE</span>
-                    <span class="badge badge-real">READY</span>
+                    <span class="badge badge-ai" id="aiModelBadge" style="font-weight:700; background:linear-gradient(135deg, #2563EB, #7C3AED); color:#fff;">🤖 RAILFLOW AI — GEMINI 2.5 FLASH</span>
+                    <span class="badge badge-real">LIVE ENGINE</span>
                 </div>
-                <h3 style="font-size:1.15rem; font-weight:700; color:var(--text-primary); margin-top:0.25rem;">Railway AI Operations Assistant</h3>
+                <h3 style="font-size:1.15rem; font-weight:700; color:var(--text-primary); margin-top:0.25rem;">RailFlow Autonomous Operations AI</h3>
             </div>
             <button class="drawer-close" id="btnCloseAIDrawer">&times;</button>
         </div>
@@ -1694,23 +1883,24 @@
         <!-- Chat messages container -->
         <div class="ai-messages-container" id="aiMessagesContainer">
             <div class="ai-bubble assistant">
-                Hello Controller! I am the RailFlow Operations Assistant grounded directly in your SQLite railway database.
+                Hello Station Master & Controller! I am <strong>RailFlow AI</strong>, powered by Google Gemini 2.5 Flash and grounded in canonical Southern Railway Chord Line topology, master train records, and live Indian Railways network intelligence across the web.
                 <div style="margin-top:0.5rem; font-size:0.80rem; color:var(--text-secondary);">
-                    <strong>How I Work:</strong><br>
-                    • <strong>DATABASE SEARCH:</strong> Returns exact records from SQLite.<br>
-                    • <strong>NETWORK ENGINE:</strong> Understands station-to-station relationships.<br>
-                    • <strong>AI ASSISTANT:</strong> Converts natural-language questions into useful railway insights using available database context.
+                    <strong>Key Capabilities:</strong><br>
+                    • <strong>CHORD LINE & TRUNK ROUTING:</strong> Accurate station sequences (ALU, TPJ, VRI, VM, MS, MAS).<br>
+                    • <strong>REAL-TIME EXPRESS TIMETABLES:</strong> Superfast trains, platform assignments, and halts.<br>
+                    • <strong>SAFETY & SIGNALLING INTELLIGENCE:</strong> Kavach TCAS, Automatic Block Signalling, and crowd dispatch.
                 </div>
             </div>
         </div>
 
         <!-- Suggested Prompt Chips -->
         <div class="ai-suggested-chips">
-            <span class="ai-chip" onclick="askAIPrompt('Tell me about Chennai Central')">Tell me about Chennai Central</span>
-            <span class="ai-chip" onclick="askAIPrompt('What stations are near Chennai?')">What stations are near Chennai?</span>
-            <span class="ai-chip" onclick="askAIPrompt('Which stations connect Mumbai and Chennai?')">Which stations connect Mumbai and Chennai?</span>
-            <span class="ai-chip" onclick="askAIPrompt('Show major Southern Railway hubs')">Show major Southern Railway hubs</span>
-            <span class="ai-chip" onclick="askAIPrompt('What platforms does MAS have?')">What platforms does MAS have?</span>
+            <span class="ai-chip" onclick="askAIPrompt('Direct express route from Ariyalur (ALU) to Chennai Egmore (MS)?')">Route: ALU ➔ Chennai Egmore</span>
+            <span class="ai-chip" onclick="askAIPrompt('Explain Southern Railway Chord Line via Ariyalur and Trichy')">Southern Railway Chord Line</span>
+            <span class="ai-chip" onclick="askAIPrompt('What express trains stop at Ariyalur (ALU)?')">Express Trains at Ariyalur</span>
+            <span class="ai-chip" onclick="askAIPrompt('Platform configurations and concourses at Chennai Central (MAS)')">MAS Platforms & Concourses</span>
+            <span class="ai-chip" onclick="askAIPrompt('How does Kavach Automatic Train Protection work in Indian Railways?')">How Kavach TCAS Works</span>
+            <span class="ai-chip" onclick="askAIPrompt('Which express trains connect Tiruchirappalli (TPJ) and Chennai Egmore (MS)?')">TPJ ➔ MS Express Timetable</span>
         </div>
 
         <!-- Chat Input -->
@@ -1837,6 +2027,8 @@
         </div>
     </div>
 
+    <!-- Master Railway Data Layer (Authoritative Frontend Fallback — real corridor & train data) -->
+    <script src="js/data/masterRailwayData.js"></script>
     <!-- Central Telemetry & Feedback Tracker -->
     <script src="js/tracker.js"></script>
     <!-- Application Controller Script -->

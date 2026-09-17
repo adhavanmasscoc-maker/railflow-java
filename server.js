@@ -1,6 +1,12 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+let railFlowAIEngine = null;
+try {
+    railFlowAIEngine = require('./railflow_ai_engine');
+} catch (e) {
+    console.warn('[Server] Could not pre-load railflow_ai_engine:', e.message);
+}
 
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 8080;
 const ROOT_DIR = __dirname;
@@ -466,6 +472,44 @@ function handleApiRequest(pathname, searchParams, res, req) {
     if (req && req.method === 'OPTIONS') {
         res.statusCode = 204;
         return res.end();
+    }
+
+    // RailFlow AI Operations Assistant Endpoint (Gemini 2.5 Flash Grounded Intelligence)
+    if (pathname === '/api/ask-railflow-ai') {
+        if (req && req.method === 'POST') {
+            let body = '';
+            req.on('data', chunk => { body += chunk; });
+            req.on('end', async () => {
+                try {
+                    const parsed = JSON.parse(body || '{}');
+                    const prompt = parsed.prompt || parsed.query || parsed.message || '';
+                    if (!railFlowAIEngine) {
+                        railFlowAIEngine = require('./railflow_ai_engine');
+                    }
+                    const answer = await railFlowAIEngine.askRailFlowAI(prompt);
+                    res.statusCode = 200;
+                    return res.end(JSON.stringify({ answer, status: 'success', model: 'gemini-2.5-flash' }));
+                } catch (err) {
+                    res.statusCode = 500;
+                    return res.end(JSON.stringify({ error: err.message || 'AI Processing Error' }));
+                }
+            });
+            return;
+        } else {
+            const prompt = (searchParams.get('prompt') || searchParams.get('q') || '').trim();
+            (async () => {
+                try {
+                    if (!railFlowAIEngine) railFlowAIEngine = require('./railflow_ai_engine');
+                    const answer = await railFlowAIEngine.askRailFlowAI(prompt);
+                    res.statusCode = 200;
+                    return res.end(JSON.stringify({ answer, status: 'success', model: 'gemini-2.5-flash' }));
+                } catch (err) {
+                    res.statusCode = 500;
+                    return res.end(JSON.stringify({ error: err.message || 'AI Processing Error' }));
+                }
+            })();
+            return;
+        }
     }
 
     // 0. Unified Global Search (Stations + Trains)

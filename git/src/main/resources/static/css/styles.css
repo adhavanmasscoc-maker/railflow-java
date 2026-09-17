@@ -1,11 +1,11 @@
-/* ═══════════════════════════════════════════════════════════════
-   RAILFLOW — Vibrant Railway Network Command Center Design System
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RAILFLOW â€” Vibrant Railway Network Command Center Design System
    Visual Direction: Dark Blue-Gray Command Console, Cyber Telemetry,
                      Railway Crimson, Electric Blue, Cyan Network,
                      Systems Emerald, Warning Amber, AI Violet
    Typography: Space Grotesk (Display/Sans) & JetBrains Mono (Telemetry/Code)
    Theme: High-Density, Vibrant, Professional Operations Dashboard
-   ═══════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 :root {
     /* Primary Backgrounds */
@@ -24,7 +24,7 @@
     --bg-elevated:      #202F48;
     --bg-elevated-hi:   #243550;
 
-    /* Borders — Subtle Illuminated Contours */
+    /* Borders â€” Subtle Illuminated Contours */
     --border:           #2A3A55; /* Default Contour Outline */
     --border-strong:    #344765; /* Prominent Border */
     --border-subtle:    #1E2C44;
@@ -98,7 +98,7 @@
     --transition-slow:  300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ─── Global Reset & Body Setup (Zero UI Leak) ───────────────── */
+/* â”€â”€â”€ Global Reset & Body Setup (Zero UI Leak) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -126,7 +126,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─── Custom Command Center Scrollbars ───────────────────────── */
+/* â”€â”€â”€ Custom Command Center Scrollbars â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -142,7 +142,7 @@ body {
     background: #4B6385;
 }
 
-/* ─── Sidebar Navigation (Command Center Console) ─────────────── */
+/* â”€â”€â”€ Sidebar Navigation (Command Center Console) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .sidebar {
     width: var(--sidebar-width);
     min-width: var(--sidebar-width);
@@ -212,7 +212,7 @@ body {
 
 .sidebar-nav {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: hidden;
     padding: 1rem 0.75rem;
     display: flex;
     flex-direction: column;
@@ -313,7 +313,7 @@ body {
     background: #0B1220;
 }
 
-/* ─── Top Header & Global Search ─────────────────────────────── */
+/* â”€â”€â”€ Top Header & Global Search â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .app-container {
     flex: 1;
     height: 100vh;
@@ -387,7 +387,7 @@ body {
     border-radius: var(--radius-md);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
     max-height: 380px;
-    overflow-y: auto;
+    overflow-y: hidden;
     display: none;
     z-index: 1000;
     padding: 0.45rem;
@@ -470,7 +470,7 @@ body {
     50% { opacity: 0.45; transform: scale(0.85); box-shadow: 0 0 2px var(--emerald); }
 }
 
-/* ─── Buttons & Badges ───────────────────────────────────────── */
+/* â”€â”€â”€ Buttons & Badges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -559,10 +559,10 @@ body {
     box-shadow: 0 0 10px rgba(139, 92, 246, 0.1);
 }
 
-/* ─── Main Viewport & Pages ──────────────────────────────────── */
+/* â”€â”€â”€ Main Viewport & Pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .main-viewport {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: hidden;
     padding: 1.75rem 2rem 3rem;
     position: relative;
     background: var(--bg-base);
@@ -620,7 +620,7 @@ body {
     line-height: 1.55;
 }
 
-/* ─── Pipeline Lifecycle Card ────────────────────────────────── */
+/* â”€â”€â”€ Pipeline Lifecycle Card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .pipeline-card {
     background: #162033;
     border: 1px solid #2A3A55;
@@ -647,7 +647,7 @@ body {
     justify-content: space-between;
     position: relative;
     gap: 0.5rem;
-    overflow-x: auto;
+    overflow-x: hidden;
     padding: 0.4rem 0;
 }
 
@@ -732,7 +732,7 @@ body {
     color: #F3F7FF;
 }
 
-/* ─── Metric Cards Grid ──────────────────────────────────────── */
+/* â”€â”€â”€ Metric Cards Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -801,7 +801,7 @@ body {
     gap: 0.35rem;
 }
 
-/* ─── Panels & Tables ────────────────────────────────────────── */
+/* â”€â”€â”€ Panels & Tables â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .panel {
     background: #162033;
     border: 1px solid #2A3A55;
@@ -832,7 +832,7 @@ body {
 }
 
 .table-wrapper {
-    overflow-x: auto;
+    overflow-x: hidden;
     border: 1px solid #2A3A55;
     border-radius: var(--radius-md);
     background: #111C2D;
@@ -878,7 +878,7 @@ body {
     border-bottom: none;
 }
 
-/* ─── Graph Viewport & Canvas (Command Center Canvas) ────────── */
+/* â”€â”€â”€ Graph Viewport & Canvas (Command Center Canvas) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .graph-viewport {
     height: 600px;
     background: radial-gradient(circle at center, #172A46 0%, #0B1220 75%);
@@ -1000,7 +1000,7 @@ body {
     text-anchor: middle;
 }
 
-/* ─── Journey Planner & Route Strip ──────────────────────────── */
+/* â”€â”€â”€ Journey Planner & Route Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .planner-form {
     background: #162033;
     border: 1px solid #2A3A55;
@@ -1089,7 +1089,7 @@ body {
     gap: 0;
     position: relative;
     padding: 1rem 0;
-    overflow-x: auto;
+    overflow-x: hidden;
 }
 
 .route-stop {
@@ -1156,14 +1156,14 @@ body {
     color: #8FA1BA;
 }
 
-/* ─── Station Network Tree (Growing Visual Tree) ─────────────── */
+/* â”€â”€â”€ Station Network Tree (Growing Visual Tree) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .tree-container {
     background: #162033;
     border: 1px solid #2A3A55;
     border-radius: var(--radius-md);
     padding: 1.25rem;
     max-height: 540px;
-    overflow-y: auto;
+    overflow-y: hidden;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
 }
 
@@ -1264,7 +1264,7 @@ body {
     color: #ffffff;
 }
 
-/* ─── Crowd Monitoring Grid ─────────────────────────────────── */
+/* â”€â”€â”€ Crowd Monitoring Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .provenance-card {
     background: #162033;
     border: 1px solid #2A3A55;
@@ -1356,7 +1356,7 @@ body {
     font-family: var(--font-mono);
 }
 
-/* ─── Drawers (Station Detail & AI Assistant) ─────────────────── */
+/* â”€â”€â”€ Drawers (Station Detail & AI Assistant) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .station-drawer, .ai-drawer {
     position: fixed;
     top: 0;
@@ -1404,7 +1404,7 @@ body {
 
 .drawer-body {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: hidden;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
@@ -1423,7 +1423,7 @@ body {
 
 .ai-messages-container {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: hidden;
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
@@ -1490,7 +1490,7 @@ body {
     background: #142136;
 }
 
-/* ─── Modals (Command Center Overlays) ───────────────────────── */
+/* â”€â”€â”€ Modals (Command Center Overlays) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -1514,7 +1514,7 @@ body {
     width: 100%;
     max-width: 680px;
     max-height: 90vh;
-    overflow-y: auto;
+    overflow-y: hidden;
     box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
     animation: modalPop 240ms cubic-bezier(0.16, 1, 0.3, 1);
     color: #F3F7FF;
@@ -1525,7 +1525,7 @@ body {
     to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* ─── SQL Terminal & Background Monitor ──────────────────────── */
+/* â”€â”€â”€ SQL Terminal & Background Monitor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .sql-terminal {
     background: #090D16;
     color: #E2E8F0;
@@ -1628,7 +1628,7 @@ body {
     box-shadow: 0 0 10px var(--rail-red-glow);
 }
 
-/* ─── Responsive Breakpoints (1920 down to 360px) ─────────────── */
+/* â”€â”€â”€ Responsive Breakpoints (1920 down to 360px) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 1200px) {
     .metrics-grid {
         grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -1711,7 +1711,7 @@ body {
     }
 }
 
-/* ─── Accessibility: Reduced Motion ──────────────────────────── */
+/* â”€â”€â”€ Accessibility: Reduced Motion â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -1721,13 +1721,13 @@ body {
     }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   RAILFLOW 2.0 — PREMIUM UI ENHANCEMENT PACK
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RAILFLOW 2.0 â€” PREMIUM UI ENHANCEMENT PACK
    Mobile Navigation, Toasts, Skeletons, Corridor Cards,
    Page Progress Bar, Telemetry Heatmap, AI Typing Indicator
-   ═══════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ─── Page-Level Top Progress Bar (Permanently Removed for Instant 0ms Latency) ─── */
+/* â”€â”€â”€ Page-Level Top Progress Bar (Permanently Removed for Instant 0ms Latency) â”€â”€â”€ */
 .page-progress-bar {
     display: none !important;
     width: 0 !important;
@@ -1736,7 +1736,7 @@ body {
     pointer-events: none !important;
 }
 
-/* ─── CUSTOM BUTTON LAYOUTS WITH EMOJIS & 0ms FAST RESPONSE ───── */
+/* â”€â”€â”€ CUSTOM BUTTON LAYOUTS WITH EMOJIS & 0ms FAST RESPONSE â”€â”€â”€â”€â”€ */
 .swap-btn {
     width: 44px;
     height: 44px;
@@ -2009,7 +2009,7 @@ body {
     background: rgba(16, 185, 129, 0.05);
 }
 
-/* ─── Mobile Hamburger Button ─────────────────────────────────── */
+/* â”€â”€â”€ Mobile Hamburger Button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .hamburger-btn {
     display: none;
     background: transparent;
@@ -2062,7 +2062,7 @@ body {
     }
 }
 
-/* ─── Mobile Sidebar Overlay Backdrop ────────────────────────── */
+/* â”€â”€â”€ Mobile Sidebar Overlay Backdrop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -2079,7 +2079,7 @@ body {
     opacity: 1;
 }
 
-/* ─── Toast Notification System ──────────────────────────────── */
+/* â”€â”€â”€ Toast Notification System â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .toast-container {
     position: fixed;
     bottom: 1.5rem;
@@ -2187,7 +2187,7 @@ body {
 .toast.toast-info    { --toast-accent: var(--cyan); border-color: rgba(34, 211, 238, 0.30); }
 .toast.toast-info .toast-icon { color: var(--cyan); }
 
-/* ─── Skeleton Loader System ──────────────────────────────────── */
+/* â”€â”€â”€ Skeleton Loader System â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes shimmer {
     0%   { background-position: -600px 0; }
     100% { background-position: 600px 0; }
@@ -2236,7 +2236,7 @@ body {
     gap: 0.75rem;
 }
 
-/* ─── Enhanced Corridor Cards ─────────────────────────────────── */
+/* â”€â”€â”€ Enhanced Corridor Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .corridor-card {
     cursor: pointer;
     padding: 0.85rem 1rem;
@@ -2308,7 +2308,7 @@ body {
     transform: translateY(-50%) translateX(3px);
 }
 
-/* ─── Status Indicator Dots ───────────────────────────────────── */
+/* â”€â”€â”€ Status Indicator Dots â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .status-indicator {
     display: inline-block;
     width: 8px;
@@ -2336,7 +2336,7 @@ body {
     animation: pulseGlow 1s infinite ease-in-out;
 }
 
-/* ─── AI Typing Indicator ─────────────────────────────────────── */
+/* â”€â”€â”€ AI Typing Indicator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .ai-typing {
     display: flex;
     align-items: center;
@@ -2366,7 +2366,7 @@ body {
     40% { transform: scale(1); opacity: 1; }
 }
 
-/* ─── Telemetry Heatmap Grid (Crowd Monitor enhancement) ─────── */
+/* â”€â”€â”€ Telemetry Heatmap Grid (Crowd Monitor enhancement) â”€â”€â”€â”€â”€â”€â”€ */
 .telemetry-heatmap {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -2398,7 +2398,7 @@ body {
     50%       { opacity: 0.6; }
 }
 
-/* ─── Loading Spinner ─────────────────────────────────────────── */
+/* â”€â”€â”€ Loading Spinner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .spinner {
     display: inline-block;
     width: 20px;
@@ -2430,7 +2430,7 @@ body {
     to { transform: rotate(360deg); }
 }
 
-/* ─── Network Pulse Animation on Edges ────────────────────────── */
+/* â”€â”€â”€ Network Pulse Animation on Edges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .graph-edge-pulse {
     stroke: var(--cyan);
     stroke-width: 2.5;
@@ -2443,7 +2443,7 @@ body {
     to { stroke-dashoffset: -40; }
 }
 
-/* ─── Enhanced Metric Cards — Color Accent Variants ──────────── */
+/* â”€â”€â”€ Enhanced Metric Cards â€” Color Accent Variants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .metric-card.accent-red    { --card-accent: var(--rail-red); }
 .metric-card.accent-blue   { --card-accent: var(--blue); }
 .metric-card.accent-cyan   { --card-accent: var(--cyan); }
@@ -2451,7 +2451,7 @@ body {
 .metric-card.accent-amber  { --card-accent: var(--amber); }
 .metric-card.accent-purple { --card-accent: var(--purple); }
 
-/* ─── Timetable Modal Enhanced States ────────────────────────── */
+/* â”€â”€â”€ Timetable Modal Enhanced States â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .tt-loading-state {
     display: flex;
     align-items: center;
@@ -2494,7 +2494,7 @@ body {
     font-weight: 600;
 }
 
-/* ─── Platform Bar Enhanced States ───────────────────────────── */
+/* â”€â”€â”€ Platform Bar Enhanced States â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .platform-bar-fill.normal   { background: linear-gradient(90deg, var(--emerald), #6EE7B7); }
 .platform-bar-fill.warning  { background: linear-gradient(90deg, var(--amber), #FCD34D); }
 .platform-bar-fill.critical {
@@ -2507,7 +2507,7 @@ body {
     50%       { box-shadow: 0 0 10px rgba(239, 51, 64, 0.5); }
 }
 
-/* ─── Keyboard Shortcut Pill ──────────────────────────────────── */
+/* â”€â”€â”€ Keyboard Shortcut Pill â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .kbd {
     display: inline-flex;
     align-items: center;
@@ -2521,7 +2521,7 @@ body {
     box-shadow: 0 2px 0 #0B1220;
 }
 
-/* ─── Data Source Provenance Ribbon ──────────────────────────── */
+/* â”€â”€â”€ Data Source Provenance Ribbon â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .source-ribbon {
     display: inline-flex;
     align-items: center;
@@ -2540,7 +2540,7 @@ body {
 .source-ribbon.catalog   { background: rgba(245, 158, 11, 0.12); color: #FBBF24; border: 1px solid rgba(245,158,11,0.25); }
 .source-ribbon.interp    { background: rgba(139, 92, 246, 0.12); color: #A78BFA; border: 1px solid rgba(139,92,246,0.25); }
 
-/* ─── Floating Live Telemetry Counter ───────────────────────── */
+/* â”€â”€â”€ Floating Live Telemetry Counter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .telemetry-badge-float {
     position: fixed;
     bottom: 1.5rem;
@@ -2574,7 +2574,7 @@ body {
     }
 }
 
-/* ─── Graph Node Glow Pulse ───────────────────────────────────── */
+/* â”€â”€â”€ Graph Node Glow Pulse â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .graph-node-active circle {
     animation: nodeActivePulse 2.5s ease-in-out infinite;
 }
@@ -2584,7 +2584,7 @@ body {
     50%       { filter: drop-shadow(0 0 14px rgba(239, 51, 64, 0.8)); }
 }
 
-/* ─── Train Type Badge Color Map ──────────────────────────────── */
+/* â”€â”€â”€ Train Type Badge Color Map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .train-type-badge {
     display: inline-flex;
     align-items: center;
@@ -2606,7 +2606,7 @@ body {
 .train-type-badge.EXPRESS     { background: rgba(16,185,129,0.15); color: #6EE7B7; border: 1px solid rgba(16,185,129,0.3); }
 .train-type-badge.MAIL        { background: rgba(245,158,11,0.15); color: #FCD34D; border: 1px solid rgba(245,158,11,0.3); }
 
-/* ─── Panel Accent Borders ────────────────────────────────────── */
+/* â”€â”€â”€ Panel Accent Borders â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .panel.accent-top-red    { border-top: 3px solid var(--rail-red); }
 .panel.accent-top-blue   { border-top: 3px solid var(--blue); }
 .panel.accent-top-cyan   { border-top: 3px solid var(--cyan); }
@@ -2614,7 +2614,7 @@ body {
 .panel.accent-top-amber  { border-top: 3px solid var(--amber); }
 .panel.accent-top-purple { border-top: 3px solid var(--purple); }
 
-/* ─── Search Results Enhanced ─────────────────────────────────── */
+/* â”€â”€â”€ Search Results Enhanced â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .search-item-type-badge {
     display: inline-flex;
     align-items: center;
@@ -2631,7 +2631,7 @@ body {
 .search-item-type-badge.train   { background: rgba(239,51,64,0.15); color: var(--rail-red); }
 .search-item-type-badge.zone    { background: rgba(59,130,246,0.15); color: var(--blue); }
 
-/* ─── Keyboard Shortcut Tooltip ───────────────────────────────── */
+/* â”€â”€â”€ Keyboard Shortcut Tooltip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 [data-shortcut]::after {
     content: attr(data-shortcut);
     position: absolute;
@@ -2652,7 +2652,7 @@ body {
     z-index: 1000;
 }
 
-/* ─── Stat Change Indicator (Up/Down arrows on metrics) ──────── */
+/* â”€â”€â”€ Stat Change Indicator (Up/Down arrows on metrics) â”€â”€â”€â”€â”€â”€â”€â”€ */
 .stat-change {
     display: inline-flex;
     align-items: center;
@@ -2666,7 +2666,7 @@ body {
 .stat-change.down { color: var(--rail-red); }
 .stat-change.flat { color: var(--text-muted); }
 
-/* ─── Version Chip in Sidebar Footer ─────────────────────────── */
+/* â”€â”€â”€ Version Chip in Sidebar Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .version-chip {
     font-size: 0.60rem;
     font-family: var(--font-mono);
@@ -2680,7 +2680,7 @@ body {
     letter-spacing: 0.06em;
 }
 
-/* ─── Full-Width Loading Overlay for Modal / Drawer ──────────── */
+/* â”€â”€â”€ Full-Width Loading Overlay for Modal / Drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .content-loading {
     display: flex;
     flex-direction: column;
@@ -2698,7 +2698,7 @@ body {
     border-width: 2.5px;
 }
 
-/* ─── Command Center Gradient Spotlight ──────────────────────── */
+/* â”€â”€â”€ Command Center Gradient Spotlight â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .spotlight-card {
     position: relative;
     overflow: hidden;
@@ -2718,7 +2718,7 @@ body {
 
 .spotlight-card > * { position: relative; z-index: 1; }
 
-/* ─── Telemetry Tick Number Badge (Crowd Page) ───────────────── */
+/* â”€â”€â”€ Telemetry Tick Number Badge (Crowd Page) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .telemetry-tick-counter {
     font-family: var(--font-mono);
     font-size: 0.85rem;
@@ -2730,7 +2730,7 @@ body {
     border-radius: 999px;
 }
 
-/* ─── Interactive Corridor Path Highlight in Route Strip ─────── */
+/* â”€â”€â”€ Interactive Corridor Path Highlight in Route Strip â”€â”€â”€â”€â”€â”€â”€ */
 .route-stop.start .stop-marker {
     background: var(--rail-red);
     border-color: #F3F7FF;
@@ -2745,7 +2745,7 @@ body {
     box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
 }
 
-/* ─── Sidebar collapse for desktop medium screens ─────────────── */
+/* â”€â”€â”€ Sidebar collapse for desktop medium screens â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 1200px) and (min-width: 1025px) {
     .sidebar {
         width: 220px;
@@ -2756,12 +2756,12 @@ body {
     }
 }
 
-/* ─── Admin Panel Lock Card Polish ────────────────────────────── */
+/* â”€â”€â”€ Admin Panel Lock Card Polish â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .admin-lock-card {
     background: linear-gradient(145deg, rgba(220, 38, 38, 0.04), transparent);
 }
 
-/* ─── Table Row Action Hover Reveal ──────────────────────────── */
+/* â”€â”€â”€ Table Row Action Hover Reveal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .data-table tbody tr .action-reveal {
     opacity: 0;
     transition: opacity var(--transition-fast);
@@ -2771,7 +2771,7 @@ body {
     opacity: 1;
 }
 
-/* ─── Responsive Tweaks for Tablet ───────────────────────────── */
+/* â”€â”€â”€ Responsive Tweaks for Tablet â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 900px) {
     .view-title {
         font-size: 1.3rem;
@@ -2784,7 +2784,7 @@ body {
     }
 }
 
-/* ─── Print: Strip all telemetry / dark backgrounds ──────────── */
+/* â”€â”€â”€ Print: Strip all telemetry / dark backgrounds â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media print {
     body { background: #ffffff; color: #000000; }
     .sidebar, .top-header, .toast-container, .telemetry-badge-float,
@@ -2793,10 +2793,10 @@ body {
     .panel { box-shadow: none; border: 1px solid #ccc; }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    PERFORMANCE & CUSTOM BUTTON LAYOUTS WITH MANUAL EMOJIS
    Zero loading delay, distinct button styling, and Southern Railway highlights
-   ═══════════════════════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 /* 1. Permanent removal of top progress bar & zero-delay instant page transitions */
 .page-progress-bar,
@@ -3058,11 +3058,11 @@ body {
     background: linear-gradient(90deg, rgba(16, 185, 129, 0.18), rgba(16, 185, 129, 0.04)) !important;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   AKNEX RAILFLOW 3.0 — AUTOMATED STATION OPERATIONS & COMMUTER INTELLIGENCE
-   ═══════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   AKNEX RAILFLOW 3.0 â€” AUTOMATED STATION OPERATIONS & COMMUTER INTELLIGENCE
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ─── Dual-View Mode Switcher (Controller HUD vs Commuter Portal) ─── */
+/* â”€â”€â”€ Dual-View Mode Switcher (Controller HUD vs Commuter Portal) â”€â”€â”€ */
 .view-mode-toggle {
     display: inline-flex;
     align-items: center;
@@ -3113,7 +3113,7 @@ body {
     font-size: 0.85rem;
 }
 
-/* ─── PA Audio & Volume Controller Dock ─── */
+/* â”€â”€â”€ PA Audio & Volume Controller Dock â”€â”€â”€ */
 .audio-control-dock {
     display: inline-flex;
     align-items: center;
@@ -3166,7 +3166,7 @@ body {
     min-width: 26px;
 }
 
-/* ─── Module A: Alert Carousel & Conflict Dispatcher ─── */
+/* â”€â”€â”€ Module A: Alert Carousel & Conflict Dispatcher â”€â”€â”€ */
 .alert-carousel-container {
     margin-bottom: 1.25rem;
     animation: alertSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -3303,7 +3303,7 @@ body {
     box-shadow: 0 0 24px rgba(239, 51, 64, 0.7);
 }
 
-/* ─── Emergency Strobe Gate Hold Banner ─── */
+/* â”€â”€â”€ Emergency Strobe Gate Hold Banner â”€â”€â”€ */
 .strobe-gate-banner {
     background: linear-gradient(90deg, #EF3340 0%, #B91C1C 50%, #EF3340 100%);
     background-size: 200% 100%;
@@ -3335,7 +3335,7 @@ body {
     margin-left: 6px;
 }
 
-/* ─── Module B: FOB & Vertical Chokepoints Topology ─── */
+/* â”€â”€â”€ Module B: FOB & Vertical Chokepoints Topology â”€â”€â”€ */
 .fob-topology-container {
     background: var(--bg-surface);
     border: 1px solid var(--border);
@@ -3422,7 +3422,7 @@ body {
 .chokepoint-meter-fill.warning { background: var(--amber); }
 .chokepoint-meter-fill.critical { background: var(--rail-red); }
 
-/* ─── Module C: Coach-Wise Crowd Density Strip ─── */
+/* â”€â”€â”€ Module C: Coach-Wise Crowd Density Strip â”€â”€â”€ */
 .coach-density-container {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -3443,7 +3443,7 @@ body {
     display: flex;
     align-items: center;
     gap: 4px;
-    overflow-x: auto;
+    overflow-x: hidden;
     padding-bottom: 6px;
 }
 
@@ -3511,7 +3511,7 @@ body {
     color: var(--cyan);
 }
 
-/* ─── Module D: Simulation Sandbox Control Panel ─── */
+/* â”€â”€â”€ Module D: Simulation Sandbox Control Panel â”€â”€â”€ */
 .sandbox-panel {
     background: linear-gradient(180deg, rgba(20, 34, 58, 0.9) 0%, rgba(11, 18, 32, 0.95) 100%);
     border: 1px solid rgba(59, 130, 246, 0.35);
@@ -3577,7 +3577,7 @@ body {
     cursor: pointer;
 }
 
-/* ─── Module E: Virtual Digital Station Display Board ─── */
+/* â”€â”€â”€ Module E: Virtual Digital Station Display Board â”€â”€â”€ */
 .digital-display-board {
     background: #02050A;
     border: 3px solid #1E2C44;
@@ -3643,7 +3643,7 @@ body {
     50% { opacity: 0.4; }
 }
 
-/* ─── Module F: Scenario Replay & Audit Log ─── */
+/* â”€â”€â”€ Module F: Scenario Replay & Audit Log â”€â”€â”€ */
 .scenario-replay-dock {
     display: flex;
     align-items: center;
@@ -3672,7 +3672,7 @@ body {
     font-weight: 700;
 }
 
-/* ─── Commuter Portal Dedicated Styles ─── */
+/* â”€â”€â”€ Commuter Portal Dedicated Styles â”€â”€â”€ */
 .commuter-portal-container {
     max-width: 960px;
     margin: 0 auto;
@@ -3739,4 +3739,112 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ─── NATIONAL INDIA RAILWAY MAP & RADAR ANIMATIONS ─────────────────────── */
+.india-outline {
+    fill: rgba(14, 28, 54, 0.45);
+    stroke: #1E3A8A;
+    stroke-width: 2.2;
+    stroke-dasharray: 6 3;
+    filter: drop-shadow(0 0 12px rgba(30, 58, 138, 0.4));
+    transition: all 0.3s ease;
+}
+
+.map-gridline {
+    stroke: rgba(255, 255, 255, 0.04);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+}
+
+.corridor-glow {
+    stroke: #3B82F6;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.6));
+}
+
+.chord-line-glow {
+    stroke: #10B981 !important;
+    stroke-width: 3 !important;
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.8)) !important;
+}
+
+.train-pulse-dot {
+    fill: #F59E0B;
+    stroke: #FFFFFF;
+    stroke-width: 2;
+    filter: drop-shadow(0 0 8px #F59E0B);
+    animation: trainPulse 2s infinite alternate;
+}
+
+@keyframes trainPulse {
+    0% { r: 5; opacity: 0.85; }
+    100% { r: 8; opacity: 1.0; filter: drop-shadow(0 0 12px #EF4444); }
+}
+
+.node-pulse-ring {
+    animation: ringGlow 3s infinite ease-out;
+    transform-origin: center;
+}
+
+@keyframes ringGlow {
+    0% { r: 8; opacity: 0.8; stroke-width: 2; }
+    50% { r: 16; opacity: 0.2; stroke-width: 1; }
+    100% { r: 22; opacity: 0; stroke-width: 0.5; }
+}
+
+/* ─── BOTTOM OPERATIONAL COMMAND DECK ──────────────────────────────────── */
+.dash-bottom-deck {
+    animation: fadeInDeck 0.6s ease-out;
+}
+
+@keyframes fadeInDeck {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fleet-row {
+    transition: background 0.2s ease;
+    border-radius: 4px;
+}
+
+.fleet-row:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.signal-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+    font-size: 0.72rem;
+}
+
+.signal-indicator.green { color: #10B981; }
+.signal-indicator.yellow { color: #F59E0B; }
+.signal-indicator.red { color: #EF4444; }
+
+.speed-gauge-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    margin-top: 2px;
+}
+
+.speed-gauge-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3B82F6, #10B981);
+    transition: width 0.5s ease;
+}
+
+/* AI Thinking Message */
+.ai-thinking {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.84rem;
+}
+
 

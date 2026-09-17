@@ -1,6 +1,12 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+let railFlowAIEngine = null;
+try {
+    railFlowAIEngine = require('./railflow_ai_engine');
+} catch (e) {
+    console.warn('[Server] Could not pre-load railflow_ai_engine:', e.message);
+}
 
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 8080;
 const ROOT_DIR = __dirname;
@@ -468,6 +474,44 @@ function handleApiRequest(pathname, searchParams, res, req) {
         return res.end();
     }
 
+    // RailFlow AI Operations Assistant Endpoint (Gemini 2.5 Flash Grounded Intelligence)
+    if (pathname === '/api/ask-railflow-ai') {
+        if (req && req.method === 'POST') {
+            let body = '';
+            req.on('data', chunk => { body += chunk; });
+            req.on('end', async () => {
+                try {
+                    const parsed = JSON.parse(body || '{}');
+                    const prompt = parsed.prompt || parsed.query || parsed.message || '';
+                    if (!railFlowAIEngine) {
+                        railFlowAIEngine = require('./railflow_ai_engine');
+                    }
+                    const answer = await railFlowAIEngine.askRailFlowAI(prompt);
+                    res.statusCode = 200;
+                    return res.end(JSON.stringify({ answer, status: 'success', model: 'gemini-2.5-flash' }));
+                } catch (err) {
+                    res.statusCode = 500;
+                    return res.end(JSON.stringify({ error: err.message || 'AI Processing Error' }));
+                }
+            });
+            return;
+        } else {
+            const prompt = (searchParams.get('prompt') || searchParams.get('q') || '').trim();
+            (async () => {
+                try {
+                    if (!railFlowAIEngine) railFlowAIEngine = require('./railflow_ai_engine');
+                    const answer = await railFlowAIEngine.askRailFlowAI(prompt);
+                    res.statusCode = 200;
+                    return res.end(JSON.stringify({ answer, status: 'success', model: 'gemini-2.5-flash' }));
+                } catch (err) {
+                    res.statusCode = 500;
+                    return res.end(JSON.stringify({ error: err.message || 'AI Processing Error' }));
+                }
+            })();
+            return;
+        }
+    }
+
     // 0. Unified Global Search (Stations + Trains)
     if (pathname === '/api/search') {
         const q = (searchParams.get('q') || searchParams.get('query') || '').trim();
@@ -825,7 +869,7 @@ function handleApiRequest(pathname, searchParams, res, req) {
                 zone: s.zone,
                 lat: s.latitude,
                 lon: s.longitude,
-                activeTrains: Math.floor(Math.random() * 35) + 8
+                activeTrains: ((s.code.split('').reduce((a,c)=>a+c.charCodeAt(0),0) % 28) + 8)
             }))
         }));
     }
@@ -842,6 +886,7 @@ function handleApiRequest(pathname, searchParams, res, req) {
             }
 
             const sql = (sqlText || '').trim();
+            const start = Date.now();
             let rows = [];
             let plan = 'SCAN TABLE stations USING INDEX idx_stn_code';
             const upper = sql.toUpperCase();
@@ -898,7 +943,7 @@ function handleApiRequest(pathname, searchParams, res, req) {
                 sql: sql || 'SELECT * FROM stations WHERE zone = "SR" LIMIT 25;',
                 database: 'database/railway.db',
                 engine: 'SQLite 3.50.3.0 (WAL Mode)',
-                executionTimeMs: (Math.random() * 0.4 + 0.15).toFixed(2),
+                executionTimeMs: (Date.now() - start).toFixed(2),
                 queryPlan: plan,
                 rowCount: rows.length,
                 rows,

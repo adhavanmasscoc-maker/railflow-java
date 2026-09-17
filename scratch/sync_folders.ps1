@@ -60,6 +60,9 @@ function Sync-Folder($folderRel, $targetFolder, $excludePatterns = @()) {
 Write-Host "`n1. Copying assets to deploy/..."
 Sync-File "index.html" $deployDir
 Sync-File "server.js" $deployDir
+Sync-File "railflow_ai.js" $deployDir
+Sync-File "railflow_ai_engine.js" $deployDir
+Sync-Folder "api" $deployDir
 Sync-File "vercel.json" $deployDir
 Sync-File "README.md" $deployDir
 Sync-File "pbl.md" $deployDir
@@ -81,6 +84,9 @@ Sync-Folder "DATA\trains" $deployDir
 Write-Host "`n2. Copying assets to git/..."
 Sync-File "index.html" $gitDir
 Sync-File "server.js" $gitDir
+Sync-File "railflow_ai.js" $gitDir
+Sync-File "railflow_ai_engine.js" $gitDir
+Sync-Folder "api" $gitDir
 Sync-File "vercel.json" $gitDir
 Sync-File "README.md" $gitDir
 Sync-File "pbl.md" $gitDir
