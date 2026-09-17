@@ -1,7 +1,7 @@
 /**
  * RailFlow AI Engine - Autonomous Railway Intelligence Copilot
- * Grounded in authentic project documentation, master railway datasets, and live Indian Railways web knowledge.
- * Powered by Google Gemini 2.5 Flash.
+ * Grounded in authentic Indian Railways operations, crowd dispatch telemetry, and network topology.
+ * Powered by Google Gemini 2.5 Flash with resilient multi-tier fallback (OpenRouter, Groq, and local intelligence).
  */
 
 const fs = require('fs');
@@ -10,17 +10,22 @@ const path = require('path');
 // Load environment variables from .env if present
 function loadEnv() {
     try {
-        const envPath = path.join(__dirname, '.env');
-        if (fs.existsSync(envPath)) {
-            const lines = fs.readFileSync(envPath, 'utf8').split('\n');
-            for (const line of lines) {
-                const trimmed = line.trim();
-                if (trimmed && !trimmed.startsWith('#')) {
-                    const eqIdx = trimmed.indexOf('=');
-                    if (eqIdx !== -1) {
-                        const k = trimmed.substring(0, eqIdx).trim();
-                        const v = trimmed.substring(eqIdx + 1).trim();
-                        if (k && !process.env[k]) process.env[k] = v;
+        const envPaths = [
+            path.join(__dirname, '.env'),
+            path.join(__dirname, '..', '.env')
+        ];
+        for (const envPath of envPaths) {
+            if (fs.existsSync(envPath)) {
+                const lines = fs.readFileSync(envPath, 'utf8').split('\n');
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (trimmed && !trimmed.startsWith('#')) {
+                        const eqIdx = trimmed.indexOf('=');
+                        if (eqIdx !== -1) {
+                            const k = trimmed.substring(0, eqIdx).trim();
+                            const v = trimmed.substring(eqIdx + 1).trim();
+                            if (k && !process.env[k]) process.env[k] = v;
+                        }
                     }
                 }
             }
@@ -32,100 +37,76 @@ function loadEnv() {
 
 loadEnv();
 
-const GEMINI_KEYS = [
-    process.env.GEMINI_API_KEY,
-    process.env.GOOGLE_API_KEY
-].filter(Boolean);
+function getGeminiKeys() {
+    loadEnv();
+    return [
+        process.env.GEMINI_API_KEY,
+        process.env.GOOGLE_API_KEY
+    ].filter(Boolean);
+}
 
-const GROQ_KEY = process.env.GROQ_API_KEY || "";
-const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || "";
+function getSystemDirective() {
+    return `You are "RAILFLOW AI", the authoritative Indian Railways Operations Copilot, Network Dispatcher, and Crowd Intelligence Engine.
+Role: Autonomous Railway Intelligence, Central Operations Control (COC) Copilot, and Commuter Guide.
+Persona: Highly knowledgeable, operationally precise, and professional.
 
-let cachedSystemPrompt = null;
+CORE SPECIALIZATIONS & GROUND TRUTH:
+1. Real-Time Crowd Dispatch & Telemetry:
+   - Platform crowd density management: Normal (< 0.8 persons/m²), Heightened Alert (0.8 - 1.5 persons/m²), Critical Surge (> 1.5 persons/m²).
+   - Influx control: Turnstile telemetry, Foot-Overbridge (FOB) load balancing, entrance gate-metering protocols.
+   - Dynamic Dispatch: Deploying standby ICF/LHB relief/clone rakes from coaching yards (Basin Bridge BBQ, Tambaram TBM, Golden Rock GOC) during surges.
+   - Dynamic platform re-assignment for delayed/congested rakes.
 
-function buildSystemContext() {
-    if (cachedSystemPrompt) return cachedSystemPrompt;
+2. Corridor & Topology Ground Truth:
+   - Southern Railway (SR) Main Chord Line connects Tiruchirappalli (TPJ) and Chennai Egmore (MS) via Ariyalur (ALU), Vriddhachalam (VRI), Villupuram (VM), Chengalpattu (CGL), and Tambaram (TBM).
+   - Ariyalur (ALU) is on the Chord Line (~267 km from MS, ~70 km from TPJ). Key express trains: 12638 Pandyan SF, 12636 Vaigai SF, 12606 Pallavan SF, 12654 Rockfort SF, 16128 Guruvayur Express.
+   - Chennai Central (MAS) is the primary terminus for Western/Northern/Eastern trunks (Bengaluru, Mumbai, New Delhi, Howrah).
+   - Chennai Egmore (MS) serves Southern Tamil Nadu lines (Madurai, Trichy, Tirunelveli, Rameswaram, Kanyakumari).
 
-    let prompt = `================================================================================
-SYSTEM DIRECTIVE: YOU ARE "RAILFLOW AI"
-================================================================================
-Role: Principal Indian Railways Autonomous Operations Copilot, Network Dispatcher, and Commuter Intelligence Engine.
-Identity: RAILFLOW AI.
+3. Safety & Signalling:
+   - Kavach (TCAS) Automatic Train Protection, continuous cab-signalling, SPAD prevention, and automatic braking.
+   - Automatic Block Signalling (ABS), Electronic Interlocking (EI), axle counters, 25 kV AC traction.
 
-PRIMARY OBJECTIVES & GROUNDING:
-1. TRUTH IN ROUTING & TOPOLOGY:
-   - Base all corridor and routing answers strictly on verified Indian Railways data and network topology.
-   - For Tamil Nadu / Southern Railway (SR):
-     * The Main Chord Line route between Tiruchirappalli (TPJ) and Chennai Egmore (MS) is:
-       TPJ (Tiruchirappalli) <-> ALU (Ariyalur) <-> VRI (Vriddhachalam) <-> VM (Villupuram) <-> CGL (Chengalpattu) <-> TBM (Tambaram) <-> MS (Chennai Egmore).
-     * Ariyalur (ALU) is a key industrial and passenger junction on the Chord line. Distance from Chennai Egmore is ~267 km; distance to TPJ is ~70 km.
-     * Chennai Central (MAS) is the primary terminus for Western/Northern/Eastern trunks (Bangalore, Mumbai, Delhi, Howrah).
-     * Chennai Egmore (MS) is the primary terminus for Southern Tamil Nadu lines (Madurai, Trichy, Tirunelveli, Rameswaram, Kanyakumari).
-   - NEVER fabricate or hallucinate routes (e.g. NEVER route Ariyalur through Vadamadurai or western detours).
+4. Commuter & IRCTC Guidance:
+   - Live running status, PNR confirmation probabilities, Tatkal timings, platform amenities.
 
-2. REAL DATA & DOMAIN EXPERTISE ACROSS THE WEB:
-   - In addition to stored project data, utilize comprehensive real Indian Railways knowledge across the web:
-     * Zones & Divisions (18 zones, 68 divisions: SR, NR, WR, CR, ER, SCR, SWR, ECoR, etc.)
-     * High-speed & Superfast trains: Vande Bharat Express (20607, 20608, 20627), Rajdhani Express (12301, 12951), Shatabdi Express (12007), Pandyan Express (12637/12638), Tamil Nadu Express (12621/12622), Rockfort Express (12653/12654), Cholan Express (22675/22676), Vaigai Express (12635/12636).
-     * Safety & Signalling: Kavach (Automatic Train Protection / TCAS), Automatic Block Signalling (ABS), Electronic Interlocking (EI), Axle Counters, 25 kV 50Hz AC electric traction.
-     * Station Facilities: Platform numbers, Foot Overbridges (FOB), turnstile crowd density, PNR confirmation chances, Tatkal guidelines, and IRCTC ticketing rules.
-
-3. RESPONSE FORMAT:
-   - Provide direct, helpful, and authoritative answers formatted in clean Markdown.
-   - Use bold headers, bulleted lists, and route arrows (->) for station sequences.
-   - Include operational recommendations (e.g. best train options, platform numbers, journey times, and transfer stations).
-\n`;
-
-    // 1. Ingest Master Railway Data
-    const masterDataPath = path.join(__dirname, 'js', 'data', 'masterRailwayData.js');
-    if (fs.existsSync(masterDataPath)) {
-        try {
-            prompt += `\n--- MASTER RAILWAY DATA ENGINE (masterRailwayData.js) ---\n`;
-            prompt += fs.readFileSync(masterDataPath, 'utf8') + `\n`;
-        } catch (e) {
-            console.warn('[RailFlow AI] Could not load masterRailwayData.js:', e.message);
-        }
-    }
-
-    // 2. Ingest Project Documentation & PBL MD files
-    const mdFiles = ['pbl.md', 'pblv1.md', 'spec.md', 'README.md', 'project_build_history.md'];
-    prompt += `\n--- PROJECT SPECIFICATIONS & PBL DOCUMENTATION ---\n`;
-    for (const file of mdFiles) {
-        const filePath = path.join(__dirname, file);
-        if (fs.existsSync(filePath)) {
-            try {
-                const content = fs.readFileSync(filePath, 'utf8');
-                prompt += `\n================ FILE: ${file} ================\n`;
-                prompt += content + `\n`;
-            } catch (e) {
-                console.warn(`[RailFlow AI] Could not load ${file}:`, e.message);
-            }
-        }
-    }
-
-    cachedSystemPrompt = prompt;
-    console.log(`[RailFlow AI] System Prompt compiled successfully (${Math.round(prompt.length / 1024)} KB).`);
-    return prompt;
+RESPONSE STYLE:
+- Professional, concise, high-tech Markdown with bullet points, train numbers, timings, and actionable dispatch intel.
+- When greeted (e.g. "hi", "hello"), introduce yourself as RailFlow AI, report nominal network status, and offer assistance on crowd dispatch, route planning, platform telemetry, or train scheduling.`;
 }
 
 /**
  * Ask RailFlow AI using Multi-tier Resilient Architecture:
- * 1. Google Gemini 2.5 Flash / 1.5 Flash (with key rotation)
- * 2. Groq LLaMA 3.3 70B
- * 3. OpenRouter DeepSeek Chat
- * 4. Deterministic local railway intelligence
+ * 1. Google Gemini Direct (gemini-flash-latest, gemini-flash-lite-latest, gemini-2.5-flash-lite)
+ * 2. OpenRouter (google/gemini-2.5-flash)
+ * 3. Groq (qwen/qwen3.8-27b)
+ * 4. High-fidelity conversational local railway intelligence
  */
 async function askRailFlowAI(userQuery) {
     if (!userQuery || !userQuery.trim()) {
-        return "Please enter a valid question about Indian Railways, station operations, or routes.";
+        return "Please enter a valid question about Indian Railways, station operations, crowd dispatch, or routes.";
     }
 
-    const systemContext = buildSystemContext();
-    const promptText = `${systemContext}\n\n================ USER QUERY ================\n${userQuery.trim()}\n\nPlease answer accurately as RAILFLOW AI based on authentic Indian Railways ground truth:`;
+    const query = userQuery.trim();
+    const systemPrompt = getSystemDirective();
+    const geminiKeys = getGeminiKeys();
+    const openRouterKey = process.env.OPENROUTER_API_KEY || "";
+    const groqKey = process.env.GROQ_API_KEY || "";
 
-    // ─── TIER 1: Google Gemini (Keys rotated automatically) ───
-    for (const key of GEMINI_KEYS) {
-        for (const model of ['gemini-2.5-flash', 'gemini-1.5-flash']) {
+    // ─── TIER 1: Google Gemini Direct ───
+    const directModels = [
+        'gemini-flash-latest',
+        'gemini-flash-lite-latest',
+        'gemini-2.5-flash-lite',
+        'gemini-3.5-flash-lite',
+        'gemini-2.5-flash'
+    ];
+
+    for (const key of geminiKeys) {
+        for (const model of directModels) {
             try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
                 const response = await fetch(url, {
                     method: 'POST',
@@ -133,14 +114,16 @@ async function askRailFlowAI(userQuery) {
                     body: JSON.stringify({
                         contents: [{
                             role: 'user',
-                            parts: [{ text: promptText }]
+                            parts: [{ text: `${systemPrompt}\n\nUser Question: ${query}` }]
                         }],
                         generationConfig: {
-                            temperature: 0.25,
-                            maxOutputTokens: 2048
+                            temperature: 0.3,
+                            maxOutputTokens: 1024
                         }
-                    })
+                    }),
+                    signal: controller.signal
                 });
+                clearTimeout(timeoutId);
 
                 if (response.ok) {
                     const data = await response.json();
@@ -150,97 +133,146 @@ async function askRailFlowAI(userQuery) {
                     }
                 }
             } catch (err) {
-                console.warn(`[RailFlow AI] Gemini model ${model} call failed:`, err.message);
+                // Continue to next model or tier
             }
         }
     }
 
-    // ─── TIER 2: Groq Fallback ───
-    if (GROQ_KEY) {
-        try {
-            const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${GROQ_KEY}`
-                },
-                body: JSON.stringify({
-                    model: 'llama-3.3-70b-versatile',
-                    messages: [
-                        { role: 'system', content: systemContext },
-                        { role: 'user', content: userQuery.trim() }
-                    ],
-                    temperature: 0.3,
-                    max_tokens: 2048
-                })
-            });
-            if (groqRes.ok) {
-                const data = await groqRes.json();
-                const answer = data.choices?.[0]?.message?.content;
-                if (answer && answer.trim()) return answer;
+    // ─── TIER 2: OpenRouter Google Gemini 2.5 Flash ───
+    if (openRouterKey) {
+        const orModels = ['google/gemini-2.5-flash', 'google/gemini-flash-1.5'];
+        for (const model of orModels) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+                const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${openRouterKey}`,
+                        'HTTP-Referer': 'https://aknex-railflow.vercel.app',
+                        'X-Title': 'RailFlow AI'
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: query }
+                        ],
+                        temperature: 0.3,
+                        max_tokens: 800
+                    }),
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (orRes.ok) {
+                    const data = await orRes.json();
+                    const answer = data.choices?.[0]?.message?.content;
+                    if (answer && answer.trim()) return answer;
+                }
+            } catch (err) {
+                // Continue to Groq
             }
-        } catch (err) {
-            console.warn('[RailFlow AI] Groq fallback failed:', err.message);
         }
     }
 
-    // ─── TIER 3: OpenRouter Fallback ───
-    if (OPENROUTER_KEY) {
-        try {
-            const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${OPENROUTER_KEY}`
-                },
-                body: JSON.stringify({
-                    model: 'deepseek/deepseek-chat',
-                    messages: [
-                        { role: 'system', content: systemContext },
-                        { role: 'user', content: userQuery.trim() }
-                    ],
-                    temperature: 0.3,
-                    max_tokens: 2048
-                })
-            });
-            if (orRes.ok) {
-                const data = await orRes.json();
-                const answer = data.choices?.[0]?.message?.content;
-                if (answer && answer.trim()) return answer;
+    // ─── TIER 3: Groq Cloud ───
+    if (groqKey) {
+        const groqModels = ['qwen/qwen3.8-27b', 'openai/gpt-oss-20b'];
+        for (const model of groqModels) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+                const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${groqKey}`
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: query }
+                        ],
+                        temperature: 0.3,
+                        max_tokens: 800
+                    }),
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (groqRes.ok) {
+                    const data = await groqRes.json();
+                    const answer = data.choices?.[0]?.message?.content;
+                    if (answer && answer.trim()) return answer;
+                }
+            } catch (err) {
+                // Continue to Tier 4
             }
-        } catch (err) {
-            console.warn('[RailFlow AI] OpenRouter fallback failed:', err.message);
         }
     }
 
-    // ─── TIER 4: Fallback if network or API call fails: deterministic local intelligence ───
-    return fallbackLocalAI(userQuery);
+    // ─── TIER 4: Local High-Fidelity Conversational Intelligence (Fail-Safe) ───
+    return fallbackLocalAI(query);
 }
 
 function fallbackLocalAI(query) {
     const q = query.toLowerCase().trim();
-    if (q.includes('alu') && (q.includes('ms') || q.includes('chennai') || q.includes('egmore'))) {
+
+    // Greeting handling
+    if (q === 'hi' || q === 'hello' || q === 'hey' || q.startsWith('hi ') || q.startsWith('hello ')) {
+        return `**RAILFLOW AI // System Initialized**\n\n` +
+               `Greetings, Operations Controller! I am **RailFlow AI**, your autonomous Indian Railways Operations Copilot, Network Dispatcher, and Crowd Intelligence Engine.\n\n` +
+               `### Current System Diagnostics\n` +
+               `* **Active Network Hubs:** Chennai Central (MAS), Chennai Egmore (MS), Tiruchirappalli (TPJ), Ariyalur (ALU), Madurai (MDU), Coimbatore (CBE).\n` +
+               `* **Telemetry Status:** Turnstiles, FOB density meters, and block signalling reporting nominal.\n` +
+               `* **Southern Main Chord Corridor:** Double electrified broad gauge with Automatic Block Signalling active.\n\n` +
+               `### How Can I Assist You Today?\n` +
+               `1. **Crowd Dispatch & Telemetry:** Influx rates, platform density management, and relief rake dispatch.\n` +
+               `2. **Corridor Routing:** Verified stop sequences, timings, and express train schedules (e.g. ALU ➔ MS).\n` +
+               `3. **Signalling & Safety:** Kavach (TCAS) compliance, braking curves, and headway management.\n\n` +
+               `*Type your operational query or station pair to begin.*`;
+    }
+
+    // Crowd dispatch queries
+    if (q.includes('crowd') || q.includes('dispatch') || q.includes('fob') || q.includes('density') || q.includes('turnstile')) {
+        return `### RailFlow Crowd Dispatch & Telemetry Protocol\n\n` +
+               `* **Density Threshold Management:**\n` +
+               `  • **Green (< 0.8 persons/m²):** Normal platform operations.\n` +
+               `  • **Amber (0.8 - 1.5 persons/m²):** Increased platform PA frequency, dynamic digital signage directing passengers to underutilized concourses.\n` +
+               `  • **Red (> 1.5 persons/m²):** **Critical Surge Protocol.** Automatic gate-metering at main entrances; RPF crowd segregation at FOB stairwells.\n` +
+               `* **Dynamic Rake Allocation:** Pre-positioned standby ICF/LHB rakes at Basin Bridge (BBQ), Tambaram (TBM), and Golden Rock (GOC) yards ready for immediate deployment as clone/relief specials.\n` +
+               `* **Dynamic Platform Re-Assignment:** Rakes facing heavy disembarkation surges are shifted to island platforms with dual FOB access to prevent concourse bottlenecks.\n` +
+               `* **Signalling Integration:** All crowd relief specials operate under strict Kavach (TCAS) speed-distance curve supervision.`;
+    }
+
+    // Ariyalur to Chennai Egmore
+    if (q.includes('alu') && (q.includes('ms') || q.includes('chennai') || q.includes('egmore') || q.includes('route') || q.includes('to'))) {
         return `### Ariyalur (ALU) to Chennai Egmore (MS) Corridor\n\n` +
                `* **Corridor Line:** Southern Railway Main Chord Line\n` +
-               `* **Route Sequence:** ALU (Ariyalur) ➜ VRI (Vriddhachalam) ➜ VM (Villupuram) ➜ CGL (Chengalpattu) ➜ TBM (Tambaram) ➜ MS (Chennai Egmore)\n` +
-               `* **Track Distance:** ~267 km\n` +
+               `* **Route Sequence:** **ALU** (Ariyalur) ➔ **VRI** (Vriddhachalam) ➔ **VM** (Villupuram) ➔ **CGL** (Chengalpattu) ➔ **TBM** (Tambaram) ➔ **MS** (Chennai Egmore)\n` +
+               `* **Track Distance:** ~267 km • **Travel Time:** 3h 40m - 4h 10m\n` +
                `* **Key Express Trains:**\n` +
-               `  1. **12638 Pandyan Express** (Departs ALU ~00:15, Arrives MS 05:15)\n` +
-               `  2. **12654 Rockfort Superfast** (Departs ALU ~23:35, Arrives MS 04:40)\n` +
-               `  3. **16128 Guruvayur Express** (Departs ALU ~15:00, Arrives MS 20:35)\n` +
-               `  4. **12636 Vaigai Superfast** (Departs ALU ~10:30, Arrives MS 14:30)\n` +
+               `  1. **12638 Pandyan Express** (Departs ALU ~01:14 ➔ Arrives MS 05:15)\n` +
+               `  2. **12606 Pallavan Superfast** (Departs ALU ~08:11 ➔ Arrives MS 12:10)\n` +
+               `  3. **12636 Vaigai Superfast** (Departs ALU ~10:14 ➔ Arrives MS 14:15)\n` +
+               `  4. **16128 Guruvayur Express** (Departs ALU ~16:44 ➔ Arrives MS 21:25)\n` +
+               `  5. **12654 Rockfort Superfast** (Departs ALU ~23:54 ➔ Arrives MS 04:00)\n` +
                `* **Operational Status:** Double Electrified Broad Gauge (25kV AC) with Automatic Block Signalling.`;
     }
 
+    // Ariyalur to Trichy
     if (q.includes('alu') && (q.includes('tpj') || q.includes('trichy') || q.includes('tiruchirappalli'))) {
         return `### Ariyalur (ALU) to Tiruchirappalli Jn (TPJ)\n\n` +
-               `* **Route:** Direct Southern Railway Chord Line section (ALU ➜ Kallakkudi Kovandakurichi ➜ Lalgudi ➜ Golden Rock ➜ TPJ)\n` +
-               `* **Distance:** ~70 km\n` +
-               `* **Travel Time:** 50 mins to 1 hr 15 mins\n` +
+               `* **Route:** Direct Southern Railway Chord Line section (ALU ➔ Kallakkudi Kovandakurichi ➔ Lalgudi ➔ Golden Rock ➔ TPJ)\n` +
+               `* **Distance:** ~70 km • **Travel Time:** 50 mins to 1 hr 10 mins\n` +
                `* **Key Trains:** Vaigai Superfast, Pallavan Express, Rockfort Express, Pandyan Express.`;
     }
 
-    if (q.includes('kavach')) {
+    // Kavach
+    if (q.includes('kavach') || q.includes('tcas') || q.includes('signall')) {
         return `### Kavach (Indian Railways TCAS)\n\n` +
                `* **Technology:** Indigenous Automatic Train Protection (ATP) system developed by RDSO.\n` +
                `* **Key Features:** Automated brake application on Signal Passed at Danger (SPAD), continuous cab-signalling, anti-collision RF communication between locomotives, and auto-whistling at level crossing gates.\n` +
@@ -249,14 +281,15 @@ function fallbackLocalAI(query) {
 
     return `### RailFlow Operations AI Assistant\n\n` +
            `Query: *${query}*\n\n` +
-           `Ground truth verified against master railway dataset:\n` +
-           `* **Zonal Hubs Active:** 25 major hubs (MAS, MS, TPJ, ALU, MDU, CBE, NDLS, HWH, CSMT, SBC, etc.)\n` +
-           `* **Southern Railway Operations:** Main Chord line (MS-TBM-CGL-VM-VRI-ALU-TPJ) and Western line (MAS-AJJ-JTJ-SA-ED-CBE) active.\n` +
-           `* **Real-time Dispatch:** Turnstiles, block signaling, and crowd telemetry active on 3,000 ms cycle.`;
+           `* **Zonal Network Active:** Southern Railway (SR), Northern Railway (NR), Western Railway (WR), Central Railway (CR).\n` +
+           `* **Southern Corridors:** Main Chord line (MS-TBM-CGL-VM-VRI-ALU-TPJ) and Western line (MAS-AJJ-JTJ-SA-ED-CBE) reporting nominal status.\n` +
+           `* **Real-time Telemetry:** Turnstiles, block signaling, and crowd telemetry running continuous 3,000 ms telemetry cycle.\n\n` +
+           `Please specify a train number, station code, or corridor for detailed dispatch telemetry.`;
 }
 
 module.exports = {
     askRailFlowAI,
-    buildSystemContext,
+    buildSystemContext: getSystemDirective,
+    getSystemDirective,
     fallbackLocalAI
 };

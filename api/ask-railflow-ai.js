@@ -1,7 +1,7 @@
 /**
  * Vercel Serverless Function: RailFlow AI Operations Assistant
  * Endpoint: /api/ask-railflow-ai
- * Multi-Tier Resilient Architecture: Gemini 2.5 Flash -> Groq -> OpenRouter -> Deterministic Local Engine
+ * Multi-Tier Resilient Architecture: Gemini Direct -> OpenRouter (Gemini 2.5 Flash) -> Groq -> Local Dispatch Engine
  */
 
 const fs = require('fs');
@@ -33,27 +33,69 @@ function loadEnv() {
 }
 loadEnv();
 
-const GEMINI_KEYS = [
-    process.env.GEMINI_API_KEY,
-    process.env.GOOGLE_API_KEY
-].filter(Boolean);
-
-const GROQ_KEY = process.env.GROQ_API_KEY || "";
-const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || "";
+function getGeminiKeys() {
+    loadEnv();
+    return [
+        process.env.GEMINI_API_KEY,
+        process.env.GOOGLE_API_KEY
+    ].filter(Boolean);
+}
 
 function getSystemDirective() {
-    return `You are "RAILFLOW AI", the authoritative Indian Railways Operations and Passenger Assistant.
-Knowledge & Topology Ground Truth:
-- Southern Railway (SR) Main Chord Line connects Tiruchirappalli (TPJ) and Chennai Egmore (MS) via Ariyalur (ALU), Vriddhachalam (VRI), Villupuram (VM), Chengalpattu (CGL), and Tambaram (TBM).
-- Ariyalur (ALU) is on the Chord Line (~267 km from Chennai Egmore, ~70 km from TPJ). Key trains: 12638 Pandian SF Express, 12636 Vaigai SF Express, 12606 Pallavan SF Express, 12654 Rockfort SF Express, 16128 Guruvayur Express.
-- Chennai Central (MAS) is the terminus for Bangalore, Mumbai, Delhi, and Howrah trunks.
-- Chennai Egmore (MS) is the terminus for southern destinations (Madurai, Trichy, Tirunelveli, Kanyakumari).
-- Incorporate comprehensive real Indian Railways knowledge across the web: Kavach TCAS, Vande Bharat, automated block signalling, platform layouts, and PNR rules.
-- Format responses cleanly with Markdown headers, bold station codes, bullet points, and timings.`;
+    return `You are "RAILFLOW AI", the authoritative Indian Railways Operations Copilot, Network Dispatcher, and Crowd Intelligence Engine.
+Role: Autonomous Railway Intelligence, Central Operations Control (COC) Copilot, and Commuter Guide.
+Persona: Highly knowledgeable, operationally precise, and professional.
+
+CORE SPECIALIZATIONS & GROUND TRUTH:
+1. Real-Time Crowd Dispatch & Telemetry:
+   - Platform crowd density management: Normal (< 0.8 persons/m²), Heightened Alert (0.8 - 1.5 persons/m²), Critical Surge (> 1.5 persons/m²).
+   - Influx control: Turnstile telemetry, Foot-Overbridge (FOB) load balancing, entrance gate-metering protocols.
+   - Dynamic Dispatch: Deploying standby ICF/LHB relief/clone rakes from coaching yards (Basin Bridge BBQ, Tambaram TBM, Golden Rock GOC) during surges.
+   - Dynamic platform re-assignment for delayed/congested rakes.
+
+2. Corridor & Topology Ground Truth:
+   - Southern Railway (SR) Main Chord Line connects Tiruchirappalli (TPJ) and Chennai Egmore (MS) via Ariyalur (ALU), Vriddhachalam (VRI), Villupuram (VM), Chengalpattu (CGL), and Tambaram (TBM).
+   - Ariyalur (ALU) is on the Chord Line (~267 km from MS, ~70 km from TPJ). Key express trains: 12638 Pandyan SF, 12636 Vaigai SF, 12606 Pallavan SF, 12654 Rockfort SF, 16128 Guruvayur Express.
+   - Chennai Central (MAS) is the primary terminus for Western/Northern/Eastern trunks (Bengaluru, Mumbai, New Delhi, Howrah).
+   - Chennai Egmore (MS) serves Southern Tamil Nadu lines (Madurai, Trichy, Tirunelveli, Rameswaram, Kanyakumari).
+
+3. Safety & Signalling:
+   - Kavach (TCAS) Automatic Train Protection, continuous cab-signalling, SPAD prevention, and automatic braking.
+   - Automatic Block Signalling (ABS), Electronic Interlocking (EI), axle counters, 25 kV AC traction.
+
+RESPONSE STYLE:
+- Professional, concise, high-tech Markdown with bullet points, train numbers, timings, and actionable dispatch intel.
+- When greeted (e.g. "hi", "hello"), introduce yourself as RailFlow AI, report nominal network status, and offer assistance on crowd dispatch, route planning, platform telemetry, or train scheduling.`;
 }
 
 function getLocalDeterministicResponse(query) {
-    const q = (query || '').toLowerCase();
+    const q = (query || '').toLowerCase().trim();
+
+    if (q === 'hi' || q === 'hello' || q === 'hey' || q.startsWith('hi ') || q.startsWith('hello ')) {
+        return `**RAILFLOW AI // System Initialized**\n\n` +
+               `Greetings, Operations Controller! I am **RailFlow AI**, your autonomous Indian Railways Operations Copilot, Network Dispatcher, and Crowd Intelligence Engine.\n\n` +
+               `### Current System Diagnostics\n` +
+               `* **Active Network Hubs:** Chennai Central (MAS), Chennai Egmore (MS), Tiruchirappalli (TPJ), Ariyalur (ALU), Madurai (MDU), Coimbatore (CBE).\n` +
+               `* **Telemetry Status:** Turnstiles, FOB density meters, and block signalling reporting nominal.\n` +
+               `* **Southern Main Chord Corridor:** Double electrified broad gauge with Automatic Block Signalling active.\n\n` +
+               `### How Can I Assist You Today?\n` +
+               `1. **Crowd Dispatch & Telemetry:** Influx rates, platform density management, and relief rake dispatch.\n` +
+               `2. **Corridor Routing:** Verified stop sequences, timings, and express train schedules (e.g. ALU ➔ MS).\n` +
+               `3. **Signalling & Safety:** Kavach (TCAS) compliance, braking curves, and headway management.\n\n` +
+               `*Type your operational query or station pair to begin.*`;
+    }
+
+    if (q.includes('crowd') || q.includes('dispatch') || q.includes('fob') || q.includes('density') || q.includes('turnstile')) {
+        return `### RailFlow Crowd Dispatch & Telemetry Protocol\n\n` +
+               `* **Density Threshold Management:**\n` +
+               `  • **Green (< 0.8 persons/m²):** Normal platform operations.\n` +
+               `  • **Amber (0.8 - 1.5 persons/m²):** Increased platform PA frequency, dynamic digital signage directing passengers to underutilized concourses.\n` +
+               `  • **Red (> 1.5 persons/m²):** **Critical Surge Protocol.** Automatic gate-metering at main entrances; RPF crowd segregation at FOB stairwells.\n` +
+               `* **Dynamic Rake Allocation:** Pre-positioned standby ICF/LHB rakes at Basin Bridge (BBQ), Tambaram (TBM), and Golden Rock (GOC) yards ready for immediate deployment as clone/relief specials.\n` +
+               `* **Dynamic Platform Re-Assignment:** Rakes facing heavy disembarkation surges are shifted to island platforms with dual FOB access to prevent concourse bottlenecks.\n` +
+               `* **Signalling Integration:** All crowd relief specials operate under strict Kavach (TCAS) speed-distance curve supervision.`;
+    }
+
     if ((q.includes('alu') || q.includes('ariyalur')) && (q.includes('ms') || q.includes('chennai') || q.includes('egmore') || q.includes('route') || q.includes('to'))) {
         return `### Direct Express Route: Ariyalur (ALU) ➔ Chennai Egmore (MS)\n\n` +
                `* **Corridor:** Southern Railway Main Chord Line\n` +
@@ -66,12 +108,14 @@ function getLocalDeterministicResponse(query) {
                `  • **12654 Rockfort SF Express** (Departs ALU ~23:54 ➔ Arrives MS 04:00)\n` +
                `  • **16128 Guruvayur Express** (Departs ALU ~16:44 ➔ Arrives MS 21:25)`;
     }
+
     if ((q.includes('alu') || q.includes('ariyalur')) && (q.includes('tpj') || q.includes('trichy') || q.includes('tiruchirappalli'))) {
         return `### Ariyalur (ALU) ➔ Tiruchirappalli Jn (TPJ)\n\n` +
                `* **Line:** Southern Railway Chord Main Line (Double Electrified 25kV AC)\n` +
                `* **Distance:** ~70 km • **Travel Time:** 50 - 65 minutes\n` +
                `* **Key Express Trains:** Vaigai Superfast, Pallavan Superfast, Rockfort Express, Pandyan Express.`;
     }
+
     return `### Indian Railways Intelligence (RailFlow Engine)\n\n` +
            `* **Database:** SQLite 3.50.3 WAL + Real Railway Topology Graph\n` +
            `* **Southern Corridors:** Chord Line (TPJ ➔ ALU ➔ VRI ➔ VM ➔ CGL ➔ TBM ➔ MS), Western Trunk (MAS ➔ AJJ ➔ KPD ➔ JTJ ➔ SA ➔ ED ➔ CBE).\n` +
@@ -104,93 +148,121 @@ module.exports = async (req, res) => {
         }
 
         const promptText = userPrompt.trim();
-        const fullPrompt = `${getSystemDirective()}\n\nUser Question: ${promptText}`;
+        const systemDirective = getSystemDirective();
+        const geminiKeys = getGeminiKeys();
+        const openRouterKey = process.env.OPENROUTER_API_KEY || "";
+        const groqKey = process.env.GROQ_API_KEY || "";
 
-        // ─── TIER 1: Google Gemini (Keys rotated automatically) ───
-        for (const key of GEMINI_KEYS) {
-            try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
-                        generationConfig: { temperature: 0.25, maxOutputTokens: 2048 }
-                    })
-                });
+        // ─── TIER 1: Google Gemini Direct ───
+        const directModels = [
+            'gemini-flash-latest',
+            'gemini-flash-lite-latest',
+            'gemini-2.5-flash-lite',
+            'gemini-3.5-flash-lite',
+            'gemini-2.5-flash'
+        ];
 
-                if (response.ok) {
-                    const data = await response.json();
-                    const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (answer && answer.trim()) {
-                        return res.status(200).json({ answer, status: 'success', model: 'gemini-2.5-flash', ok: true });
+        for (const key of geminiKeys) {
+            for (const model of directModels) {
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 7000);
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ role: 'user', parts: [{ text: `${systemDirective}\n\nUser Question: ${promptText}` }] }],
+                            generationConfig: { temperature: 0.3, maxOutputTokens: 1024 }
+                        }),
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (answer && answer.trim()) {
+                            return res.status(200).json({ answer, status: 'success', model: model, ok: true });
+                        }
                     }
-                }
-            } catch (err) {
-                console.warn('[Serverless AI] Gemini key failed, trying next...');
+                } catch (err) {}
             }
         }
 
-        // ─── TIER 2: Groq Cloud (Llama 3.3 70B Versatile) ───
-        if (GROQ_KEY) {
-            try {
-                const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${GROQ_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        model: 'llama-3.3-70b-versatile',
-                        messages: [
-                            { role: 'system', content: getSystemDirective() },
-                            { role: 'user', content: promptText }
-                        ],
-                        temperature: 0.2,
-                        max_tokens: 1500
-                    })
-                });
+        // ─── TIER 2: OpenRouter Google Gemini 2.5 Flash ───
+        if (openRouterKey) {
+            const orModels = ['google/gemini-2.5-flash', 'google/gemini-flash-1.5'];
+            for (const model of orModels) {
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 7000);
+                    const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${openRouterKey}`,
+                            'Content-Type': 'application/json',
+                            'HTTP-Referer': 'https://aknex-railflow.vercel.app',
+                            'X-Title': 'RailFlow AI'
+                        },
+                        body: JSON.stringify({
+                            model: model,
+                            messages: [
+                                { role: 'system', content: systemDirective },
+                                { role: 'user', content: promptText }
+                            ],
+                            temperature: 0.3,
+                            max_tokens: 800
+                        }),
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
 
-                if (groqRes.ok) {
-                    const data = await groqRes.json();
-                    const answer = data.choices?.[0]?.message?.content;
-                    if (answer) {
-                        return res.status(200).json({ answer, status: 'success', model: 'groq-llama-3.3-70b', ok: true });
+                    if (orRes.ok) {
+                        const data = await orRes.json();
+                        const answer = data.choices?.[0]?.message?.content;
+                        if (answer && answer.trim()) {
+                            return res.status(200).json({ answer, status: 'success', model: model, ok: true });
+                        }
                     }
-                }
-            } catch (err) {
-                console.warn('[Serverless AI] Groq fallback failed:', err.message);
+                } catch (err) {}
             }
         }
 
-        // ─── TIER 3: OpenRouter ───
-        if (OPENROUTER_KEY) {
-            try {
-                const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${OPENROUTER_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        model: 'deepseek/deepseek-chat',
-                        messages: [
-                            { role: 'system', content: getSystemDirective() },
-                            { role: 'user', content: promptText }
-                        ],
-                        temperature: 0.2
-                    })
-                });
+        // ─── TIER 3: Groq Cloud ───
+        if (groqKey) {
+            const groqModels = ['qwen/qwen3.8-27b', 'openai/gpt-oss-20b'];
+            for (const model of groqModels) {
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 7000);
+                    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${groqKey}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            model: model,
+                            messages: [
+                                { role: 'system', content: systemDirective },
+                                { role: 'user', content: promptText }
+                            ],
+                            temperature: 0.3,
+                            max_tokens: 800
+                        }),
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
 
-                if (orRes.ok) {
-                    const data = await orRes.json();
-                    const answer = data.choices?.[0]?.message?.content;
-                    if (answer) {
-                        return res.status(200).json({ answer, status: 'success', model: 'openrouter-deepseek', ok: true });
+                    if (groqRes.ok) {
+                        const data = await groqRes.json();
+                        const answer = data.choices?.[0]?.message?.content;
+                        if (answer && answer.trim()) {
+                            return res.status(200).json({ answer, status: 'success', model: model, ok: true });
+                        }
                     }
-                }
-            } catch (err) {
-                console.warn('[Serverless AI] OpenRouter fallback failed:', err.message);
+                } catch (err) {}
             }
         }
 
