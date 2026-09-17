@@ -43,3 +43,9 @@ Thumbs.db
 
 .vercel
 .env*
+
+# Database & SQLite binaries (>100MB limit on GitHub)
+database/*.db
+database/*.db-wal
+database/*.db-shm
+*.db
