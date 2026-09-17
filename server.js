@@ -132,7 +132,63 @@ function loadMasterData() {
             }).filter(s => s.code.length > 0);
 
             STATIONS.forEach(s => STATION_BY_CODE.set(s.code, s));
-            console.log(`[Data Engine] Ingested ${STATIONS.length} real stations from stations.json with historical profiles`);
+
+            // Ensure priority metadata, zones, and proper names for TPJ and ALU
+            const tpj = STATION_BY_CODE.get('TPJ');
+            if (tpj) {
+                tpj.name = 'Tiruchirappalli Jn (Trichy)';
+                tpj.state = 'Tamil Nadu';
+                tpj.zone = 'SR';
+                tpj.platformCount = 8;
+                tpj.aliases = Array.from(new Set([...(tpj.aliases || []), 'TRICHY', 'TIRUCHIRAPPALLI', 'TRICHI', 'TIRUCHI', 'TPJ', 'TRICHINOPOLY']));
+            }
+            let alu = STATION_BY_CODE.get('ALU');
+            if (alu) {
+                alu.name = 'Ariyalur';
+                alu.state = 'Tamil Nadu';
+                alu.zone = 'SR';
+                alu.platformCount = 3;
+                alu.aliases = Array.from(new Set([...(alu.aliases || []), 'ARIYALUR', 'ALU']));
+            } else {
+                alu = {
+                    code: 'ALU',
+                    name: 'Ariyalur',
+                    state: 'Tamil Nadu',
+                    zone: 'SR',
+                    address: 'Ariyalur, Tamil Nadu',
+                    latitude: 11.150035,
+                    longitude: 79.068318,
+                    platformCount: 3,
+                    dailyFootfall: 15000,
+                    peakCrowdLevel: 'NORMAL',
+                    openedYear: 1928,
+                    establishedDate: '1928-01-01',
+                    historicalDetails: 'Key junction in Ariyalur district on the Chennai Egmore - Tiruchirappalli chord line.',
+                    aliases: ['ARIYALUR', 'ALU']
+                };
+                STATIONS.push(alu);
+                STATION_BY_CODE.set('ALU', alu);
+            }
+
+            // Register explicit aliases
+            const priorityAliases = {
+                'TRICHY': ['TPJ'],
+                'TIRUCHIRAPPALLI': ['TPJ'],
+                'TIRUCHI': ['TPJ'],
+                'TRICHI': ['TPJ'],
+                'TRICHINOPOLY': ['TPJ'],
+                'ARIYALUR': ['ALU'],
+                'ALU': ['ALU'],
+                'TPJ': ['TPJ']
+            };
+            for (const [al, cds] of Object.entries(priorityAliases)) {
+                if (!ALIAS_TO_CODES.has(al)) ALIAS_TO_CODES.set(al, []);
+                cds.forEach(c => {
+                    if (!ALIAS_TO_CODES.get(al).includes(c)) ALIAS_TO_CODES.get(al).unshift(c);
+                });
+            }
+
+            console.log(`[Data Engine] Ingested ${STATIONS.length} real stations from stations.json with historical profiles (TPJ: Trichy, ALU: Ariyalur configured)`);
         }
 
         if (fs.existsSync(trainsPath)) {
@@ -228,7 +284,9 @@ function calcDistance(fromCode, toCode) {
 function searchStations(q, limit = 20) {
     q = (q || '').trim().toUpperCase();
     if (!q) {
-        return STATIONS.slice(0, limit);
+        const topCodes = ['TPJ', 'ALU', 'MAS', 'MS', 'MDU', 'CBE', 'NDLS', 'BCT', 'HWH', 'SBC', 'TVC'];
+        const topStns = topCodes.map(c => STATION_BY_CODE.get(c)).filter(Boolean);
+        return topStns.slice(0, limit);
     }
 
     const qNorm = q.replace(/[^A-Z0-9]/g, '');
@@ -767,7 +825,7 @@ function handleApiRequest(pathname, searchParams, res, req) {
                 zone: s.zone,
                 lat: s.latitude,
                 lon: s.longitude,
-                activeTrains: Math.floor(Math.random() * 35) + 8
+                activeTrains: ((s.code.split('').reduce((a,c)=>a+c.charCodeAt(0),0) % 28) + 8)
             }))
         }));
     }
@@ -784,6 +842,7 @@ function handleApiRequest(pathname, searchParams, res, req) {
             }
 
             const sql = (sqlText || '').trim();
+            const start = Date.now();
             let rows = [];
             let plan = 'SCAN TABLE stations USING INDEX idx_stn_code';
             const upper = sql.toUpperCase();
@@ -840,7 +899,7 @@ function handleApiRequest(pathname, searchParams, res, req) {
                 sql: sql || 'SELECT * FROM stations WHERE zone = "SR" LIMIT 25;',
                 database: 'database/railway.db',
                 engine: 'SQLite 3.50.3.0 (WAL Mode)',
-                executionTimeMs: (Math.random() * 0.4 + 0.15).toFixed(2),
+                executionTimeMs: (Date.now() - start).toFixed(2),
                 queryPlan: plan,
                 rowCount: rows.length,
                 rows,

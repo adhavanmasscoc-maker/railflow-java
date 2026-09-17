@@ -51,7 +51,8 @@ const RAW_HUBS = [
     { code: 'SBC', name: 'KSR Bengaluru', zone: 'SWR', city: 'Bengaluru', state: 'Karnataka', platforms: 10, lat: 12.9776, lon: 77.5681, tier: 'junction' },
     { code: 'MYS', name: 'Mysuru Jn', zone: 'SWR', city: 'Mysuru', state: 'Karnataka', platforms: 6, lat: 12.3189, lon: 76.6460, tier: 'junction' },
     { code: 'CBE', name: 'Coimbatore Jn', zone: 'SR', city: 'Coimbatore', state: 'Tamil Nadu', platforms: 6, lat: 10.9976, lon: 76.9663, tier: 'southern' },
-    { code: 'TPJ', name: 'Tiruchirappalli Jn', zone: 'SR', city: 'Tiruchirappalli', state: 'Tamil Nadu', platforms: 8, lat: 10.7941, lon: 78.6854, tier: 'southern' },
+    { code: 'TPJ', name: 'Tiruchirappalli Jn (Trichy)', zone: 'SR', city: 'Tiruchirappalli', state: 'Tamil Nadu', platforms: 8, lat: 10.7941, lon: 78.6854, tier: 'southern' },
+    { code: 'ALU', name: 'Ariyalur', zone: 'SR', city: 'Ariyalur', state: 'Tamil Nadu', platforms: 3, lat: 11.1500, lon: 79.0683, tier: 'southern' },
     { code: 'MDU', name: 'Madurai Jn', zone: 'SR', city: 'Madurai', state: 'Tamil Nadu', platforms: 8, lat: 9.9199, lon: 78.1103, tier: 'southern' },
     { code: 'TVC', name: 'Thiruvananthapuram C', zone: 'SR', city: 'Thiruvananthapuram', state: 'Kerala', platforms: 5, lat: 8.4867, lon: 76.9512, tier: 'southern' },
     { code: 'JAT', name: 'Jammu Tawi', zone: 'NR', city: 'Jammu', state: 'Jammu and Kashmir', platforms: 7, lat: 32.7070, lon: 74.8801, tier: 'junction' },
@@ -61,6 +62,31 @@ const RAW_HUBS = [
     { code: 'ST', name: 'Surat', zone: 'WR', city: 'Surat', state: 'Gujarat', platforms: 4, lat: 21.2066, lon: 72.8408, tier: 'junction' },
     { code: 'VSKP', name: 'Visakhapatnam', zone: 'ECoR', city: 'Visakhapatnam', state: 'Andhra Pradesh', platforms: 8, lat: 17.7216, lon: 83.2895, tier: 'junction' },
     { code: 'BZA', name: 'Vijayawada Jn', zone: 'SCR', city: 'Vijayawada', state: 'Andhra Pradesh', platforms: 10, lat: 16.5183, lon: 80.6186, tier: 'junction' }
+];
+
+const ALL_COMMON_STATIONS = [
+    { code: 'TPJ', name: 'Tiruchirappalli Jn (Trichy)', city: 'Tiruchirappalli', state: 'Tamil Nadu', zone: 'SR', platforms: 8, emoji: '🌴', badge: 'TRICHY', aliases: ['TRICHY', 'TIRUCHIRAPPALLI', 'TRICHI', 'TIRUCHI', 'TPJ'] },
+    { code: 'ALU', name: 'Ariyalur', city: 'Ariyalur', state: 'Tamil Nadu', zone: 'SR', platforms: 3, emoji: '🌴', badge: 'ARIYALUR', aliases: ['ARIYALUR', 'ALU'] },
+    { code: 'MAS', name: 'Chennai Central', city: 'Chennai', state: 'Tamil Nadu', zone: 'SR', platforms: 12, emoji: '🌴', badge: 'CHENNAI CTL', aliases: ['CHENNAI', 'MADRAS', 'MAS'] },
+    { code: 'MS', name: 'Chennai Egmore', city: 'Chennai', state: 'Tamil Nadu', zone: 'SR', platforms: 11, emoji: '🌴', badge: 'EGMORE', aliases: ['EGMORE', 'CHENNAI EGMORE', 'MS'] },
+    { code: 'TBM', name: 'Tambaram', city: 'Chennai', state: 'Tamil Nadu', zone: 'SR', platforms: 8, emoji: '🌴', badge: 'TAMBARAM', aliases: ['TAMBARAM', 'TBM'] },
+    { code: 'MDU', name: 'Madurai Jn', city: 'Madurai', state: 'Tamil Nadu', zone: 'SR', platforms: 8, emoji: '🌴', badge: 'MADURAI', aliases: ['MADURAI', 'MDU'] },
+    { code: 'CBE', name: 'Coimbatore Jn', city: 'Coimbatore', state: 'Tamil Nadu', zone: 'SR', platforms: 6, emoji: '🌴', badge: 'COIMBATORE', aliases: ['COIMBATORE', 'KOVAI', 'CBE'] },
+    { code: 'NDLS', name: 'New Delhi', city: 'Delhi', state: 'Delhi NCT', zone: 'NR', platforms: 16, emoji: '🏛️', badge: 'DELHI', aliases: ['NEW DELHI', 'DELHI', 'NDLS'] },
+    { code: 'BCT', name: 'Mumbai Central', city: 'Mumbai', state: 'Maharashtra', zone: 'WR', platforms: 8, emoji: '⚡', badge: 'MUMBAI CTL', aliases: ['MUMBAI', 'BOMBAY', 'BCT', 'MMCT'] },
+    { code: 'CSTM', name: 'Chhatrapati Shivaji MT', city: 'Mumbai', state: 'Maharashtra', zone: 'CR', platforms: 18, emoji: '🏛️', badge: 'MUMBAI VT', aliases: ['VT', 'CST', 'CSMT'] },
+    { code: 'HWH', name: 'Howrah Jn', city: 'Kolkata', state: 'West Bengal', zone: 'ER', platforms: 23, emoji: '🌊', badge: 'HOWRAH', aliases: ['KOLKATA', 'CALCUTTA', 'HWH'] },
+    { code: 'SBC', name: 'KSR Bengaluru', city: 'Bengaluru', state: 'Karnataka', zone: 'SWR', platforms: 10, emoji: '🌿', badge: 'BANGALORE', aliases: ['BENGALURU', 'BANGALORE', 'SBC'] },
+    { code: 'MYS', name: 'Mysuru Jn', city: 'Mysuru', state: 'Karnataka', zone: 'SWR', platforms: 6, emoji: '🌿', badge: 'MYSURU', aliases: ['MYSORE', 'MYS'] },
+    { code: 'PUNE', name: 'Pune Jn', city: 'Pune', state: 'Maharashtra', zone: 'CR', platforms: 6, emoji: '⚡', badge: 'PUNE', aliases: ['PUNE', 'POONA'] },
+    { code: 'HYB', name: 'Hyderabad Deccan', city: 'Hyderabad', state: 'Telangana', zone: 'SCR', platforms: 6, emoji: '🏛️', badge: 'HYDERABAD', aliases: ['HYDERABAD', 'NAMPALLY', 'HYB'] },
+    { code: 'BZA', name: 'Vijayawada Jn', city: 'Vijayawada', state: 'Andhra Pradesh', zone: 'SCR', platforms: 10, emoji: '⚡', badge: 'VIJAYAWADA', aliases: ['VIJAYAWADA', 'BZA'] },
+    { code: 'TVC', name: 'Thiruvananthapuram C', city: 'Thiruvananthapuram', state: 'Kerala', zone: 'SR', platforms: 5, emoji: '🌴', badge: 'TRIVANDRUM', aliases: ['TRIVANDRUM', 'TVC'] },
+    { code: 'CNB', name: 'Kanpur Central', city: 'Kanpur', state: 'Uttar Pradesh', zone: 'NCR', platforms: 10, emoji: '⚡', badge: 'KANPUR', aliases: ['KANPUR', 'CNB'] },
+    { code: 'LKO', name: 'Lucknow Charbagh', city: 'Lucknow', state: 'Uttar Pradesh', zone: 'NR', platforms: 9, emoji: '🏛️', badge: 'LUCKNOW', aliases: ['LUCKNOW', 'LKO'] },
+    { code: 'BSB', name: 'Varanasi Jn', city: 'Varanasi', state: 'Uttar Pradesh', zone: 'NR', platforms: 9, emoji: '🕉️', badge: 'VARANASI', aliases: ['VARANASI', 'BANARAS', 'KASHI', 'BSB'] },
+    { code: 'JP', name: 'Jaipur Jn', city: 'Jaipur', state: 'Rajasthan', zone: 'NWR', platforms: 8, emoji: '🏰', badge: 'JAIPUR', aliases: ['JAIPUR', 'PINK CITY', 'JP'] },
+    { code: 'ADI', name: 'Ahmedabad Jn', city: 'Ahmedabad', state: 'Gujarat', zone: 'WR', platforms: 12, emoji: '⚡', badge: 'AHMEDABAD', aliases: ['AHMEDABAD', 'ADI'] }
 ];
 
 const RAILWAY_HUBS = RAW_HUBS.map(h => {
@@ -109,6 +135,11 @@ const CORRIDOR_EDGES = [
     { from: 'MAS', to: 'MS', dist: 3, name: 'Chennai Urban Bifurcation' },
     { from: 'MS', to: 'TBM', dist: 25, name: 'Tambaram Suburban Link' },
     { from: 'TBM', to: 'TPJ', dist: 310, name: 'Rockfort Southern Main' },
+    { from: 'TBM', to: 'ALU', dist: 242, name: 'Tambaram - Ariyalur Fast Corridor' },
+    { from: 'ALU', to: 'TPJ', dist: 70, name: 'Ariyalur - Trichy Chord Main' },
+    { from: 'TPJ', to: 'ALU', dist: 70, name: 'Trichy - Ariyalur Chord Main' },
+    { from: 'MS', to: 'ALU', dist: 267, name: 'Chennai - Ariyalur Express Line' },
+    { from: 'ALU', to: 'MS', dist: 267, name: 'Ariyalur - Chennai Express Line' },
     { from: 'TPJ', to: 'MDU', dist: 157, name: 'Pandyan Express Corridor' },
     { from: 'MDU', to: 'TVC', dist: 210, name: 'Cape-Malabar Line' },
     { from: 'SBC', to: 'CBE', dist: 375, name: 'Kongu Link' },
@@ -161,8 +192,34 @@ const MASTER_TRAINS = [
     { number: '12637', name: 'Pandian Express', type: 'SUPERFAST', from: 'MS', to: 'MDU', route: 'MS ➔ TBM ➔ TPJ ➔ MDU', platform: 'PF 4', time: '21:40', freq: 'Daily', stops: [
         { code: 'MS', name: 'Chennai Egmore', arr: 'START', dep: '21:40', halt: '-', dist: '0 km', pf: '4' },
         { code: 'TBM', name: 'Tambaram', arr: '22:08', dep: '22:10', halt: '2 min', dist: '25 km', pf: '8' },
-        { code: 'TPJ', name: 'Tiruchirappalli Jn', arr: '02:05', dep: '02:10', halt: '5 min', dist: '335 km', pf: '1' },
+        { code: 'TPJ', name: 'Tiruchirappalli Jn (Trichy)', arr: '02:05', dep: '02:10', halt: '5 min', dist: '335 km', pf: '1' },
         { code: 'MDU', name: 'Madurai Jn', arr: '05:25', dep: 'ENDS', halt: '-', dist: '492 km', pf: '1' }
+    ]},
+    { number: '12635', name: 'Vaigai Superfast Express', type: 'SUPERFAST', from: 'MS', to: 'MDU', route: 'MS ➔ TBM ➔ ALU ➔ TPJ ➔ MDU', platform: 'PF 4', time: '13:50', freq: 'Daily', stops: [
+        { code: 'MS', name: 'Chennai Egmore', arr: 'START', dep: '13:50', halt: '-', dist: '0 km', pf: '4' },
+        { code: 'TBM', name: 'Tambaram', arr: '14:18', dep: '14:20', halt: '2 min', dist: '25 km', pf: '8' },
+        { code: 'ALU', name: 'Ariyalur', arr: '17:04', dep: '17:05', halt: '1 min', dist: '267 km', pf: '2' },
+        { code: 'TPJ', name: 'Tiruchirappalli Jn (Trichy)', arr: '18:00', dep: '18:05', halt: '5 min', dist: '337 km', pf: '1' },
+        { code: 'MDU', name: 'Madurai Jn', arr: '21:15', dep: 'ENDS', halt: '-', dist: '494 km', pf: '1' }
+    ]},
+    { number: '12636', name: 'Vaigai Superfast Express', type: 'SUPERFAST', from: 'MDU', to: 'MS', route: 'MDU ➔ TPJ ➔ ALU ➔ TBM ➔ MS', platform: 'PF 1', time: '07:10', freq: 'Daily', stops: [
+        { code: 'MDU', name: 'Madurai Jn', arr: 'START', dep: '07:10', halt: '-', dist: '0 km', pf: '1' },
+        { code: 'TPJ', name: 'Tiruchirappalli Jn (Trichy)', arr: '09:00', dep: '09:05', halt: '5 min', dist: '157 km', pf: '2' },
+        { code: 'ALU', name: 'Ariyalur', arr: '09:59', dep: '10:00', halt: '1 min', dist: '227 km', pf: '1' },
+        { code: 'TBM', name: 'Tambaram', arr: '13:18', dep: '13:20', halt: '2 min', dist: '469 km', pf: '6' },
+        { code: 'MS', name: 'Chennai Egmore', arr: '14:15', dep: 'ENDS', halt: '-', dist: '494 km', pf: '5' }
+    ]},
+    { number: '12653', name: 'Rockfort Superfast Express', type: 'SUPERFAST', from: 'MS', to: 'TPJ', route: 'MS ➔ TBM ➔ ALU ➔ TPJ', platform: 'PF 5', time: '23:35', freq: 'Daily', stops: [
+        { code: 'MS', name: 'Chennai Egmore', arr: 'START', dep: '23:35', halt: '-', dist: '0 km', pf: '5' },
+        { code: 'TBM', name: 'Tambaram', arr: '00:03', dep: '00:05', halt: '2 min', dist: '25 km', pf: '8' },
+        { code: 'ALU', name: 'Ariyalur', arr: '03:40', dep: '03:41', halt: '1 min', dist: '267 km', pf: '2' },
+        { code: 'TPJ', name: 'Tiruchirappalli Jn (Trichy)', arr: '04:55', dep: 'ENDS', halt: '-', dist: '337 km', pf: '3' }
+    ]},
+    { number: '12654', name: 'Rockfort Superfast Express', type: 'SUPERFAST', from: 'TPJ', to: 'MS', route: 'TPJ ➔ ALU ➔ TBM ➔ MS', platform: 'PF 1', time: '22:50', freq: 'Daily', stops: [
+        { code: 'TPJ', name: 'Tiruchirappalli Jn (Trichy)', arr: 'START', dep: '22:50', halt: '-', dist: '0 km', pf: '1' },
+        { code: 'ALU', name: 'Ariyalur', arr: '23:45', dep: '23:46', halt: '1 min', dist: '70 km', pf: '3' },
+        { code: 'TBM', name: 'Tambaram', arr: '03:08', dep: '03:10', halt: '2 min', dist: '312 km', pf: '5' },
+        { code: 'MS', name: 'Chennai Egmore', arr: '04:00', dep: 'ENDS', halt: '-', dist: '337 km', pf: '2' }
     ]}
 ];
 
@@ -177,6 +234,35 @@ const STATE = {
     intervalTimerId: null,
     audioAlerts: true,
     telemetryTick: 1,
+    viewMode: 'controller',
+    audioMuted: false,
+    audioVolume: 0.8,
+    activeScenario: 'morning',
+    inflowSurgeMultiplier: 1.0,
+    activeIncident: 'NONE',
+    isReplayPaused: false,
+    replaySpeed: 1,
+    chokepoints: {
+        northGate: { name: 'North Concourse Gate', density: 1.15, inflow: 42, cap: 3.0 },
+        southGate: { name: 'South Concourse Gate', density: 1.32, inflow: 56, cap: 3.0 },
+        fob1: { name: 'FOB 1 (Main Overbridge & Stairs)', density: 1.48, cap: 3.0 },
+        fob2: { name: 'FOB 2 (Suburban Connector & Escalator)', density: 2.18, cap: 3.0 }
+    },
+    activeConflict: {
+        detected: false,
+        trainNo: '12638',
+        trainName: 'Pandyan Express',
+        currentPf: 2,
+        targetPf: 3,
+        currentDensity: 88,
+        targetDensity: 24,
+        penalty: 18.2,
+        countdown: 12
+    },
+    reallocationAuditLog: [
+        { time: '08:14:22', train: '12638 Pandyan Exp', origPf: 2, origDensity: 88, targetPf: 3, targetDensity: 24, source: 'Python Heuristic', status: 'DISPATCHED' },
+        { time: '07:48:10', train: '22625 Double Decker', origPf: 4, origDensity: 82, targetPf: 1, targetDensity: 18, source: 'Station Master HUD', status: 'EXECUTED' }
+    ],
     zoomLevel: 1,
     panX: 0,
     panY: 0,
@@ -229,6 +315,8 @@ const $$ = sel => document.querySelectorAll(sel);
 document.addEventListener('DOMContentLoaded', () => {
     initClock();
     initNavigation();
+    initDualViewAndAudio();
+    initStationOperationsIntelligence();
     initSearch();
     initDrawersAndModals();
     initNetworkGraphs();
@@ -256,6 +344,8 @@ function initClock() {
         const str = d.toTimeString().split(' ')[0];
         const ticker = $('pipelineClock');
         if (ticker) ticker.textContent = str;
+        const commuterClock = $('commuterClock');
+        if (commuterClock) commuterClock.textContent = str;
     };
     update();
     setInterval(update, 1000);
@@ -289,6 +379,21 @@ function switchPage(pageId) {
         switchNetworkView('radar'); // RailRadar Live GPS stream is default FIRST sub-view
     } else if (pageId === 'dashboard') {
         renderNetworkGraph('dashGraphSvg', false);
+    }
+
+    // Synchronize Dual-View Mode Switcher buttons
+    const btnController = $('btnModeController');
+    const btnCommuter = $('btnModeCommuter');
+    if (btnController && btnCommuter) {
+        if (pageId === 'commuter') {
+            btnCommuter.classList.add('active');
+            btnController.classList.remove('active');
+            STATE.viewMode = 'commuter';
+        } else {
+            btnController.classList.add('active');
+            btnCommuter.classList.remove('active');
+            STATE.viewMode = 'controller';
+        }
     }
 
     // Scroll viewport to top
@@ -638,9 +743,27 @@ function quickPlanRoute(fromCode, toCode) {
 }
 window.quickPlanRoute = quickPlanRoute;
 
+function resolveStationCode(val) {
+    if (!val) return '';
+    const v = val.trim().toUpperCase();
+    const stn = ALL_COMMON_STATIONS.find(s =>
+        s.code === v ||
+        (s.aliases && s.aliases.some(a => a.toUpperCase() === v)) ||
+        s.name.toUpperCase().includes(v)
+    );
+    if (stn) return stn.code;
+    const hub = RAILWAY_HUBS.find(h => h.code === v || h.name.toUpperCase().includes(v) || (h.city && h.city.toUpperCase().includes(v)));
+    if (hub) return hub.code;
+    return v;
+}
+window.resolveStationCode = resolveStationCode;
+
 async function executeJourneyPlan() {
-    const fromVal = ($('fromStationInput').value || 'NDLS').trim().toUpperCase();
-    const toVal = ($('toStationInput').value || 'MAS').trim().toUpperCase();
+    const fromRaw = ($('fromStationInput').value || 'NDLS').trim();
+    const toRaw = ($('toStationInput').value || 'MAS').trim();
+
+    const fromVal = resolveStationCode(fromRaw) || 'NDLS';
+    const toVal = resolveStationCode(toRaw) || 'MAS';
 
     if (!fromVal || !toVal) return;
 
@@ -654,8 +777,8 @@ async function executeJourneyPlan() {
         if (!res.ok) throw new Error('API routing request failed');
         const data = await res.json();
 
-        const fromName = data.fromStation?.name || fromVal;
-        const toName = data.toStation?.name || toVal;
+        const fromName = data.fromStation?.name || data.from?.name || fromVal;
+        const toName = data.toStation?.name || data.to?.name || toVal;
         $('resJourneyTitle').textContent = `${fromName} (${fromVal}) → ${toName} (${toVal})`;
 
         const directTrains = data.directTrains || [];
@@ -864,6 +987,117 @@ function renderDirectTrainsTable(trains, fromCode, toCode, rawRoutes) {
     `;
 }
 
+function lookupLocalStations(query, limit = 8) {
+    const q = (query || '').trim().toLowerCase();
+    const allStns = [...ALL_COMMON_STATIONS];
+    RAILWAY_HUBS.forEach(h => {
+        if (!allStns.some(s => s.code === h.code)) {
+            allStns.push({
+                code: h.code,
+                name: h.name,
+                city: h.city,
+                state: h.state,
+                zone: h.zone,
+                platforms: h.platforms,
+                emoji: h.zone === 'SR' ? '🌴' : (h.tier === 'trunk' ? '⚡' : '🚉'),
+                badge: h.zone,
+                aliases: [h.code.toLowerCase(), h.name.toLowerCase(), (h.city || '').toLowerCase()]
+            });
+        }
+    });
+
+    if (!q) {
+        // Return curated priority hubs
+        const defaults = ['TPJ', 'ALU', 'MAS', 'MS', 'MDU', 'CBE', 'NDLS', 'BCT'];
+        return defaults.map(code => allStns.find(s => s.code === code)).filter(Boolean);
+    }
+
+    const exactCode = [];
+    const aliasExact = [];
+    const prefixCode = [];
+    const prefixName = [];
+    const containsName = [];
+    const seen = new Set();
+
+    function add(s) {
+        if (!s || seen.has(s.code)) return false;
+        seen.add(s.code);
+        return true;
+    }
+
+    // 1. Exact station code match (e.g. "tpj" -> TPJ, "alu" -> ALU)
+    const exact = allStns.find(s => s.code.toLowerCase() === q);
+    if (exact && add(exact)) exactCode.push(exact);
+
+    // 2. Exact alias match (e.g. "trichy", "trichrapali", "trichi", "ariyalur")
+    allStns.forEach(s => {
+        if (s.aliases && s.aliases.some(a => a.toLowerCase() === q)) {
+            if (add(s)) aliasExact.push(s);
+        }
+    });
+
+    // 3. Station code prefix (e.g. "tp" -> TPJ, "al" -> ALU)
+    allStns.forEach(s => {
+        if (s.code.toLowerCase().startsWith(q)) {
+            if (add(s)) prefixCode.push(s);
+        }
+    });
+
+    // 4. Station name prefix or alias prefix (e.g. "trich" -> TPJ, "ariya" -> ALU)
+    allStns.forEach(s => {
+        const nameMatch = s.name.toLowerCase().startsWith(q);
+        const aliasMatch = s.aliases && s.aliases.some(a => a.toLowerCase().startsWith(q));
+        if (nameMatch || aliasMatch) {
+            if (add(s)) prefixName.push(s);
+        }
+    });
+
+    // 5. Contains in name, city or aliases
+    allStns.forEach(s => {
+        const nameContains = s.name.toLowerCase().includes(q);
+        const cityContains = s.city && s.city.toLowerCase().includes(q);
+        const aliasContains = s.aliases && s.aliases.some(a => a.toLowerCase().includes(q));
+        if (nameContains || cityContains || aliasContains) {
+            if (add(s)) containsName.push(s);
+        }
+    });
+
+    return [...exactCode, ...aliasExact, ...prefixCode, ...prefixName, ...containsName].slice(0, limit);
+}
+
+function renderStationDropdownHtml(stations, inputId, dropdownId) {
+    if (!stations || stations.length === 0) {
+        return '<div style="padding:0.85rem 1rem; color:var(--text-muted); font-size:0.8rem; text-align:center;">No matching railway stations found</div>';
+    }
+
+    return stations.map(s => {
+        const isTPJ = s.code === 'TPJ';
+        const isALU = s.code === 'ALU';
+        const isSR = s.zone === 'SR' || isTPJ || isALU;
+        const emoji = s.emoji || (isTPJ || isALU ? '🌴' : (isSR ? '🌴' : '🚉'));
+        const badgeText = isTPJ ? 'TRICHY / TPJ' : (isALU ? 'ARIYALUR / ALU' : (s.badge || s.zone || 'IR'));
+        const badgeClass = isTPJ ? 'chip-tpj-alu' : (isALU ? 'chip-alu-ms' : '');
+
+        return `
+            <div class="search-item ${isSR ? 'highlight-sr' : ''}" onclick="selectDropdownStation('${inputId}', '${dropdownId}', '${s.code}')">
+                <div style="display:flex; align-items:center; gap:0.75rem; min-width:0;">
+                    <span style="font-size:1.3rem; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3)); flex-shrink:0;">${emoji}</span>
+                    <div style="min-width:0;">
+                        <div class="search-item-primary" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+                            <strong style="color:var(--text-primary); font-size:0.9rem;">${s.name}</strong>
+                            ${badgeText ? `<span class="badge ${badgeClass}" style="font-size:0.65rem; font-weight:700; text-transform:uppercase; padding:0.15rem 0.45rem;">${badgeText}</span>` : ''}
+                        </div>
+                        <div style="color:var(--text-muted); font-size:0.74rem; margin-top:2px;">
+                            ${s.city ? s.city + ', ' : ''}${s.state || s.zone || 'IR'} • ${s.platforms || 4} PFs
+                        </div>
+                    </div>
+                </div>
+                <span class="search-item-code-badge">${s.code}</span>
+            </div>
+        `;
+    }).join('');
+}
+
 function setupStationAutocomplete(inputId, dropdownId) {
     const input = $(inputId);
     const drop = $(dropdownId);
@@ -871,60 +1105,71 @@ function setupStationAutocomplete(inputId, dropdownId) {
 
     let debounceTimer = null;
 
+    // Instantly show curated suggestions when focused
+    input.addEventListener('focus', () => {
+        const val = input.value.trim();
+        const localMatches = lookupLocalStations(val, 8);
+        drop.innerHTML = renderStationDropdownHtml(localMatches, inputId, dropdownId);
+        drop.classList.add('open');
+    });
+
     input.addEventListener('input', () => {
         clearTimeout(debounceTimer);
         const val = input.value.trim();
         if (!val || val.length < 1) {
-            drop.classList.remove('open');
+            const localMatches = lookupLocalStations('', 8);
+            drop.innerHTML = renderStationDropdownHtml(localMatches, inputId, dropdownId);
+            drop.classList.add('open');
             return;
         }
 
+        // ⚡ INSTANT 0MS SYNCHRONOUS LOCAL RENDERING FIRST!
+        const localMatches = lookupLocalStations(val, 8);
+        if (localMatches.length > 0) {
+            drop.innerHTML = renderStationDropdownHtml(localMatches, inputId, dropdownId);
+            drop.classList.add('open');
+        }
+
+        // Background server enrichment for extended stations
         debounceTimer = setTimeout(async () => {
             try {
                 const res = await fetch(`${CONFIG.API_BASE}/stations/search?q=${encodeURIComponent(val)}&limit=10`);
-                if (!res.ok) throw new Error('Search failed');
+                if (!res.ok) return;
                 const stations = await res.json();
 
-                if (!stations || stations.length === 0) {
-                    drop.innerHTML = '<div style="padding:0.6rem; color:var(--text-muted); font-size:0.75rem;">No matching railway stations found</div>';
+                // Strict filter against user query to avoid unrelated stations like Badhal
+                const valLower = val.toLowerCase();
+                const validServerStations = (stations || []).filter(s => {
+                    const code = (s.code || '').toLowerCase();
+                    const name = (s.name || '').toLowerCase();
+                    const aliases = (s.aliases || []).map(a => a.toLowerCase());
+                    return code.includes(valLower) || name.includes(valLower) || aliases.some(a => a.includes(valLower));
+                });
+
+                const merged = [...localMatches];
+                const seen = new Set(merged.map(m => m.code));
+                validServerStations.forEach(s => {
+                    if (!seen.has(s.code)) {
+                        seen.add(s.code);
+                        merged.push({
+                            code: s.code,
+                            name: s.name,
+                            city: s.city || s.state,
+                            state: s.state,
+                            zone: s.zone || 'IR',
+                            platforms: s.platformCount || s.platforms || 4,
+                            emoji: (s.zone === 'SR' || s.code === 'TPJ' || s.code === 'ALU') ? '🌴' : '🚉',
+                            badge: s.zone || 'IR'
+                        });
+                    }
+                });
+
+                if (merged.length > 0) {
+                    drop.innerHTML = renderStationDropdownHtml(merged.slice(0, 8), inputId, dropdownId);
                     drop.classList.add('open');
-                    return;
                 }
-
-                drop.innerHTML = stations.map(s => `
-                    <div class="search-item" onclick="selectDropdownStation('${inputId}', '${dropdownId}', '${s.code}')">
-                        <div>
-                            <span class="search-item-primary">${s.name}</span>
-                            <span style="color:var(--text-muted); font-size:0.72rem;"> (${s.city || s.state || s.zone || 'IR'})</span>
-                        </div>
-                        <span class="search-item-meta">${s.code}</span>
-                    </div>
-                `).join('');
-
-                drop.classList.add('open');
             } catch (err) {
-                // Fallback to local hubs
-                const matches = RAILWAY_HUBS.filter(h =>
-                    h.code.toLowerCase().includes(val.toLowerCase()) ||
-                    h.name.toLowerCase().includes(val.toLowerCase()) ||
-                    (h.city && h.city.toLowerCase().includes(val.toLowerCase()))
-                ).slice(0, 6);
-
-                if (matches.length === 0) {
-                    drop.classList.remove('open');
-                    return;
-                }
-
-                drop.innerHTML = matches.map(m => `
-                    <div class="search-item" onclick="selectDropdownStation('${inputId}', '${dropdownId}', '${m.code}')">
-                        <div>
-                            <span class="search-item-primary">${m.name}</span>
-                            <span style="color:var(--text-muted); font-size:0.72rem;"> (${m.city}, ${m.zone})</span>
-                        </div>
-                        <span class="search-item-meta">${m.code}</span>
-                    </div>
-                `).join('');
-                drop.classList.add('open');
+                // Keep local matches displayed
             }
         }, 120);
     });
@@ -1241,6 +1486,31 @@ function tickTelemetrySimulation() {
     // Re-render live platform bars
     renderPlatformBars(STATE.selectedCrowdStation);
 
+    // Update Module B: FOB & Vertical Chokepoints Density
+    if (typeof updateChokepointsDensity === 'function') updateChokepointsDensity();
+
+    // Update Module C: Coach-wise density distribution
+    if (typeof updateCoachDensityView === 'function') updateCoachDensityView();
+
+    // Update Module E: Commuter LED Display Board
+    if (typeof updateCommuterDisplayBoard === 'function') updateCommuterDisplayBoard();
+
+    // Module A: Periodic Conflict Evaluator
+    if (typeof evaluatePlatformConflicts === 'function') evaluatePlatformConflicts();
+
+    // Pipe silent telemetry hit to tracker.js
+    if (window.RailTracker && typeof window.RailTracker.trackTelemetry === 'function') {
+        window.RailTracker.trackTelemetry({
+            station: STATE.selectedCrowdStation,
+            tick: STATE.telemetryTick,
+            multiplier: STATE.inflowSurgeMultiplier,
+            scenario: STATE.activeScenario,
+            incident: STATE.activeIncident,
+            platforms: STATE.platformCrowdData[STATE.selectedCrowdStation] || [],
+            chokepoints: STATE.chokepoints
+        });
+    }
+
     // Subtle audio click/beep on critical overcrowding
     if (hadCritical && STATE.audioAlerts) {
         playTelemetryBeep();
@@ -1302,6 +1572,503 @@ function playTelemetryBeep() {
         osc.start();
         osc.stop(audioCtx.currentTime + 0.15);
     } catch (e) {}
+}
+
+// ─── 8B. DUAL-VIEW & PA AUDIO CONTROLLER ──────────────────────────────────────
+function initDualViewAndAudio() {
+    const btnController = $('btnModeController');
+    const btnCommuter = $('btnModeCommuter');
+    if (btnController && btnCommuter) {
+        btnController.addEventListener('click', () => {
+            STATE.viewMode = 'controller';
+            btnController.classList.add('active');
+            btnCommuter.classList.remove('active');
+            switchPage('crowd');
+        });
+        btnCommuter.addEventListener('click', () => {
+            STATE.viewMode = 'commuter';
+            btnCommuter.classList.add('active');
+            btnController.classList.remove('active');
+            switchPage('commuter');
+        });
+    }
+
+    const soundBtn = $('soundMuteBtn');
+    const soundSlider = $('soundVolumeSlider');
+    const soundIcon = $('soundIcon');
+    const volumeValText = $('volumeValText');
+
+    if (soundBtn) {
+        soundBtn.addEventListener('click', () => {
+            STATE.audioMuted = !STATE.audioMuted;
+            if (soundIcon) soundIcon.textContent = STATE.audioMuted ? '🔇' : '🔊';
+            soundBtn.classList.toggle('muted', STATE.audioMuted);
+            soundBtn.title = STATE.audioMuted ? 'Unmute PA Audio Announcements' : 'Mute PA Audio Announcements';
+            if (STATE.audioMuted && 'speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            Toast.info(STATE.audioMuted ? 'PA Audio Muted' : 'PA Audio Active', `Station Master PA synthesized speech is ${STATE.audioMuted ? 'muted' : 'enabled'}.`, 2000);
+        });
+    }
+
+    if (soundSlider) {
+        soundSlider.addEventListener('input', (e) => {
+            STATE.audioVolume = parseFloat(e.target.value);
+            if (volumeValText) {
+                volumeValText.textContent = `${Math.round(STATE.audioVolume * 100)}%`;
+            }
+            if (STATE.audioVolume === 0) {
+                STATE.audioMuted = true;
+                if (soundIcon) soundIcon.textContent = '🔇';
+            } else if (STATE.audioMuted) {
+                STATE.audioMuted = false;
+                if (soundIcon) soundIcon.textContent = '🔊';
+            }
+        });
+    }
+
+    const btnRepeat = $('btnRepeatAnnouncement');
+    if (btnRepeat) {
+        btnRepeat.addEventListener('click', () => {
+            const liveText = $('commuterLiveAnnouncementText');
+            const msg = liveText ? liveText.textContent.replace(/^"|"$/g, '') : 'Attention passengers: Train 12638 Pandyan Express arriving on Platform 3.';
+            triggerStationVoiceAlert(msg, true);
+        });
+    }
+}
+
+function triggerStationVoiceAlert(message, priority = false) {
+    const liveText = $('commuterLiveAnnouncementText');
+    if (liveText) liveText.textContent = `"${message}"`;
+
+    if (window.RailTracker && typeof window.RailTracker.trackVoiceDispatch === 'function') {
+        window.RailTracker.trackVoiceDispatch(message);
+    }
+
+    if (STATE.audioMuted) return;
+
+    if ('speechSynthesis' in window) {
+        try {
+            if (priority) window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.rate = 0.92;
+            utterance.pitch = 1.0;
+            utterance.volume = STATE.audioVolume;
+            window.speechSynthesis.speak(utterance);
+        } catch (e) {
+            console.warn('Speech synthesis exception:', e);
+        }
+    }
+}
+
+// ─── 8C. STATION OPERATIONS INTELLIGENCE & HEURISTICS ─────────────────────────
+function initStationOperationsIntelligence() {
+    // Module A: Heuristic Conflict Reallocation
+    const btnReallocate = $('btnHeuristicReallocate');
+    if (btnReallocate) {
+        btnReallocate.addEventListener('click', () => {
+            const conflict = STATE.activeConflict;
+            if (!conflict) return;
+
+            const masPlatforms = STATE.platformCrowdData.MAS;
+            const origP = masPlatforms ? masPlatforms.find(p => p.num === conflict.currentPf) : null;
+            const targetP = masPlatforms ? masPlatforms.find(p => p.num === conflict.targetPf) : null;
+
+            if (origP) origP.crowd = Math.max(120, origP.crowd - 300);
+            if (targetP) targetP.crowd = Math.min(targetP.capacity, targetP.crowd + 160);
+
+            const carousel = $('alertCarouselContainer');
+            if (carousel) carousel.style.display = 'none';
+            conflict.detected = false;
+
+            const now = new Date();
+            const timeStr = now.toTimeString().split(' ')[0];
+            const densitySaved = conflict.currentDensity - conflict.targetDensity;
+
+            STATE.reallocationAuditLog.unshift({
+                time: timeStr,
+                train: `${conflict.trainNo} ${conflict.trainName}`,
+                origPf: conflict.currentPf,
+                origDensity: conflict.currentDensity,
+                targetPf: conflict.targetPf,
+                targetDensity: conflict.targetDensity,
+                source: 'One-Click Heuristic Reallocator',
+                status: 'EXECUTED'
+            });
+            renderAuditLog();
+
+            const voiceMsg = `Attention please: Train ${conflict.trainNo} ${conflict.trainName} has been reallocated to Platform ${conflict.targetPf} instead of Platform ${conflict.currentPf}. Passengers please proceed safely via Foot Over Bridge 1.`;
+            triggerStationVoiceAlert(voiceMsg, true);
+
+            Toast.success('Platform Reallocated', `Train ${conflict.trainNo} diverted to Platform ${conflict.targetPf}. Station audio dispatched.`, 4500);
+
+            if (window.RailTracker && typeof window.RailTracker.trackDecision === 'function') {
+                window.RailTracker.trackDecision({
+                    train: conflict.trainNo,
+                    fromPf: conflict.currentPf,
+                    toPf: conflict.targetPf,
+                    densitySaved: `${densitySaved}%`,
+                    source: 'Heuristic One-Click'
+                });
+            }
+
+            renderPlatformBars(STATE.selectedCrowdStation);
+        });
+    }
+
+    const btnDismiss = $('btnDismissAlert');
+    if (btnDismiss) {
+        btnDismiss.addEventListener('click', () => {
+            const carousel = $('alertCarouselContainer');
+            if (carousel) carousel.style.display = 'none';
+        });
+    }
+
+    // Module B: Chokepoints Strobe Acknowledge
+    const btnAck = $('btnAcknowledgeStrobe');
+    if (btnAck) {
+        btnAck.addEventListener('click', () => {
+            const banner = $('strobeGateBanner');
+            if (banner) banner.style.display = 'none';
+            Toast.info('Hold Acknowledged', 'Concourse turnstiles metered at 15 pax/min until vertical density normalizes.', 3500);
+        });
+    }
+
+    // Module D: Sandbox Controls
+    const slider = $('inflowSurgeSlider');
+    const sliderVal = $('inflowSurgeValue');
+    if (slider) {
+        slider.addEventListener('input', (e) => {
+            STATE.inflowSurgeMultiplier = parseFloat(e.target.value);
+            if (sliderVal) sliderVal.textContent = `${STATE.inflowSurgeMultiplier.toFixed(1)}x`;
+            updateChokepointsDensity();
+        });
+    }
+
+    const incidentSelect = $('sandboxIncidentSelect');
+    if (incidentSelect) {
+        incidentSelect.addEventListener('change', (e) => {
+            STATE.activeIncident = e.target.value;
+            applySandboxIncident(STATE.activeIncident);
+        });
+    }
+
+    const btnFastForward = $('btnFastForwardSim');
+    if (btnFastForward) {
+        btnFastForward.addEventListener('click', () => {
+            runFastForwardSimulation();
+        });
+    }
+
+    const btnResetSandbox = $('btnResetSandbox');
+    if (btnResetSandbox) {
+        btnResetSandbox.addEventListener('click', () => {
+            STATE.inflowSurgeMultiplier = 1.0;
+            if (slider) slider.value = '1.0';
+            if (sliderVal) sliderVal.textContent = '1.0x';
+            if (incidentSelect) incidentSelect.value = 'NONE';
+            STATE.activeIncident = 'NONE';
+            Toast.info('Sandbox Reset', 'Passenger influx and infrastructure state restored to nominal.', 3000);
+            updateChokepointsDensity();
+        });
+    }
+
+    // Module F: Scenario Replay Controls
+    initScenarioReplay();
+
+    // Initial renders
+    updateChokepointsDensity();
+    updateCoachDensityView();
+    updateCommuterDisplayBoard();
+    renderAuditLog();
+}
+
+function updateChokepointsDensity() {
+    const mult = STATE.inflowSurgeMultiplier || 1.0;
+    const jitter = () => (Math.random() * 0.16 - 0.08);
+
+    let dNorth = Math.max(0.6, Math.min(3.2, 1.15 * mult + jitter()));
+    let dSouth = Math.max(0.7, Math.min(3.2, 1.32 * mult + jitter()));
+    let dFob1 = Math.max(0.8, Math.min(3.2, 1.48 * mult + jitter()));
+    let dFob2 = Math.max(0.9, Math.min(3.4, 2.18 * mult + jitter()));
+
+    if (STATE.activeIncident === 'FOB_BREAKDOWN') dFob1 = 2.85;
+
+    STATE.chokepoints.northGate.density = dNorth;
+    STATE.chokepoints.southGate.density = dSouth;
+    STATE.chokepoints.fob1.density = dFob1;
+    STATE.chokepoints.fob2.density = dFob2;
+
+    const renderCp = (cardId, badgeId, densityId, meterId, val) => {
+        const card = $(cardId);
+        const badge = $(badgeId);
+        const dens = $(densityId);
+        const meter = $(meterId);
+        if (!card || !dens || !meter) return;
+
+        dens.textContent = val.toFixed(2);
+        const pct = Math.min(100, Math.round((val / 3.0) * 100));
+        meter.style.width = `${pct}%`;
+
+        card.classList.remove('safe', 'warning', 'critical');
+        meter.classList.remove('safe', 'warning', 'critical');
+
+        if (val > 2.5) {
+            card.classList.add('critical');
+            meter.classList.add('critical');
+            if (badge) {
+                badge.className = 'badge';
+                badge.style.background = 'var(--rail-red)';
+                badge.style.color = '#fff';
+                badge.textContent = 'HAZARD HOLD';
+            }
+        } else if (val >= 1.5) {
+            card.classList.add('warning');
+            meter.classList.add('warning');
+            if (badge) {
+                badge.className = 'badge badge-derived';
+                badge.style.background = '';
+                badge.style.color = '';
+                badge.textContent = 'CAUTION';
+            }
+        } else {
+            card.classList.add('safe');
+            meter.classList.add('safe');
+            if (badge) {
+                badge.className = 'badge badge-real';
+                badge.style.background = '';
+                badge.style.color = '';
+                badge.textContent = 'NOMINAL';
+            }
+        }
+    };
+
+    renderCp('cpCardNorth', 'cpBadgeNorth', 'cpDensityNorth', 'cpMeterNorth', dNorth);
+    renderCp('cpCardSouth', 'cpBadgeSouth', 'cpDensitySouth', 'cpMeterSouth', dSouth);
+    renderCp('cpCardFob1', 'cpBadgeFob1', 'cpDensityFob1', 'cpMeterFob1', dFob1);
+    renderCp('cpCardFob2', 'cpBadgeFob2', 'cpDensityFob2', 'cpMeterFob2', dFob2);
+
+    const strobeBanner = $('strobeGateBanner');
+    if (strobeBanner) {
+        if (dFob1 > 2.5 || dFob2 > 2.5) {
+            if (strobeBanner.style.display !== 'flex') {
+                strobeBanner.style.display = 'flex';
+                triggerStationVoiceAlert('Warning: Vertical pedestrian chokepoint has reached critical density. Concourse gates holding inflow.', true);
+            }
+        } else {
+            strobeBanner.style.display = 'none';
+        }
+    }
+}
+
+function updateCoachDensityView() {
+    const strip = $('coachTrackStrip');
+    if (!strip) return;
+
+    const coaches = [
+        { code: 'LOCO', type: 'engine', tag: 'WAP-7', color: 'var(--cyan)' },
+        { code: 'GEN-1', pct: 95, colorClass: 'red', tag: '95% CRIT' },
+        { code: 'S1', pct: 74, colorClass: 'amber', tag: '74% HIGH' },
+        { code: 'S2', pct: 91, colorClass: 'red', tag: '91% CRIT' },
+        { code: 'S3', pct: 89, colorClass: 'red', tag: '89% CRIT' },
+        { code: 'S4', pct: 92, colorClass: 'red', tag: '92% CRIT' },
+        { code: 'S5', pct: 76, colorClass: 'amber', tag: '76% HIGH' },
+        { code: 'S6', pct: 41, colorClass: 'green', tag: '41% SAFE' },
+        { code: 'S7', pct: 37, colorClass: 'green', tag: '37% SAFE' },
+        { code: 'B1', pct: 35, colorClass: 'green', tag: '35% SAFE' },
+        { code: 'B2', pct: 40, colorClass: 'green', tag: '40% SAFE' },
+        { code: 'A1', pct: 67, colorClass: 'amber', tag: '67% MED' },
+        { code: 'A2', pct: 39, colorClass: 'green', tag: '39% SAFE' },
+        { code: 'GEN-2', pct: 97, colorClass: 'red', tag: '97% CRIT' }
+    ];
+
+    const jitter = Math.floor(Math.random() * 5) - 2;
+    strip.innerHTML = coaches.map(c => {
+        if (c.type === 'engine') {
+            return `<div class="coach-block engine"><div class="coach-name">${c.code}</div><div class="coach-status-tag" style="color:${c.color};">${c.tag}</div></div>`;
+        }
+        const val = Math.max(10, Math.min(100, c.pct + jitter));
+        let cls = c.colorClass;
+        if (val > 80) cls = 'red';
+        else if (val >= 50) cls = 'amber';
+        else cls = 'green';
+
+        return `<div class="coach-block ${cls}"><div class="coach-name">${c.code}</div><div class="coach-status-tag ${cls}">${val}% ${cls.toUpperCase()}</div></div>`;
+    }).join('');
+}
+
+function updateCommuterDisplayBoard() {
+    const clock = $('commuterClock');
+    if (clock) clock.textContent = new Date().toTimeString().split(' ')[0];
+}
+
+function evaluatePlatformConflicts() {
+    const masPlatforms = STATE.platformCrowdData.MAS;
+    if (!masPlatforms) return;
+
+    const pf2 = masPlatforms.find(p => p.num === 2);
+    const pf2Density = pf2 ? Math.round((pf2.crowd / pf2.capacity) * 100) : 88;
+
+    if (pf2Density >= 80 && !STATE.activeConflict.detected) {
+        triggerConflictAlert(pf2Density);
+    }
+}
+
+function triggerConflictAlert(currentDensity = 88) {
+    STATE.activeConflict.detected = true;
+    STATE.activeConflict.currentDensity = currentDensity;
+
+    const carousel = $('alertCarouselContainer');
+    if (carousel) carousel.style.display = 'block';
+
+    const msg = $('alertConflictMsg');
+    if (msg) {
+        msg.innerHTML = `<strong>Train 12638 (Pandyan Express)</strong> delayed by 25m. Schedule overlap on <strong>Platform 2</strong> (Density: ${currentDensity}% CRITICAL). High stampede hazard.`;
+    }
+
+    const rec = $('alertTargetPfText');
+    if (rec) {
+        rec.innerHTML = `Reallocate to <strong>Platform 3</strong> (Current Density: 24% SAFE • Penalty: 18.2).`;
+    }
+
+    triggerStationVoiceAlert('Operational alert: Platform 2 schedule conflict detected for Train 12638. Heuristic reallocator recommendation ready.', false);
+}
+
+function applySandboxIncident(incident) {
+    if (incident === 'FOB_BREAKDOWN') {
+        STATE.chokepoints.fob1.density = 2.85;
+        Toast.warn('Incident Injected', 'FOB 1 Escalator breakdown: passengers diverted to FOB 2.', 4000);
+    } else if (incident === 'TRAIN_DELAY') {
+        const masPlatforms = STATE.platformCrowdData.MAS;
+        const pf2 = masPlatforms ? masPlatforms.find(p => p.num === 2) : null;
+        if (pf2) pf2.crowd = 530;
+        triggerConflictAlert(96);
+        Toast.warn('Incident Injected', 'Express train delayed by 45m; Platform 2 crowding critical.', 4000);
+    } else if (incident === 'SIGNAL_FAULT') {
+        const masPlatforms = STATE.platformCrowdData.MAS;
+        const pf3 = masPlatforms ? masPlatforms.find(p => p.num === 3) : null;
+        if (pf3) pf3.crowd = 490;
+        triggerConflictAlert(88);
+        Toast.warn('Incident Injected', 'Platform 3 track circuit fault active.', 4000);
+    } else if (incident === 'FESTIVAL_RUSH') {
+        STATE.inflowSurgeMultiplier = 3.5;
+        const slider = $('inflowSurgeSlider');
+        const sliderVal = $('inflowSurgeValue');
+        if (slider) slider.value = '3.5';
+        if (sliderVal) sliderVal.textContent = '3.5x';
+        Toast.warn('Incident Injected', 'Festival rush surge: 3.5x passenger influx applied across all turnstiles.', 4000);
+    }
+    updateChokepointsDensity();
+}
+
+function runFastForwardSimulation() {
+    Toast.info('Fast-Forward Sim Active', 'Running 30-minute cascade stress test across 10 rapid iterations...', 3000);
+    let count = 0;
+    const ffInterval = setInterval(() => {
+        count++;
+        tickTelemetrySimulation();
+        if (count >= 10) {
+            clearInterval(ffInterval);
+            Toast.success('Stress-Test Complete', 'Cascade heuristics evaluated 10 schedule permutations. Zero stampede breaches.', 4000);
+        }
+    }, 250);
+}
+
+function renderAuditLog() {
+    const tbody = $('reallocationAuditBody');
+    const countEl = $('auditEventCount');
+    if (!tbody) return;
+
+    if (countEl) countEl.textContent = `Showing recent ${STATE.reallocationAuditLog.length} decisions`;
+
+    tbody.innerHTML = STATE.reallocationAuditLog.slice(0, 10).map(item => `
+        <tr>
+            <td style="font-family:var(--font-mono); font-size:0.75rem;">${item.time}</td>
+            <td><strong>${item.train}</strong></td>
+            <td><span class="badge badge-simulated">Pf ${item.origPf} (${item.origDensity}%)</span></td>
+            <td><span class="badge badge-real">Pf ${item.targetPf} (${item.targetDensity}%)</span></td>
+            <td style="color:var(--emerald); font-weight:700;">-${item.origDensity - item.targetDensity}% Density</td>
+            <td><span class="badge badge-derived">${item.source}</span></td>
+            <td><span class="badge badge-real">${item.status}</span></td>
+        </tr>
+    `).join('');
+}
+
+function initScenarioReplay() {
+    const btnMorning = $('btnScenarioMorning');
+    const btnFestive = $('btnScenarioFestive');
+    const btnDrill = $('btnScenarioDrill');
+    const btnPlayPause = $('btnReplayPlayPause');
+    const btnSpeed = $('btnReplaySpeed');
+    const btnReset = $('btnReplayReset');
+
+    const setScenario = (sc) => {
+        STATE.activeScenario = sc;
+        [btnMorning, btnFestive, btnDrill].forEach(b => {
+            if (b) b.classList.toggle('active', b.dataset.scenario === sc);
+        });
+
+        if (sc === 'morning') {
+            STATE.inflowSurgeMultiplier = 1.6;
+            Toast.info('Scenario Loaded', 'Morning Office Rush: High suburban concourse inflow active.', 3500);
+        } else if (sc === 'festive') {
+            STATE.inflowSurgeMultiplier = 3.2;
+            STATE.chokepoints.fob2.density = 2.65;
+            Toast.warn('Scenario Loaded', 'Festive Season Surge: Heavy luggage, extreme FOB stoppage.', 3500);
+        } else if (sc === 'drill') {
+            STATE.inflowSurgeMultiplier = 2.4;
+            triggerConflictAlert(94);
+            Toast.warn('Scenario Loaded', 'Emergency Evacuation Drill: Platform reroute protocol initiated.', 3500);
+        }
+        updateChokepointsDensity();
+        renderPlatformBars(STATE.selectedCrowdStation);
+    };
+
+    if (btnMorning) btnMorning.addEventListener('click', () => setScenario('morning'));
+    if (btnFestive) btnFestive.addEventListener('click', () => setScenario('festive'));
+    if (btnDrill) btnDrill.addEventListener('click', () => setScenario('drill'));
+
+    if (btnPlayPause) {
+        btnPlayPause.addEventListener('click', () => {
+            STATE.isReplayPaused = !STATE.isReplayPaused;
+            btnPlayPause.textContent = STATE.isReplayPaused ? '▶ Play' : '⏸ Pause';
+            if (STATE.isReplayPaused) {
+                if (STATE.intervalTimerId) clearInterval(STATE.intervalTimerId);
+            } else {
+                startTelemetryScheduler();
+            }
+        });
+    }
+
+    if (btnSpeed) {
+        btnSpeed.addEventListener('click', () => {
+            if (STATE.replaySpeed === 1) {
+                STATE.replaySpeed = 2;
+                STATE.telemetryInterval = 1500;
+                btnSpeed.textContent = '1x Speed';
+                btnSpeed.classList.add('active');
+            } else {
+                STATE.replaySpeed = 1;
+                STATE.telemetryInterval = 3000;
+                btnSpeed.textContent = '2x Speed';
+                btnSpeed.classList.remove('active');
+            }
+            if (!STATE.isReplayPaused) startTelemetryScheduler();
+        });
+    }
+
+    if (btnReset) {
+        btnReset.addEventListener('click', () => {
+            setScenario('morning');
+            STATE.isReplayPaused = false;
+            STATE.replaySpeed = 1;
+            STATE.telemetryInterval = 3000;
+            if (btnPlayPause) btnPlayPause.textContent = '⏸ Pause';
+            if (btnSpeed) { btnSpeed.textContent = '2x Speed'; btnSpeed.classList.remove('active'); }
+            startTelemetryScheduler();
+            Toast.info('Replay Reset', 'Scenario returned to baseline tick #1.', 2500);
+        });
+    }
 }
 
 // ─── 9. DATA QUALITY & HEALTH VALIDATION ───────────────────────────────────────
@@ -2211,6 +2978,11 @@ window.togglePasswordVisibility = togglePasswordVisibility;
 window.runSqlPreset = runSqlPreset;
 window.runSqlTableInspect = runSqlTableInspect;
 window.runCustomAdminSql = runCustomAdminSql;
+window.initDualViewAndAudio = initDualViewAndAudio;
+window.initStationOperationsIntelligence = initStationOperationsIntelligence;
+window.triggerStationVoiceAlert = triggerStationVoiceAlert;
+window.runFastForwardSimulation = runFastForwardSimulation;
+window.applySandboxIncident = applySandboxIncident;
 
 
 // ─── 11. USER REVIEWS & SQLite FEEDBACK ───────────────────────────────────────
@@ -2241,6 +3013,17 @@ function initFeedback() {
             }
 
             form.reset();
+
+            // Central Tracker: Pipe feedback to tracker.js
+            if (window.RailTracker && typeof window.RailTracker.trackFeedback === 'function') {
+                window.RailTracker.trackFeedback({
+                    author: name,
+                    rating: rating,
+                    category: category,
+                    message: msg,
+                    timestamp: new Date().toISOString()
+                });
+            }
 
             // Try background POST to backend
             fetch(`${CONFIG.API_BASE}/feedback`, {
@@ -2401,6 +3184,58 @@ function initSearch() {
 
     let debounceTimer = null;
 
+    function renderGlobalSearchDropdown(trains, stations) {
+        if ((!trains || trains.length === 0) && (!stations || stations.length === 0)) {
+            return '<div style="padding:0.8rem; color:var(--text-muted); font-size:0.75rem; text-align:center;">No matching railway stations or trains found</div>';
+        }
+
+        let html = '';
+        if (trains && trains.length > 0) {
+            html += '<div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); padding:0.4rem 0.65rem; text-transform:uppercase; letter-spacing:0.5px;">🚆 Trains (Instant Match)</div>';
+            html += trains.map(t => {
+                const tNum = t.trainNumber || t.number;
+                const tName = t.trainName || t.name;
+                const src = t.source || t.from || '';
+                const dst = t.destination || t.to || '';
+                const typ = t.type || 'EXPRESS';
+                const pf = t.platform || ('PF ' + ((parseInt(tNum, 10) % 8) + 1));
+                return `
+                    <div class="search-item" onclick="openTrainTimetableModal('${tNum}')">
+                        <span class="search-item-primary">🚆 <strong>${tNum}</strong> &mdash; ${tName}</span>
+                        <span class="search-item-meta">${src} ➔ ${dst} • ${typ} • ${pf}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        if (stations && stations.length > 0) {
+            html += '<div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); padding:0.4rem 0.65rem; text-transform:uppercase; letter-spacing:0.5px;">🚉 Stations (Network Hubs)</div>';
+            html += stations.map(s => {
+                const isTPJ = s.code === 'TPJ';
+                const isALU = s.code === 'ALU';
+                const isSR = s.zone === 'SR' || isTPJ || isALU;
+                const emoji = s.emoji || (isTPJ || isALU || isSR ? '🌴' : '🚉');
+                const badgeText = isTPJ ? 'TRICHY / TPJ' : (isALU ? 'ARIYALUR / ALU' : (s.badge || s.zone || 'IR'));
+                const badgeClass = isTPJ ? 'chip-tpj-alu' : (isALU ? 'chip-alu-ms' : '');
+
+                return `
+                    <div class="search-item ${isSR ? 'highlight-sr' : ''}" onclick="selectGlobalStation('${s.code}')">
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <span style="font-size:1.15rem;">${emoji}</span>
+                            <div>
+                                <span class="search-item-primary"><strong>${s.name}</strong> (${s.code}) ${badgeText ? `<span class="badge ${badgeClass}" style="font-size:0.62rem; margin-left:4px;">${badgeText}</span>` : ''}</span>
+                                <span class="search-item-meta">${s.city ? s.city + ', ' : ''}${s.state || s.zone || 'IR'} • ${s.platforms || s.platformCount || 4} PFs</span>
+                            </div>
+                        </div>
+                        <span class="search-item-code-badge">${s.code}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        return html;
+    }
+
     input.addEventListener('input', () => {
         clearTimeout(debounceTimer);
         const val = input.value.trim();
@@ -2409,83 +3244,71 @@ function initSearch() {
             return;
         }
 
+        // ⚡ INSTANT 0MS SYNCHRONOUS LOCAL RESULTS
+        const localStations = lookupLocalStations(val, 5);
+        const localTrains = MASTER_TRAINS.filter(t =>
+            t.number.includes(val) ||
+            t.name.toLowerCase().includes(val.toLowerCase()) ||
+            t.route.toLowerCase().includes(val.toLowerCase())
+        ).slice(0, 4).map(t => ({
+            trainNumber: t.number,
+            trainName: t.name,
+            source: t.from,
+            destination: t.to,
+            type: t.type,
+            platform: t.platform
+        }));
+
+        if (localStations.length > 0 || localTrains.length > 0) {
+            dropdown.innerHTML = renderGlobalSearchDropdown(localTrains, localStations);
+            dropdown.classList.add('open');
+        }
+
         debounceTimer = setTimeout(async () => {
             try {
-                // Query stations and trains concurrently from backend
                 const [stnRes, trnRes] = await Promise.all([
-                    fetch(`${CONFIG.API_BASE}/stations/search?q=${encodeURIComponent(val)}&limit=5`).catch(() => null),
-                    fetch(`${CONFIG.API_BASE}/trains/search?q=${encodeURIComponent(val)}&limit=5`).catch(() => null)
+                    fetch(`${CONFIG.API_BASE}/stations/search?q=${encodeURIComponent(val)}&limit=6`).catch(() => null),
+                    fetch(`${CONFIG.API_BASE}/trains/search?q=${encodeURIComponent(val)}&limit=6`).catch(() => null)
                 ]);
 
                 const stations = (stnRes && stnRes.ok) ? await stnRes.json() : [];
                 let trainMatches = (trnRes && trnRes.ok) ? await trnRes.json() : [];
 
-                // Fallback to local MASTER_TRAINS if backend returned empty
                 if (trainMatches.length === 0) {
-                    trainMatches = MASTER_TRAINS.filter(t =>
-                        t.number.includes(val) ||
-                        t.name.toLowerCase().includes(val.toLowerCase())
-                    ).slice(0, 4).map(t => ({
-                        trainNumber: t.number,
-                        trainName: t.name,
-                        source: t.from,
-                        destination: t.to,
-                        type: t.type,
-                        platform: t.platform
-                    }));
+                    trainMatches = localTrains;
                 }
 
-                if (stations.length === 0 && trainMatches.length === 0) {
-                    dropdown.innerHTML = '<div style="padding:0.6rem; color:var(--text-muted); font-size:0.75rem;">No matching railway stations or trains</div>';
-                    dropdown.classList.add('open');
-                    return;
-                }
+                // Strict filter for server stations
+                const valLower = val.toLowerCase();
+                const validServerStations = (stations || []).filter(s => {
+                    const code = (s.code || '').toLowerCase();
+                    const name = (s.name || '').toLowerCase();
+                    const aliases = (s.aliases || []).map(a => a.toLowerCase());
+                    return code.includes(valLower) || name.includes(valLower) || aliases.some(a => a.includes(valLower));
+                });
 
-                let html = '';
-                if (trainMatches.length > 0) {
-                    html += '<div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); padding:0.4rem 0.6rem; text-transform:uppercase;">Trains (Master Database)</div>';
-                    html += trainMatches.map(t => {
-                        const tNum = t.trainNumber || t.number;
-                        const tName = t.trainName || t.name;
-                        const src = t.source || t.from || '';
-                        const dst = t.destination || t.to || '';
-                        const typ = t.type || 'EXPRESS';
-                        const pf = t.platform || ('PF ' + ((parseInt(tNum, 10) % 8) + 1));
-                        return `
-                            <div class="search-item" onclick="openTrainTimetableModal('${tNum}')">
-                                <span class="search-item-primary">🚆 ${tNum} — ${tName}</span>
-                                <span class="search-item-meta">${src} ➔ ${dst} • ${typ} • ${pf}</span>
-                            </div>
-                        `;
-                    }).join('');
-                }
+                const mergedStations = [...localStations];
+                const seen = new Set(mergedStations.map(m => m.code));
+                validServerStations.forEach(s => {
+                    if (!seen.has(s.code)) {
+                        seen.add(s.code);
+                        mergedStations.push({
+                            code: s.code,
+                            name: s.name,
+                            city: s.city || s.state,
+                            state: s.state,
+                            zone: s.zone || 'IR',
+                            platforms: s.platformCount || s.platforms || 4,
+                            emoji: (s.zone === 'SR' || s.code === 'TPJ' || s.code === 'ALU') ? '🌴' : '🚉',
+                            badge: s.zone || 'IR'
+                        });
+                    }
+                });
 
-                if (stations.length > 0) {
-                    html += '<div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); padding:0.4rem 0.6rem; text-transform:uppercase;">Stations (Master Database)</div>';
-                    html += stations.map(s => `
-                        <div class="search-item" onclick="selectGlobalStation('${s.code}')">
-                            <span class="search-item-primary">🚉 ${s.name} (${s.code}) ${s.aliasMatched ? `<span class="badge badge-ai" style="font-size:0.65rem; margin-left:4px;">Alias: ${s.aliasMatched}</span>` : ''}</span>
-                            <span class="search-item-meta">${s.zone || 'IR'} • ${s.state || s.city || ''} • Est. ${s.openedYear || 1900} • ${s.platformCount || s.platforms || 4} PFs</span>
-                        </div>
-                    `).join('');
-                }
-
-                dropdown.innerHTML = html;
+                dropdown.innerHTML = renderGlobalSearchDropdown(trainMatches.slice(0, 5), mergedStations.slice(0, 6));
                 dropdown.classList.add('open');
             } catch (err) {
-                // Fallback to local
-                const hubMatches = RAILWAY_HUBS.filter(h =>
-                    h.code.toLowerCase().includes(val.toLowerCase()) ||
-                    h.name.toLowerCase().includes(val.toLowerCase())
-                ).slice(0, 4);
-
-                dropdown.innerHTML = hubMatches.map(h => `
-                    <div class="search-item" onclick="selectGlobalStation('${h.code}')">
-                        <span class="search-item-primary">🚉 ${h.name} (${h.code})</span>
-                        <span class="search-item-meta">${h.zone} • ${h.platforms} PFs</span>
-                    </div>
-                `).join('');
-                dropdown.classList.add('open');
+                // local results remain visible
             }
         }, 120);
     });
@@ -2726,3 +3549,232 @@ function downloadFile(filename, text, mimeType) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// RAILFLOW 2.0 — PREMIUM UI ENHANCEMENT MODULE
+// Toast Notifications, Page Progress Bar, Mobile Nav, Telemetry Badge
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ─── TOAST NOTIFICATION SYSTEM ────────────────────────────────────────────────
+const Toast = {
+    container: null,
+    _getContainer() {
+        if (!this.container) this.container = document.getElementById('toastContainer');
+        return this.container;
+    },
+    show(title, msg = '', type = 'info', duration = 4000) {
+        const c = this._getContainer();
+        if (!c) return;
+        const icons = {
+            success: `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+            error:   `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
+            warn:    `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+            info:    `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`
+        };
+        const el = document.createElement('div');
+        el.className = `toast toast-${type}`;
+        el.style.setProperty('--toast-duration', `${duration}ms`);
+        el.innerHTML = `
+            ${icons[type] || icons.info}
+            <div class="toast-content">
+                <div class="toast-title">${escapeHtml ? escapeHtml(title) : title}</div>
+                ${msg ? `<div class="toast-msg">${escapeHtml ? escapeHtml(msg) : msg}</div>` : ''}
+            </div>
+            <button class="toast-close" onclick="Toast._remove(this.closest('.toast'))">&times;</button>
+        `;
+        c.appendChild(el);
+        setTimeout(() => Toast._remove(el), duration + 100);
+        return el;
+    },
+    success(title, msg, duration) { return this.show(title, msg, 'success', duration); },
+    error(title, msg, duration)   { return this.show(title, msg, 'error', duration || 6000); },
+    warn(title, msg, duration)    { return this.show(title, msg, 'warn', duration || 5000); },
+    info(title, msg, duration)    { return this.show(title, msg, 'info', duration); },
+    _remove(el) {
+        if (!el || el.classList.contains('removing')) return;
+        el.classList.add('removing');
+        setTimeout(() => el.remove(), 260);
+    }
+};
+window.Toast = Toast;
+
+// ─── PAGE PROGRESS BAR (DISABLED FOR INSTANT 0MS RESPONSE) ────────────────────
+const PageProgress = {
+    start() {},
+    done() {}
+};
+window.PageProgress = PageProgress;
+
+// ─── MOBILE SIDEBAR TOGGLE ────────────────────────────────────────────────────
+function initMobileMenu() {
+    const btn = document.getElementById('btnMobileMenu');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (!btn || !sidebar) return;
+
+    function open() {
+        sidebar.classList.add('mobile-open');
+        if (overlay) overlay.classList.add('active');
+        btn.classList.add('active');
+        btn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function close() {
+        sidebar.classList.remove('mobile-open');
+        if (overlay) overlay.classList.remove('active');
+        btn.classList.remove('active');
+        btn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+
+    btn.addEventListener('click', () => {
+        if (sidebar.classList.contains('mobile-open')) close(); else open();
+    });
+
+    if (overlay) overlay.addEventListener('click', close);
+
+    // Close on nav item click (mobile)
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth <= 768) close();
+        });
+    });
+}
+
+// ─── INSTANT SWITCH PAGE (0MS IMMEDIATE TRANSITION) ───────────────────────────
+const _origSwitchPage = window.switchPage;
+window.switchPage = function(pageId) {
+    if (!pageId) return;
+    _origSwitchPage(pageId);
+};
+
+// ─── TELEMETRY BADGE FLOAT UPDATER ────────────────────────────────────────────
+function updateTelemetryBadgeFloat(tick) {
+    const el = document.getElementById('telemetryFloatLabel');
+    if (el) {
+        const now = new Date();
+        const t = now.toTimeString().split(' ')[0];
+        el.textContent = `LIVE TELEMETRY — Tick #${tick} @ ${t}`;
+    }
+}
+
+// ─── HOOK INTO TELEMETRY SCHEDULER TO UPDATE BADGE ───────────────────────────
+// Override startTelemetryScheduler after DOMContentLoaded to hook badge
+document.addEventListener('DOMContentLoaded', () => {
+    // Init mobile menu
+    initMobileMenu();
+
+    // Greet user with subtle info toast on first load
+    setTimeout(() => {
+        Toast.info(
+            'RailFlow 2.0 Ready',
+            'Indian Railways Intelligence Platform loaded. Press / to search.',
+            5000
+        );
+    }, 800);
+
+    // Hook into telemetry ticks to update float badge
+    const origStartTelemetry = window.startTelemetryScheduler;
+    if (origStartTelemetry) {
+        // Patch: wrap updateTelemetry to also update the badge
+        const origUpdateTelemetry = window.updatePlatformTelemetry;
+        if (origUpdateTelemetry) {
+            window.updatePlatformTelemetry = function(...args) {
+                origUpdateTelemetry.apply(this, args);
+                updateTelemetryBadgeFloat(STATE && STATE.telemetryTick ? STATE.telemetryTick : 1);
+            };
+        }
+    }
+
+    // Also hook tick badge from existing scheduler if it updates STATE.telemetryTick
+    const tickObserver = setInterval(() => {
+        if (typeof STATE !== 'undefined' && STATE.telemetryTick) {
+            updateTelemetryBadgeFloat(STATE.telemetryTick);
+        }
+    }, 3100);
+    // After 30 mins, clear the observer to avoid forever polling
+    setTimeout(() => clearInterval(tickObserver), 30 * 60 * 1000);
+}, { once: true });
+
+// ─── ENHANCED TIMETABLE MODAL: LOADING STATE & ORIGIN/TERMINUS ROWS ─────────
+// Patch openTrainTimetableModal to show spinner while loading
+const _origOpenTimetable = window.openTrainTimetableModal;
+window.openTrainTimetableModal = async function(trainNum, trainName) {
+    // Show modal immediately with loading state
+    const modal = document.getElementById('trainTimetableModal');
+    if (modal) modal.classList.add('open');
+    const tbody = document.querySelector('#ttStopsTable tbody');
+    if (tbody) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" style="padding:0; border:none;">
+                    <div class="tt-loading-state">
+                        <div class="spinner spinner-red spinner-sm"></div>
+                        <span>Loading timetable for Train #${escapeHtml ? escapeHtml(String(trainNum)) : trainNum}...</span>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+    // Call original with a slight delay for UX
+    try {
+        await _origOpenTimetable(trainNum, trainName);
+    } catch(e) {
+        console.warn('Timetable modal failed:', e);
+    }
+    // After render, apply origin/terminus row classes
+    setTimeout(() => {
+        const rows = document.querySelectorAll('#ttStopsTable tbody tr');
+        if (rows.length > 0) {
+            rows[0].classList.add('origin-row');
+            rows[rows.length - 1].classList.add('terminus-row');
+        }
+    }, 100);
+};
+
+// ─── ENHANCED GRAPH RENDERING: Animated pulse on trunk nodes ─────────────────
+// Patch renderNetworkGraph to add active pulse class to trunk hubs
+const _origRenderGraph = window.renderNetworkGraph || null;
+// Note: renderNetworkGraph is defined above in the file and not on window,
+// so we apply the trunk glow via the graph init sequence. The CSS class
+// .graph-node-active is applied here as a post-render pass:
+document.addEventListener('DOMContentLoaded', () => {
+    // After graphs render, highlight trunk nodes with pulse glow
+    function applyTrunkNodeGlow() {
+        const svgEl = document.getElementById('fullNetworkGraphSvg') ||
+                      document.getElementById('dashGraphSvg');
+        if (!svgEl) return;
+        const nodes = svgEl.querySelectorAll('.graph-node');
+        nodes.forEach(n => {
+            const circle = n.querySelector('circle');
+            if (!circle) return;
+            const fill = circle.getAttribute('fill');
+            // Trunk nodes are EF3340 (railway red)
+            if (fill && fill.toLowerCase() === '#ef3340') {
+                n.classList.add('graph-node-active');
+            }
+        });
+    }
+    // Apply after graph renders (initial delay)
+    setTimeout(applyTrunkNodeGlow, 800);
+    // Also re-apply after 3s for when user switches to network page
+    setTimeout(applyTrunkNodeGlow, 3000);
+}, { once: true });
+
+// ─── INLINE NAVIGATION SHORTCUTS TOAST HINT (one-time) ───────────────────────
+(function () {
+    const STORAGE_KEY = 'railflow_shortcut_hint_shown';
+    try {
+        if (!sessionStorage.getItem(STORAGE_KEY)) {
+            setTimeout(() => {
+                Toast.info(
+                    'Keyboard Navigation Ready',
+                    'Press 1–9 to switch pages. Press / or Ctrl+K to search.',
+                    6500
+                );
+                sessionStorage.setItem(STORAGE_KEY, '1');
+            }, 3500);
+        }
+    } catch (e) { /* ignore */ }
+})();

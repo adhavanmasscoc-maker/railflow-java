@@ -102,4 +102,18 @@ Sync-File "DATA\stations.json" $gitDir
 Sync-File "DATA\train_catalog.json" $gitDir
 Sync-Folder "DATA\trains" $gitDir
 
+# 3. Sync to src/main/resources/static/
+Write-Host "`n3. Copying web assets to src/main/resources/static/..."
+$staticDir = Join-Path $rootDir "src\main\resources\static"
+Sync-File "index.html" $staticDir
+Sync-Folder "css" $staticDir
+Sync-Folder "js" $staticDir
+
+# 4. Sync to frontend/
+Write-Host "`n4. Copying web assets to frontend/..."
+$frontDir = Join-Path $rootDir "frontend"
+Sync-File "index.html" $frontDir
+Sync-Folder "css" $frontDir
+Sync-Folder "js" $frontDir
+
 Write-Host "`n=== SYNCHRONIZATION COMPLETE ==="

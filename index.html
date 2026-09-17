@@ -15,14 +15,12 @@
 </head>
 <body>
 
-    <!-- ─── Page Progress Bar ──────────────────────────────────── -->
-    <div class="page-progress-bar" id="pageProgressBar"></div>
     <!-- ─── Mobile Sidebar Overlay ────────────────────────────── -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <!-- ─── Toast Container ───────────────────────────────────── -->
     <div class="toast-container" id="toastContainer"></div>
-    <!-- ─── Floating Telemetry Badge ──────────────────────────── -->
-    <div class="telemetry-badge-float" id="telemetryBadgeFloat">
+    <!-- ─── Floating Telemetry Badge (hidden from viewport per ops directive) ──────────────────────────── -->
+    <div class="telemetry-badge-float" id="telemetryBadgeFloat" style="display:none; visibility:hidden; pointer-events:none; position:fixed; bottom:-999px; left:-999px; opacity:0;">
         <span class="pulse-dot"></span>
         <span id="telemetryFloatLabel">LIVE TELEMETRY — Tick #1</span>
     </div>
@@ -52,77 +50,58 @@
         <nav class="sidebar-nav">
             <div class="nav-section-label">Operations Console</div>
             <a href="#" class="nav-item active" data-page="dashboard" id="nav-dashboard">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-                </svg>
+                <span class="nav-emoji">📊</span>
                 <span>Dashboard</span>
                 <span class="nav-badge" style="background:var(--emerald-dim); color:var(--emerald);">LIVE</span>
             </a>
             <a href="#" class="nav-item" data-page="network" id="nav-network">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/>
-                    <line x1="8.5" y1="7.5" x2="15.5" y2="7.5"/><line x1="7.5" y1="8.5" x2="10.5" y2="15.5"/><line x1="16.5" y1="8.5" x2="13.5" y2="15.5"/>
-                </svg>
-                <span>Network Graph</span>
+                <span class="nav-emoji">🌐</span>
+                <span>RailRadar Network</span>
                 <span class="nav-badge">SVG</span>
             </a>
             <a href="#" class="nav-item" data-page="journey" id="nav-journey">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                </svg>
+                <span class="nav-emoji">🧭</span>
                 <span>Journey Planner</span>
                 <span class="nav-badge" style="background:var(--rail-red-dim); color:var(--rail-red);">ROUTER</span>
             </a>
             <a href="#" class="nav-item" data-page="stations" id="nav-stations">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M3 20h18"/><circle cx="12" cy="10" r="4"/><path d="M12 2v4"/><path d="M12 14v6"/>
-                </svg>
+                <span class="nav-emoji">🚉</span>
                 <span>Station Network</span>
                 <span class="nav-badge" id="navStationCount">25 Hubs</span>
             </a>
             <a href="#" class="nav-item" data-page="trains" id="nav-trains">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M2 11h20"/>
-                </svg>
+                <span class="nav-emoji">🚆</span>
                 <span>Train Explorer</span>
                 <span class="nav-badge">REAL DATA</span>
             </a>
             <a href="#" class="nav-item" data-page="crowd" id="nav-crowd">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
+                <span class="nav-emoji">👥</span>
                 <span>Crowd Monitoring</span>
                 <span class="nav-badge" style="background:var(--amber-dim); color:var(--amber);">3000ms</span>
+            </a>
+            <a href="#" class="nav-item" data-page="commuter" id="nav-commuter">
+                <span class="nav-emoji">📱</span>
+                <span>Commuter Portal</span>
+                <span class="nav-badge" style="background:var(--cyan-dim); color:var(--cyan);">PASSENGER</span>
             </a>
 
             <div class="nav-section-label">Intelligence & Data Layer</div>
             <a href="#" class="nav-item" data-page="quality" id="nav-quality">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
+                <span class="nav-emoji">📈</span>
                 <span>Data Quality</span>
                 <span class="nav-badge">DERIVED</span>
             </a>
             <a href="#" class="nav-item" data-page="architecture" id="nav-architecture">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/>
-                    <line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/>
-                </svg>
-                <span>System Architecture</span>
+                <span class="nav-emoji">🏛️</span>
+                <span>Architecture</span>
             </a>
             <a href="#" class="nav-item" data-page="database" id="nav-database">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-                </svg>
+                <span class="nav-emoji">🗄️</span>
                 <span>Database Explorer</span>
                 <span class="nav-badge">JDBC</span>
             </a>
             <a href="#" class="nav-item" data-page="feedback" id="nav-feedback">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
+                <span class="nav-emoji">💬</span>
                 <span>User Feedback</span>
             </a>
         </nav>
@@ -155,6 +134,29 @@
 
             <!-- Pipeline Status Ticker & Controls -->
             <div class="header-actions">
+                <!-- Dual-View Context Switcher (Controller HUD vs Commuter Portal) -->
+                <div class="view-mode-toggle" id="viewModeToggle" role="radiogroup" aria-label="Operational View Mode">
+                    <button class="view-mode-btn active" id="btnModeController" data-mode="controller" title="Switch to Station Controller HUD (Full Telemetry & Dispatch)">
+                        <span class="mode-icon">🎛️</span>
+                        <span class="mode-text">CONTROLLER HUD</span>
+                    </button>
+                    <button class="view-mode-btn" id="btnModeCommuter" data-mode="commuter" title="Switch to Passenger Commuter Portal (Mobile-Friendly)">
+                        <span class="mode-icon">📱</span>
+                        <span class="mode-text">COMMUTER PORTAL</span>
+                    </button>
+                </div>
+
+                <!-- PA Audio & Volume Controller Dock -->
+                <div class="audio-control-dock" id="audioControlDock" title="Station Master PA Audio System">
+                    <button class="btn-sound-mute" id="soundMuteBtn" aria-label="Toggle PA Audio Mute" title="Mute/Unmute Audio Announcements">
+                        <span id="soundIcon">🔊</span>
+                    </button>
+                    <div class="sound-slider-wrapper" title="PA Announcement Volume">
+                        <input type="range" min="0" max="1" step="0.05" value="0.8" id="soundVolumeSlider" class="sound-volume-slider" aria-label="Volume">
+                        <span class="volume-val" id="volumeValText">80%</span>
+                    </div>
+                </div>
+
                 <div class="pipeline-ticker">
                     <span class="pulse-dot"></span>
                     <span>LIVE PIPELINE</span>
@@ -162,32 +164,62 @@
                 </div>
 
                 <!-- Feature: Quick PNR Checker Launcher -->
-                <button class="btn btn-secondary" id="btnOpenPnrModal" title="Check Indian Railways 10-Digit PNR Status">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h8"/><path d="M8 12h6"/><path d="M8 16h4"/>
-                    </svg>
-                    <span>PNR Status</span>
+                <button class="btn btn-pnr-status" id="btnOpenPnrModal" title="Check Indian Railways 10-Digit PNR Status">
+                    <span>🎫 PNR Status</span>
                 </button>
 
-                <button class="btn btn-secondary" id="btnOperationsGuide">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-                    </svg>
-                    <span>Operations Guide</span>
+                <button class="btn btn-guide" id="btnOperationsGuide" title="Open Operations Architecture Guide">
+                    <span>📖 Operations Guide</span>
                 </button>
 
-                <button class="btn btn-primary" id="btnToggleAI">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10"/>
-                    </svg>
-                    <span>AI Assistant</span>
-                    <span class="badge" style="background:rgba(255,255,255,0.18); color:#F3F7FF; padding:0.1rem 0.35rem; font-size:0.65rem; border:1px solid rgba(255,255,255,0.3);">READY</span>
+                <button class="btn btn-ai-toggle" id="btnToggleAI" title="Open RailFlow AI Operations Terminal" style="padding:4px 8px; font-size:0.72rem; height:auto;">
+                    <span style="font-size:0.7rem;">🤖</span>
+                    <span style="font-size:0.7rem; letter-spacing:0.04em;">AI</span>
+                    <span class="badge badge-ai-pulse" style="font-size:9px; padding:1px 4px; min-width:0;">READY</span>
                 </button>
             </div>
         </header>
 
         <!-- Viewport Container -->
         <main class="main-viewport" id="mainViewport">
+
+            <!-- ─── Module A: Heuristic Conflict Alert Carousel (Automated Detection) ─── -->
+            <div class="alert-carousel-container" id="alertCarouselContainer" style="display:none;">
+                <div class="alert-carousel-card">
+                    <div class="alert-header">
+                        <div class="alert-pulse-badge">
+                            <span class="pulse-ring"></span>
+                            <span class="alert-icon">⚠️</span>
+                            <span class="alert-tag">SCHEDULE CONFLICT DETECTED</span>
+                        </div>
+                        <span class="alert-time-badge" id="alertCountdown">OVERLAP IN 12 MIN</span>
+                    </div>
+                    <div class="alert-body">
+                        <div class="alert-message" id="alertConflictMsg">
+                            <strong>Train 12638 (Pandyan Express)</strong> delayed by 25m. Schedule overlap on <strong>Platform 2</strong> (Density: 88% CRITICAL). High stampede hazard.
+                        </div>
+                        <div class="alert-recommendation">
+                            <span class="rec-label">Heuristic Recommendation:</span>
+                            <span id="alertTargetPfText">Reallocate to <strong>Platform 3</strong> (Current Density: 24% SAFE • Penalty: 18.2).</span>
+                        </div>
+                    </div>
+                    <div class="alert-actions">
+                        <button class="btn btn-danger btn-reallocate-action" id="btnHeuristicReallocate">
+                            <span>⚡ One-Click Heuristic Reallocate</span>
+                        </button>
+                        <button class="btn btn-secondary" id="btnDismissAlert" style="font-size:0.75rem; padding:6px 12px;">Dismiss</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── Emergency Strobe Gate Hold Banner (Triggered when FOB/Stairs Red > 2.5 persons/m²) ─── -->
+            <div class="strobe-gate-banner" id="strobeGateBanner" style="display:none;">
+                <div class="strobe-text">
+                    <strong>🚨 STAMPEDE HAZARD ALERT:</strong> Vertical Chokepoint (FOB 2 Staircase) exceeded 2.5 persons/m²! 
+                    <span>ACTION MANDATED: HOLD PASSENGER INFLOW AT CONCOURSE GATES (NORTH & SOUTH).</span>
+                </div>
+                <button class="btn btn-secondary" id="btnAcknowledgeStrobe" style="font-size:0.72rem; padding:4px 10px; background:rgba(0,0,0,0.4); color:#fff; border-color:#fff;">Acknowledge Hold</button>
+            </div>
 
             <!-- ═══════════════════════════════════════════════════════════
                  PAGE 1: DASHBOARD
@@ -376,12 +408,12 @@
                         </p>
                     </div>
                     <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                        <button class="btn btn-secondary" id="btnResetGraph">Reset View</button>
-                        <button class="btn btn-secondary" onclick="filterGraphZone('ALL')">All Zones</button>
-                        <button class="btn btn-secondary" onclick="filterGraphZone('NR')">Northern</button>
-                        <button class="btn btn-secondary" onclick="filterGraphZone('SR')">Southern</button>
-                        <button class="btn btn-secondary" onclick="filterGraphZone('WR')">Western</button>
-                        <button class="btn btn-secondary" onclick="filterGraphZone('CR')">Central</button>
+                        <button class="btn btn-secondary" id="btnResetGraph"><span>🔄 Reset View</span></button>
+                        <button class="btn btn-secondary" onclick="filterGraphZone('ALL')"><span>🇮🇳 All Zones</span></button>
+                        <button class="btn btn-secondary" onclick="filterGraphZone('NR')"><span>🏛️ Northern</span></button>
+                        <button class="btn btn-secondary" onclick="filterGraphZone('SR')"><span>🌴 Southern</span></button>
+                        <button class="btn btn-secondary" onclick="filterGraphZone('WR')"><span>🌅 Western</span></button>
+                        <button class="btn btn-secondary" onclick="filterGraphZone('CR')"><span>🌿 Central</span></button>
                     </div>
                 </div>
 
@@ -389,12 +421,10 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
                     <div style="display:flex; gap:0.5rem; background:var(--bg-subtle); padding:0.25rem; border-radius:var(--radius-md); border:1px solid var(--border);">
                         <button id="btnNetRadar" class="btn btn-primary" onclick="switchNetworkView('radar')" style="font-size:0.8rem; padding:0.4rem 0.85rem; display:inline-flex; align-items:center; gap:6px;">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polygon points="12 8 16 12 12 16 12 8"/></svg>
-                            <span>Live Satellite RailRadar</span>
+                            <span>🛰️ Live Satellite RailRadar</span>
                         </button>
                         <button id="btnNetTopology" class="btn btn-secondary" onclick="switchNetworkView('topology')" style="font-size:0.8rem; padding:0.4rem 0.85rem; display:inline-flex; align-items:center; gap:6px;">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                            <span>Interactive Topology Graph (India Geo Map)</span>
+                            <span>🌐 Topology Graph (India Geo Map)</span>
                         </button>
                     </div>
                     <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.75rem; color:var(--text-muted);">
@@ -412,7 +442,7 @@
                             <span class="badge badge-real">ACTIVE GPS RADAR</span>
                         </div>
                         <a href="https://railradar.in/railradar" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size:0.75rem; padding:0.25rem 0.6rem; text-decoration:none; display:inline-flex; align-items:center; gap:4px">
-                            <span>🛰️</span> <span>Open Fullscreen Radar ↗</span>
+                            <span>🛰️ Open Fullscreen Radar ↗</span>
                         </a>
                     </div>
                     <iframe src="https://railradar.in/railradar" style="width: 100%; height: 680px; border: none; display: block;" title="RailRadar Live Map" loading="lazy" allow="geolocation"></iframe>
@@ -429,9 +459,9 @@
                         </div>
 
                         <div class="graph-controls">
-                            <button class="graph-btn" id="btnZoomIn" title="Zoom In">+</button>
-                            <button class="graph-btn" id="btnZoomOut" title="Zoom Out">&minus;</button>
-                            <button class="graph-btn" id="btnFitGraph" title="Fit to Screen">&#x26F6;</button>
+                            <button class="graph-btn" id="btnZoomIn" title="Zoom In"><span>➕</span></button>
+                            <button class="graph-btn" id="btnZoomOut" title="Zoom Out"><span>➖</span></button>
+                            <button class="graph-btn" id="btnFitGraph" title="Fit to Screen"><span>🎯</span></button>
                         </div>
 
                         <svg class="graph-canvas" id="fullNetworkGraphSvg" viewBox="0 0 1000 900" style="width:100%; height:auto; min-height:600px;"></svg>
@@ -458,24 +488,57 @@
                 <div class="planner-form">
                     <div class="form-group">
                         <label class="form-label" for="fromStationInput">From Station / City / Code</label>
-                        <input type="text" class="form-input" id="fromStationInput" placeholder="e.g. NDLS, New Delhi, Chennai, MAS, BCT..." value="NDLS" autocomplete="off">
+                        <input type="text" class="form-input" id="fromStationInput" placeholder="e.g. TPJ, Trichy, ALU, Ariyalur, MAS, NDLS..." value="NDLS" autocomplete="off">
                         <div class="search-results-dropdown" id="fromDropdown"></div>
                     </div>
 
                     <button class="swap-btn" id="btnSwapStations" title="Swap Stations">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/>
-                        </svg>
+                        <span>🔄</span>
                     </button>
 
                     <div class="form-group">
                         <label class="form-label" for="toStationInput">To Station / City / Code</label>
-                        <input type="text" class="form-input" id="toStationInput" placeholder="e.g. MAS, Chennai, Bangalore, SBC, CSTM..." value="MAS" autocomplete="off">
+                        <input type="text" class="form-input" id="toStationInput" placeholder="e.g. ALU, Ariyalur, TPJ, Trichy, MAS, SBC..." value="MAS" autocomplete="off">
                         <div class="search-results-dropdown" id="toDropdown"></div>
                     </div>
 
-                    <button class="btn btn-primary" id="btnPlanJourney" style="height:42px; padding:0 1.75rem;">
-                        <span>Plan Route</span>
+                    <button class="btn btn-plan-route" id="btnPlanJourney">
+                        <span>🗺️ Plan Corridor Route</span>
+                    </button>
+                </div>
+
+                <!-- Quick Route Corridor Presets with Custom Layouts and Emojis -->
+                <div class="corridor-preset-bar">
+                    <span class="corridor-preset-label">⚡ QUICK CORRIDORS:</span>
+                    <button type="button" class="btn-corridor-chip chip-tpj-alu" onclick="quickPlanRoute('TPJ', 'ALU')" title="Trichy to Ariyalur Direct Express Line (70 km)">
+                        <span class="chip-emoji">🌴</span>
+                        <span class="chip-route">TPJ ➔ ALU</span>
+                        <span class="chip-desc">Trichy - Ariyalur</span>
+                    </button>
+                    <button type="button" class="btn-corridor-chip chip-tpj-ms" onclick="quickPlanRoute('TPJ', 'MS')" title="Rockfort Express Corridor (337 km)">
+                        <span class="chip-emoji">🚂</span>
+                        <span class="chip-route">TPJ ➔ MS</span>
+                        <span class="chip-desc">Rockfort Exp</span>
+                    </button>
+                    <button type="button" class="btn-corridor-chip chip-alu-ms" onclick="quickPlanRoute('ALU', 'MS')" title="Ariyalur to Chennai Egmore (267 km)">
+                        <span class="chip-emoji">🏛️</span>
+                        <span class="chip-route">ALU ➔ MS</span>
+                        <span class="chip-desc">Ariyalur - Chennai</span>
+                    </button>
+                    <button type="button" class="btn-corridor-chip chip-ndls-mas" onclick="quickPlanRoute('NDLS', 'MAS')" title="Grand Trunk Corridor (2,180 km)">
+                        <span class="chip-emoji">⚡</span>
+                        <span class="chip-route">NDLS ➔ MAS</span>
+                        <span class="chip-desc">Grand Trunk</span>
+                    </button>
+                    <button type="button" class="btn-corridor-chip chip-bct-ndls" onclick="quickPlanRoute('BCT', 'NDLS')" title="Western Rajdhani Trunk (1,384 km)">
+                        <span class="chip-emoji">🚄</span>
+                        <span class="chip-route">BCT ➔ NDLS</span>
+                        <span class="chip-desc">Rajdhani</span>
+                    </button>
+                    <button type="button" class="btn-corridor-chip chip-mas-hwh" onclick="quickPlanRoute('MAS', 'HWH')" title="Coromandel Coast Trunk (1,660 km)">
+                        <span class="chip-emoji">🌊</span>
+                        <span class="chip-route">MAS ➔ HWH</span>
+                        <span class="chip-desc">Coromandel</span>
                     </button>
                 </div>
 
@@ -533,6 +596,118 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- ─── FOB SAFETY INTERLOCK & COACH WALKING COMPASS ─── -->
+                <div id="fobInterlockPanel" style="margin-top:1.5rem;">
+
+                    <!-- 15-Minute FOB Interlock Alert System -->
+                    <div class="panel" id="fobInterlockCard" style="border-left:3px solid var(--amber); margin-bottom:1rem;">
+                        <div class="panel-header" style="background:rgba(245,158,11,0.06);">
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <span style="font-size:0.65rem; background:rgba(245,158,11,0.15); color:var(--amber); border:1px solid var(--amber); border-radius:4px; padding:1px 5px; font-family:var(--font-mono); font-weight:700;">FOB INTERLOCK</span>
+                                <span class="panel-title">15-Minute Pre-Signal FOB Safety Interlock</span>
+                                <span class="pulse-dot" style="background:var(--amber);"></span>
+                            </div>
+                            <div style="display:flex; gap:0.5rem;">
+                                <button class="btn btn-secondary" id="btnSimStampede" style="font-size:0.7rem; padding:3px 8px;">⚡ Simulate Stampede Risk</button>
+                                <button class="btn btn-secondary" id="btnAdvanceEta" style="font-size:0.7rem; padding:3px 8px;">⏩ Advance ETA</button>
+                                <button class="btn btn-secondary" id="btnResetFob" style="font-size:0.7rem; padding:3px 8px;">↺ Reset</button>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:0.75rem; margin-bottom:0.75rem;">
+                                <!-- Platform 1 -->
+                                <div id="fobPf1" style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; padding:0.75rem;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                                        <span style="font-size:0.78rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">PF 1</span>
+                                        <span id="fobPf1Badge" style="font-size:9px; padding:1px 5px; border-radius:3px; background:var(--emerald-dim); color:var(--emerald); font-family:var(--font-mono);">CLEAR</span>
+                                    </div>
+                                    <div style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);">FOB-A • <span id="fobPf1Train">No Active Train</span></div>
+                                    <div style="font-size:0.7rem; color:var(--cyan); margin-top:0.3rem;">ETA: <span id="fobPf1Eta">—</span></div>
+                                    <div style="margin-top:0.5rem; height:4px; border-radius:2px; background:var(--border);">
+                                        <div id="fobPf1Bar" style="height:4px; border-radius:2px; background:var(--emerald); width:0%; transition:width 0.4s;"></div>
+                                    </div>
+                                </div>
+                                <!-- Platform 2 -->
+                                <div id="fobPf2" style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; padding:0.75rem;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                                        <span style="font-size:0.78rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">PF 2</span>
+                                        <span id="fobPf2Badge" style="font-size:9px; padding:1px 5px; border-radius:3px; background:var(--emerald-dim); color:var(--emerald); font-family:var(--font-mono);">CLEAR</span>
+                                    </div>
+                                    <div style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);">FOB-A • <span id="fobPf2Train">No Active Train</span></div>
+                                    <div style="font-size:0.7rem; color:var(--cyan); margin-top:0.3rem;">ETA: <span id="fobPf2Eta">—</span></div>
+                                    <div style="margin-top:0.5rem; height:4px; border-radius:2px; background:var(--border);">
+                                        <div id="fobPf2Bar" style="height:4px; border-radius:2px; background:var(--emerald); width:0%; transition:width 0.4s;"></div>
+                                    </div>
+                                </div>
+                                <!-- Platform 3 -->
+                                <div id="fobPf3" style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; padding:0.75rem;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                                        <span style="font-size:0.78rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">PF 3</span>
+                                        <span id="fobPf3Badge" style="font-size:9px; padding:1px 5px; border-radius:3px; background:var(--emerald-dim); color:var(--emerald); font-family:var(--font-mono);">CLEAR</span>
+                                    </div>
+                                    <div style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);">FOB-B • <span id="fobPf3Train">No Active Train</span></div>
+                                    <div style="font-size:0.7rem; color:var(--cyan); margin-top:0.3rem;">ETA: <span id="fobPf3Eta">—</span></div>
+                                    <div style="margin-top:0.5rem; height:4px; border-radius:2px; background:var(--border);">
+                                        <div id="fobPf3Bar" style="height:4px; border-radius:2px; background:var(--emerald); width:0%; transition:width 0.4s;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FOB Clash Alert Banner -->
+                            <div id="fobClashBanner" style="display:none; background:rgba(239,68,68,0.08); border:1px solid var(--rail-red); border-radius:8px; padding:0.75rem; margin-bottom:0.75rem;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                                    <div>
+                                        <span style="font-size:0.72rem; color:var(--rail-red); font-weight:700; font-family:var(--font-mono);">⚠️ FOB CLASH HAZARD DETECTED</span>
+                                        <div id="fobClashMsg" style="font-size:0.78rem; color:var(--text-secondary); margin-top:0.25rem;"></div>
+                                    </div>
+                                    <button id="btnFobReallocate" class="btn btn-danger btn-reallocate-action" style="font-size:0.72rem; padding:4px 10px; white-space:nowrap;">⚡ One-Click Safe Reallocate</button>
+                                </div>
+                            </div>
+                            <!-- Audit Trail -->
+                            <div style="font-size:0.7rem; font-family:var(--font-mono); color:var(--text-muted); border-top:1px solid var(--border); padding-top:0.5rem;">
+                                <div style="font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">📋 AUDIT TRAIL</div>
+                                <div id="fobAuditTrail" style="max-height:70px; overflow-y:auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coach Walking Compass -->
+                    <div class="panel" style="border-left:3px solid var(--cyan);">
+                        <div class="panel-header" style="background:rgba(34,211,238,0.04);">
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <span style="font-size:0.65rem; background:rgba(34,211,238,0.15); color:var(--cyan); border:1px solid var(--cyan); border-radius:4px; padding:1px 5px; font-family:var(--font-mono); font-weight:700;">COMPASS</span>
+                                <span class="panel-title">Commuter Coach Walking Compass</span>
+                            </div>
+                            <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);">Bridge Staircase Landing: Coach S3/S4 • 23m per coach</span>
+                        </div>
+                        <div class="panel-body">
+                            <!-- Coach Selector Grid -->
+                            <div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:0.75rem;" id="coachSelectorGrid"></div>
+                            <!-- Result Display -->
+                            <div id="compassResult" style="display:none; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; padding:0.75rem; margin-bottom:0.75rem;">
+                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem;">
+                                    <div style="text-align:center;">
+                                        <div style="font-size:0.65rem; color:var(--text-muted); font-family:var(--font-mono); text-transform:uppercase;">Distance</div>
+                                        <div id="compassDistance" style="font-size:1.4rem; font-weight:800; color:var(--cyan); font-family:var(--font-mono);">0m</div>
+                                    </div>
+                                    <div style="text-align:center;">
+                                        <div style="font-size:0.65rem; color:var(--text-muted); font-family:var(--font-mono); text-transform:uppercase;">Direction</div>
+                                        <div id="compassDirection" style="font-size:0.95rem; font-weight:700; color:var(--text-primary); margin-top:0.25rem;">—</div>
+                                    </div>
+                                    <div style="text-align:center;">
+                                        <div style="font-size:0.65rem; color:var(--text-muted); font-family:var(--font-mono); text-transform:uppercase;">Walk Time</div>
+                                        <div id="compassWalkTime" style="font-size:1.4rem; font-weight:800; color:var(--emerald); font-family:var(--font-mono);">0s</div>
+                                    </div>
+                                </div>
+                                <div id="compassGuidance" style="font-size:0.78rem; color:var(--text-secondary); margin-top:0.5rem; padding-top:0.5rem; border-top:1px solid var(--border);"></div>
+                                <div id="compassBottleneck" style="display:none; font-size:0.72rem; background:rgba(245,158,11,0.08); border:1px solid var(--amber); border-radius:4px; padding:4px 8px; margin-top:0.4rem; color:var(--amber);">⚠️ Bottleneck Zone: This coach is near the main FOB staircase. Expect crowding — consider moving to S5+ for faster boarding.</div>
+                                <button id="btnSpeakCompass" style="margin-top:0.5rem; font-size:0.7rem; padding:3px 8px;" class="btn btn-secondary">🔊 Speak Guidance</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </section>
 
             <!-- ═══════════════════════════════════════════════════════════
@@ -682,6 +857,241 @@
                     </div>
                     <div class="panel-body">
                         <div class="platform-grid" id="platformBarsContainer"></div>
+                    </div>
+                </div>
+
+                <!-- ─── MODULE D: "WHAT-IF" CASCADE STRESS-TEST SANDBOX ─── -->
+                <div class="sandbox-panel" id="sandboxPanel">
+                    <div class="sandbox-header">
+                        <div>
+                            <span class="badge badge-derived" style="margin-bottom:4px; display:inline-block;">MODULE D • CASCADE STRESS ENGINE</span>
+                            <h3 style="font-size:1.05rem; font-weight:700; color:#F3F7FF; margin:0;">"What-If" Cascade Stress-Test Sandbox</h3>
+                            <p style="font-size:0.78rem; color:var(--text-secondary); margin:2px 0 0 0;">Simulate high-volume passenger influx, delayed express rakes, and vertical infrastructure chokepoints.</p>
+                        </div>
+                        <span class="badge badge-real" id="sandboxStatusBadge">SANDBOX ACTIVE</span>
+                    </div>
+                    <div class="sandbox-controls-grid">
+                        <div class="sandbox-field">
+                            <label for="inflowSurgeSlider">Inflow Surge Multiplier: <span class="sandbox-slider-val" id="inflowSurgeValue">1.0x</span></label>
+                            <div class="sandbox-slider-wrap">
+                                <span style="font-size:0.7rem; color:var(--text-muted);">1x</span>
+                                <input type="range" id="inflowSurgeSlider" class="sandbox-slider" min="1.0" max="5.0" step="0.5" value="1.0">
+                                <span style="font-size:0.7rem; color:var(--text-muted);">5x</span>
+                            </div>
+                        </div>
+                        <div class="sandbox-field">
+                            <label for="sandboxIncidentSelect">Inject Infrastructure Incident</label>
+                            <select id="sandboxIncidentSelect" class="sandbox-select">
+                                <option value="NONE">None (Nominal Operations)</option>
+                                <option value="FOB_BREAKDOWN">FOB 1 Escalator Breakdown (+45% Surge)</option>
+                                <option value="TRAIN_DELAY">Express Train 45m Delay (Pf 2 Overlap)</option>
+                                <option value="SIGNAL_FAULT">Platform 3 Signal Fault (Reroute Required)</option>
+                                <option value="FESTIVAL_RUSH">Diwali / Pongal Mass Influx (3.5x Multiplier)</option>
+                            </select>
+                        </div>
+                        <div class="sandbox-field">
+                            <label>Heuristic Optimization Engine</label>
+                            <div style="font-size:0.76rem; color:var(--cyan); font-family:var(--font-mono); padding-top:6px;">
+                                Penalty = (ρ × 40) + (FOB × 0.4) + (d × 5)
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn btn-primary" id="btnFastForwardSim" style="white-space:nowrap; height:38px;">
+                                <span>⏩ Run 30-Min Fast-Forward</span>
+                            </button>
+                            <button class="btn btn-secondary" id="btnResetSandbox" style="height:38px;" title="Reset Simulation Parameters">Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ─── MODULE B: FOB & VERTICAL CHOKEPOINTS TOPOLOGY ─── -->
+                <div class="fob-topology-container" id="fobTopologyContainer">
+                    <div class="fob-topology-header">
+                        <div>
+                            <span class="badge badge-simulated" style="margin-bottom:4px; display:inline-block;">MODULE B • SPATIAL TOPOLOGY</span>
+                            <h3 style="font-size:1.05rem; font-weight:700; color:#F3F7FF; margin:0;">FOB & Vertical Chokepoints Real-Time Density Heatmap</h3>
+                            <p style="font-size:0.78rem; color:var(--text-secondary); margin:2px 0 0 0;">Continuous optical crowd density monitoring in <code>persons/m²</code> across multi-level station pathways.</p>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px; font-size:0.75rem; font-family:var(--font-mono);">
+                            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:var(--emerald);"></span> &lt;1.5 Safe</span>
+                            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:var(--amber);"></span> 1.5–2.5 Warning</span>
+                            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:var(--rail-red);"></span> &gt;2.5 Hazard Hold</span>
+                        </div>
+                    </div>
+
+                    <div class="topology-grid">
+                        <!-- Chokepoint 1: North Concourse Entry -->
+                        <div class="chokepoint-card safe" id="cpCardNorth">
+                            <div class="chokepoint-top">
+                                <span class="chokepoint-title">North Concourse Gate</span>
+                                <span class="badge badge-real" id="cpBadgeNorth">NOMINAL</span>
+                            </div>
+                            <div>
+                                <span class="chokepoint-density-val" id="cpDensityNorth">1.15</span>
+                                <span class="chokepoint-unit">persons/m²</span>
+                            </div>
+                            <div class="chokepoint-meter">
+                                <div class="chokepoint-meter-fill safe" id="cpMeterNorth" style="width: 38%;"></div>
+                            </div>
+                            <div style="margin-top:6px; font-size:0.72rem; color:var(--text-muted); display:flex; justify-content:space-between;">
+                                <span>Turnstile Inflow: 42/min</span>
+                                <span>Cap: 3.0 p/m²</span>
+                            </div>
+                        </div>
+
+                        <!-- Chokepoint 2: South Concourse Entry -->
+                        <div class="chokepoint-card safe" id="cpCardSouth">
+                            <div class="chokepoint-top">
+                                <span class="chokepoint-title">South Concourse Gate</span>
+                                <span class="badge badge-real" id="cpBadgeSouth">NOMINAL</span>
+                            </div>
+                            <div>
+                                <span class="chokepoint-density-val" id="cpDensitySouth">1.32</span>
+                                <span class="chokepoint-unit">persons/m²</span>
+                            </div>
+                            <div class="chokepoint-meter">
+                                <div class="chokepoint-meter-fill safe" id="cpMeterSouth" style="width: 44%;"></div>
+                            </div>
+                            <div style="margin-top:6px; font-size:0.72rem; color:var(--text-muted); display:flex; justify-content:space-between;">
+                                <span>Turnstile Inflow: 56/min</span>
+                                <span>Cap: 3.0 p/m²</span>
+                            </div>
+                        </div>
+
+                        <!-- Chokepoint 3: FOB 1 & Staircases -->
+                        <div class="chokepoint-card safe" id="cpCardFob1">
+                            <div class="chokepoint-top">
+                                <span class="chokepoint-title">FOB 1 (Main Overbridge & Stairs)</span>
+                                <span class="badge badge-real" id="cpBadgeFob1">NOMINAL</span>
+                            </div>
+                            <div>
+                                <span class="chokepoint-density-val" id="cpDensityFob1">1.48</span>
+                                <span class="chokepoint-unit">persons/m²</span>
+                            </div>
+                            <div class="chokepoint-meter">
+                                <div class="chokepoint-meter-fill safe" id="cpMeterFob1" style="width: 49%;"></div>
+                            </div>
+                            <div style="margin-top:6px; font-size:0.72rem; color:var(--text-muted); display:flex; justify-content:space-between;">
+                                <span>Connected Platforms: 1, 2, 3</span>
+                                <span>Cap: 3.0 p/m²</span>
+                            </div>
+                        </div>
+
+                        <!-- Chokepoint 4: FOB 2 & Escalator -->
+                        <div class="chokepoint-card warning" id="cpCardFob2">
+                            <div class="chokepoint-top">
+                                <span class="chokepoint-title">FOB 2 (Suburban Connector & Escalator)</span>
+                                <span class="badge badge-derived" id="cpBadgeFob2">CAUTION</span>
+                            </div>
+                            <div>
+                                <span class="chokepoint-density-val" id="cpDensityFob2">2.18</span>
+                                <span class="chokepoint-unit">persons/m²</span>
+                            </div>
+                            <div class="chokepoint-meter">
+                                <div class="chokepoint-meter-fill warning" id="cpMeterFob2" style="width: 72%;"></div>
+                            </div>
+                            <div style="margin-top:6px; font-size:0.72rem; color:var(--text-muted); display:flex; justify-content:space-between;">
+                                <span>Connected Platforms: 4, 5, 6</span>
+                                <span>Cap: 3.0 p/m²</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ─── MODULE C: COACH-WISE CROWD DENSITY INDICATOR ─── -->
+                <div class="coach-density-container" id="coachDensityContainer">
+                    <div class="coach-density-header">
+                        <div>
+                            <span class="badge badge-derived" style="margin-bottom:4px; display:inline-block;">MODULE C • COACH INTELLIGENCE</span>
+                            <h3 style="font-size:1.02rem; font-weight:700; color:#F3F7FF; margin:0;">Platform Edge Coach-Wise Density Distribution</h3>
+                            <p style="font-size:0.76rem; color:var(--text-secondary); margin:2px 0 0 0;">LHB/ICF Rake Composition for Arriving Rake: <strong id="coachCurrentTrainLabel">12638 Pandyan Express (Platform 2)</strong></p>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="badge badge-simulated" id="coachOccupancyBadge">Avg Load: 71%</span>
+                        </div>
+                    </div>
+
+                    <div class="coach-track-strip" id="coachTrackStrip">
+                        <div class="coach-block engine"><div class="coach-name">LOCO</div><div class="coach-status-tag" style="color:var(--cyan);">WAP-7</div></div>
+                        <div class="coach-block red"><div class="coach-name">GEN-1</div><div class="coach-status-tag red">96% CRIT</div></div>
+                        <div class="coach-block amber"><div class="coach-name">S1</div><div class="coach-status-tag amber">74% HIGH</div></div>
+                        <div class="coach-block red"><div class="coach-name">S2</div><div class="coach-status-tag red">92% CRIT</div></div>
+                        <div class="coach-block red"><div class="coach-name">S3</div><div class="coach-status-tag red">89% CRIT</div></div>
+                        <div class="coach-block red"><div class="coach-name">S4</div><div class="coach-status-tag red">91% CRIT</div></div>
+                        <div class="coach-block amber"><div class="coach-name">S5</div><div class="coach-status-tag amber">78% HIGH</div></div>
+                        <div class="coach-block green"><div class="coach-name">S6</div><div class="coach-status-tag green">42% SAFE</div></div>
+                        <div class="coach-block green"><div class="coach-name">S7</div><div class="coach-status-tag green">38% SAFE</div></div>
+                        <div class="coach-block green"><div class="coach-name">B1</div><div class="coach-status-tag green">35% SAFE</div></div>
+                        <div class="coach-block green"><div class="coach-name">B2</div><div class="coach-status-tag green">41% SAFE</div></div>
+                        <div class="coach-block amber"><div class="coach-name">A1</div><div class="coach-status-tag amber">68% MED</div></div>
+                        <div class="coach-block green"><div class="coach-name">A2</div><div class="coach-status-tag green">39% SAFE</div></div>
+                        <div class="coach-block red"><div class="coach-name">GEN-2</div><div class="coach-status-tag red">98% CRIT</div></div>
+                    </div>
+
+                    <div class="dispersal-arrow-banner" id="dispersalBanner">
+                        <span>⚠️ <strong>SURGE CLUSTERING DETECTED:</strong> FOB 2 drop zone (Coaches S2-S4) is dangerously crowded.</span>
+                        <span style="font-weight:700;">👉 PLEASE DISPERSE TOWARDS REAR COACHES (S6–B2) FOR FASTER BOARDING</span>
+                    </div>
+                </div>
+
+                <!-- ─── MODULE F: SENSOR TELEMETRY MOCK & REPLAY ENGINE + AUDIT LOG ─── -->
+                <div class="panel" style="margin-top:1.5rem;">
+                    <div class="panel-header">
+                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                            <span class="panel-title">Module F: Sensor Telemetry Scenario Replay &amp; Audit Log</span>
+                            <span class="badge badge-real">EVENT REPLAY</span>
+                        </div>
+                        <div class="scenario-replay-dock">
+                            <span style="font-size:0.72rem; color:var(--text-muted); margin-right:4px;">Scenario:</span>
+                            <button class="scenario-btn active" id="btnScenarioMorning" data-scenario="morning">Morning Office Rush</button>
+                            <button class="scenario-btn" id="btnScenarioFestive" data-scenario="festive">Festive Season Surge</button>
+                            <button class="scenario-btn" id="btnScenarioDrill" data-scenario="drill">Emergency Evac Drill</button>
+                            <span style="color:var(--border); margin:0 4px;">|</span>
+                            <button class="scenario-btn" id="btnReplayPlayPause">⏸ Pause</button>
+                            <button class="scenario-btn" id="btnReplaySpeed">2x Speed</button>
+                            <button class="scenario-btn" id="btnReplayReset">↺ Reset</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                            <span style="font-size:0.78rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase;">Automated vs Manual Reallocation Audit Log</span>
+                            <span style="font-size:0.72rem; color:var(--cyan); font-family:var(--font-mono);" id="auditEventCount">Showing recent 5 decisions</span>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="data-table" id="reallocationAuditTable">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Train No / Name</th>
+                                        <th>Original Pf</th>
+                                        <th>Target Pf</th>
+                                        <th>Density Saved</th>
+                                        <th>Decision Source</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reallocationAuditBody">
+                                    <tr>
+                                        <td style="font-family:var(--font-mono); font-size:0.75rem;">08:14:22</td>
+                                        <td><strong>12638 Pandyan Exp</strong></td>
+                                        <td><span class="badge badge-simulated">Pf 2 (88%)</span></td>
+                                        <td><span class="badge badge-real">Pf 3 (24%)</span></td>
+                                        <td style="color:var(--emerald); font-weight:700;">-64% Density</td>
+                                        <td><span class="badge badge-derived">Python Heuristic</span></td>
+                                        <td><span class="badge badge-real">DISPATCHED</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-family:var(--font-mono); font-size:0.75rem;">07:48:10</td>
+                                        <td><strong>22625 Double Decker</strong></td>
+                                        <td><span class="badge badge-simulated">Pf 4 (82%)</span></td>
+                                        <td><span class="badge badge-real">Pf 1 (18%)</span></td>
+                                        <td style="color:var(--emerald); font-weight:700;">-64% Density</td>
+                                        <td><span class="badge badge-derived">Station Master HUD</span></td>
+                                        <td><span class="badge badge-real">EXECUTED</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1142,6 +1552,196 @@
                 </div>
             </section>
 
+            <!-- ═══════════════════════════════════════════════════════════
+                 PAGE: PASSENGER COMMUTER PORTAL (DUAL-VIEW MODE)
+                 ═══════════════════════════════════════════════════════════ -->
+            <section class="page-view" id="page-commuter">
+                <div class="commuter-portal-container">
+                    <div class="commuter-hero-card">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+                            <div>
+                                <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                                    <span class="badge badge-real">COMMUTER INTELLIGENCE</span>
+                                    <span class="badge badge-ai-pulse" style="font-size:0.68rem;">LIVE SYNTHESIS</span>
+                                </div>
+                                <h1 style="font-size:1.85rem; font-weight:800; color:#FFFFFF; margin:0 0 4px 0; letter-spacing:-0.02em;">
+                                    Chennai Central (MAS)
+                                </h1>
+                                <p style="font-size:0.85rem; color:#C7D2E3; margin:0;">
+                                    High-contrast real-time station concourse guide, live track allocations, coach crowding metrics &amp; stampede-free egress.
+                                </p>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-family:var(--font-mono); font-size:1.6rem; font-weight:800; color:var(--cyan);" id="commuterClock">18:45:00</div>
+                                <div style="font-size:0.75rem; color:var(--emerald); font-weight:600;">● CONCOURSE OPERATING NOMINAL</div>
+                            </div>
+                        </div>
+
+                        <!-- Active Train Announcement Spotlight -->
+                        <div style="background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-md); padding:1rem; margin-top:1.25rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <span style="font-size:1.8rem;">📢</span>
+                                <div>
+                                    <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Live Audio Dispatch</div>
+                                    <div style="font-size:0.88rem; color:#FFFFFF; font-weight:600;" id="commuterLiveAnnouncementText">
+                                        "Attention please: Train 12638 Pandyan Express is arriving on Platform 3. Please use FOB 1 for safe boarding."
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary" id="btnRepeatAnnouncement" style="font-size:0.75rem; padding:6px 14px; white-space:nowrap;">
+                                🔊 Replay Voice
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ─── MODULE E: VIRTUAL DIGITAL STATION DISPLAY BOARD ─── -->
+                    <div class="digital-display-board">
+                        <div class="digital-display-title">
+                            <span>🔴 LIVE STATION DEPARTURE CONCOURSE BOARD • SOUTHERN RAILWAY</span>
+                            <span style="font-size:0.75rem;">AUTO-REFRESH: 3s</span>
+                        </div>
+                        <div style="overflow-x:auto;">
+                            <table class="display-board-table">
+                                <thead>
+                                    <tr>
+                                        <th>TRAIN NO / NAME</th>
+                                        <th>DESTINATION</th>
+                                        <th>EXP ARRIVAL</th>
+                                        <th>EXP DEP</th>
+                                        <th style="text-align:center;">PLATFORM</th>
+                                        <th>STATUS</th>
+                                        <th>BOARDING DENSITY</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="commuterDisplayBoardBody">
+                                    <tr>
+                                        <td style="font-weight:700;">12638 • Pandyan Express</td>
+                                        <td>Madurai Jn (MDU)</td>
+                                        <td>21:15</td>
+                                        <td>21:30</td>
+                                        <td style="text-align:center;"><span class="led-pf">PF 3</span></td>
+                                        <td><span class="led-delayed">DELAYED 15M (REALLOCATED)</span></td>
+                                        <td style="color:var(--emerald);">Safe (24% Load)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight:700;">12622 • Tamil Nadu Exp</td>
+                                        <td>New Delhi (NDLS)</td>
+                                        <td>21:55</td>
+                                        <td>22:15</td>
+                                        <td style="text-align:center;"><span class="led-pf">PF 1</span></td>
+                                        <td><span class="led-on-time">ON TIME</span></td>
+                                        <td style="color:var(--amber);">Moderate (65% Load)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight:700;">22625 • Double Decker</td>
+                                        <td>KSR Bengaluru (SBC)</td>
+                                        <td>07:10</td>
+                                        <td>07:25</td>
+                                        <td style="text-align:center;"><span class="led-pf">PF 4</span></td>
+                                        <td><span class="led-on-time">ON TIME</span></td>
+                                        <td style="color:var(--emerald);">Safe (38% Load)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight:700;">12840 • Howrah Mail</td>
+                                        <td>Howrah Jn (HWH)</td>
+                                        <td>23:30</td>
+                                        <td>23:45</td>
+                                        <td style="text-align:center;"><span class="led-pf">PF 5</span></td>
+                                        <td><span class="led-on-time">ON TIME</span></td>
+                                        <td style="color:var(--rail-red);">Heavy Rush (86% Load)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight:700;">16057 • Sapthagiri Exp</td>
+                                        <td>Tirupati (TPTY)</td>
+                                        <td>06:25</td>
+                                        <td>06:40</td>
+                                        <td style="text-align:center;"><span class="led-pf">PF 6</span></td>
+                                        <td><span class="led-on-time">ON TIME</span></td>
+                                        <td style="color:var(--emerald);">Low (29% Load)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ─── COMMUTER COACH GUIDANCE ─── -->
+                    <div class="panel" style="margin-bottom:1.5rem;">
+                        <div class="panel-header">
+                            <div>
+                                <span class="panel-title">Smart Coach Boarding Guidance: Train 12638</span>
+                                <span class="badge badge-derived">LIVE PASSENGER SENSING</span>
+                            </div>
+                            <span style="font-size:0.75rem; color:var(--text-muted);">Platform 3 Track Edge</span>
+                        </div>
+                        <div class="panel-body">
+                            <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.75rem;">
+                                Live crowd heat distribution across the 24-coach rake. Board at green coaches for guaranteed seating and unblocked vestibules.
+                            </p>
+                            <div class="coach-track-strip" id="commuterCoachTrackStrip">
+                                <div class="coach-block engine"><div class="coach-name">LOCO</div><div class="coach-status-tag" style="color:var(--cyan);">FRONT</div></div>
+                                <div class="coach-block red"><div class="coach-name">GEN-1</div><div class="coach-status-tag red">FULL</div></div>
+                                <div class="coach-block amber"><div class="coach-name">S1</div><div class="coach-status-tag amber">74%</div></div>
+                                <div class="coach-block red"><div class="coach-name">S2</div><div class="coach-status-tag red">92%</div></div>
+                                <div class="coach-block red"><div class="coach-name">S3</div><div class="coach-status-tag red">89%</div></div>
+                                <div class="coach-block red"><div class="coach-name">S4</div><div class="coach-status-tag red">91%</div></div>
+                                <div class="coach-block amber"><div class="coach-name">S5</div><div class="coach-status-tag amber">78%</div></div>
+                                <div class="coach-block green"><div class="coach-name">S6</div><div class="coach-status-tag green">SAFE 42%</div></div>
+                                <div class="coach-block green"><div class="coach-name">S7</div><div class="coach-status-tag green">SAFE 38%</div></div>
+                                <div class="coach-block green"><div class="coach-name">B1</div><div class="coach-status-tag green">SAFE 35%</div></div>
+                                <div class="coach-block green"><div class="coach-name">B2</div><div class="coach-status-tag green">SAFE 41%</div></div>
+                                <div class="coach-block amber"><div class="coach-name">A1</div><div class="coach-status-tag amber">68%</div></div>
+                                <div class="coach-block green"><div class="coach-name">A2</div><div class="coach-status-tag green">SAFE 39%</div></div>
+                                <div class="coach-block red"><div class="coach-name">GEN-2</div><div class="coach-status-tag red">REAR FULL</div></div>
+                            </div>
+                            <div class="dispersal-arrow-banner" style="margin-top:10px;">
+                                <span>💡 <strong>Commuter Advice:</strong> Avoid center coaches S2-S4 (FOB bottleneck).</span>
+                                <span style="font-weight:700;">WALK 60 METERS TOWARDS S6–B2 FOR EFFORTLESS BOARDING</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─── SHORTEST CROWD-FREE EXIT NAVIGATOR ─── -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <span class="panel-title">Shortest Crowd-Free Concourse Egress Routes</span>
+                                <span class="badge badge-real">LOWEST IMPEDANCE PATH</span>
+                            </div>
+                            <span style="font-size:0.75rem; color:var(--emerald);">● REAL-TIME DENSITY OPTIMIZED</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="commuter-exit-grid">
+                                <div class="exit-route-card recommended">
+                                    <div class="exit-icon">🟢</div>
+                                    <div style="flex:1;">
+                                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                                            <strong style="font-size:0.92rem; color:#FFFFFF;">North Concourse Main Gate (via FOB 1)</strong>
+                                            <span class="badge badge-real">RECOMMENDED EXIT</span>
+                                        </div>
+                                        <p style="font-size:0.76rem; color:var(--text-secondary); margin:4px 0 0 0;">
+                                            Current Density: <strong>1.15 persons/m² (Safe)</strong> • Est. Clearance: <strong>2.5 min</strong> • Escalator operating smoothly.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="exit-route-card">
+                                    <div class="exit-icon">🔴</div>
+                                    <div style="flex:1;">
+                                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                                            <strong style="font-size:0.92rem; color:#FFFFFF;">South Concourse Suburban Gate (via FOB 2)</strong>
+                                            <span class="badge badge-simulated" style="color:var(--rail-red); border-color:var(--rail-red);">CONGESTED</span>
+                                        </div>
+                                        <p style="font-size:0.76rem; color:var(--text-secondary); margin:4px 0 0 0;">
+                                            Current Density: <strong>2.18 persons/m² (Caution)</strong> • Est. Clearance: <strong>9.0 min</strong> • Moderate baggage bottleneck.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
 
@@ -1350,6 +1950,10 @@
         </div>
     </div>
 
+    <!-- Master Railway Data Layer (Authoritative Frontend Fallback — real corridor & train data) -->
+    <script src="js/data/masterRailwayData.js"></script>
+    <!-- Central Telemetry & Feedback Tracker -->
+    <script src="js/tracker.js"></script>
     <!-- Application Controller Script -->
     <script src="js/app.js"></script>
 </body>
