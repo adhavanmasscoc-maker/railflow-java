@@ -917,9 +917,79 @@ function switchPage(pageId, pushUrl) {
     // Scroll viewport to top
     const viewport = $('mainViewport');
     if (viewport) viewport.scrollTop = 0;
+
+    // Update Machina HUD Telemetry
+    updateHudTelemetry(pageId);
 }
 window.switchPage = switchPage;
 window.navigateTo = switchPage;
+
+// ─── MACHINA HUD TELEMETRY & NAVIGATION ─────────────────────────────
+const HUD_PAGES = [
+    'dashboard',
+    'console',
+    'network',
+    'journey',
+    'stations',
+    'trains',
+    'crowd',
+    'quality',
+    'architecture',
+    'database',
+    'feedback',
+    'commuter'
+];
+
+function updateHudTelemetry(pageId) {
+    const pageIndex = HUD_PAGES.indexOf(pageId);
+    if (pageIndex !== -1) {
+        const pageNum = pageIndex + 1;
+        const hudBlock = $('hud-block');
+        if (hudBlock) hudBlock.textContent = String(pageNum).padStart(2, '0');
+        const pct = Math.round((pageNum / HUD_PAGES.length) * 100);
+        const hudBar = $('hud-bar');
+        if (hudBar) hudBar.style.width = `${pct}%`;
+        const hudPct = $('hud-pct');
+        if (hudPct) hudPct.textContent = `${pct}%`;
+    }
+}
+
+function initMachinaHud() {
+    // 1. High-resolution millisecond clock for HUD
+    function updateHudLiveClock() {
+        const el = $('live-clock');
+        if (!el) return;
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+        const ms = String(Math.floor(now.getMilliseconds())).padStart(3, '0');
+        el.innerHTML = `${h}:${m}:${s}<span class="ms">.${ms}</span>`;
+    }
+    updateHudLiveClock();
+    setInterval(updateHudLiveClock, 47);
+
+    // 2. HUD arrow navigation
+    const btnUp = $('arrow-up');
+    const btnDown = $('arrow-down');
+    if (btnUp) {
+        btnUp.onclick = () => {
+            const idx = HUD_PAGES.indexOf(STATE.activePage);
+            const prevIdx = (idx <= 0) ? HUD_PAGES.length - 1 : idx - 1;
+            switchPage(HUD_PAGES[prevIdx]);
+        };
+    }
+    if (btnDown) {
+        btnDown.onclick = () => {
+            const idx = HUD_PAGES.indexOf(STATE.activePage);
+            const nextIdx = (idx < 0 || idx >= HUD_PAGES.length - 1) ? 0 : idx + 1;
+            switchPage(HUD_PAGES[nextIdx]);
+        };
+    }
+
+    // 3. Initial sync
+    updateHudTelemetry(STATE.activePage || 'dashboard');
+}
 
 // â”€â”€â”€ SUB-VIEW SWITCHER: SVG TOPOLOGY VS. LIVE SATELLITE RAILRADAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function switchNetworkView(view) {
@@ -3935,7 +4005,7 @@ function initFeedback() {
             if (status) {
                 status.style.display = 'block';
                 status.style.color = 'var(--emerald)';
-                status.textContent = 'âœ“ Review submitted & stored in SQLite feedback registry!';
+                status.textContent = '✓ Review submitted & stored in SQLite feedback registry!';
                 setTimeout(() => { status.style.display = 'none'; }, 4000);
             }
 
@@ -5165,6 +5235,7 @@ function initAllRailFlowApp() {
         ['KeyboardShortcuts', initKeyboardShortcuts],
         ['FobInterlock', initFobInterlockAndCompass],
         ['MobileMenu', initMobileMenu],
+        ['MachinaHud', initMachinaHud],
         ['TelemetryScheduler', startTelemetryScheduler],
         ['DefaultRoute', () => planRouteSilent('NDLS', 'MAS')]
     ];

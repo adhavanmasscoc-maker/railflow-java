@@ -4,6 +4,35 @@
  * Multi-Tier Resilient Architecture: Gemini 2.5 Flash -> Groq -> OpenRouter -> Deterministic Local Engine
  */
 
+const fs = require('fs');
+const path = require('path');
+
+function loadEnv() {
+    try {
+        const envPaths = [
+            path.join(__dirname, '.env'),
+            path.join(__dirname, '..', '.env')
+        ];
+        for (const envPath of envPaths) {
+            if (fs.existsSync(envPath)) {
+                const lines = fs.readFileSync(envPath, 'utf8').split('\n');
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (trimmed && !trimmed.startsWith('#')) {
+                        const eqIdx = trimmed.indexOf('=');
+                        if (eqIdx !== -1) {
+                            const k = trimmed.substring(0, eqIdx).trim();
+                            const v = trimmed.substring(eqIdx + 1).trim();
+                            if (k && !process.env[k]) process.env[k] = v;
+                        }
+                    }
+                }
+            }
+        }
+    } catch (e) {}
+}
+loadEnv();
+
 const GEMINI_KEYS = [
     process.env.GEMINI_API_KEY,
     process.env.GOOGLE_API_KEY

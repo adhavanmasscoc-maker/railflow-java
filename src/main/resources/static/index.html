@@ -14,6 +14,14 @@
     <script src="https://feedback.adhavanmasscoc.workers.dev/aknex-tracker.js" data-site="site_railflow" defer></script>
 </head>
 <body>
+    <!-- ─── Machina HUD Telemetry Frame (Corner Ticks) ────────── -->
+    <div class="hud-frame" aria-hidden="true">
+        <span class="ck tl"></span>
+        <span class="ck tr"></span>
+        <span class="ck bl"></span>
+        <span class="ck br"></span>
+    </div>
+
     <!-- ─── Mobile Sidebar Overlay ────────────────────────────── -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="document.getElementById('sidebar').classList.remove('mobile-open'); this.classList.remove('active');"></div>
     <!-- ─── Toast Container ───────────────────────────────────── -->
@@ -182,12 +190,6 @@
                     <span class="badge badge-ai-pulse" style="font-size:9px; padding:1px 4px; min-width:0;">READY</span>
                 </button>
             </div>
-        </header>ailFlow AI Operations Terminal" style="padding:4px 8px; font-size:0.72rem; height:auto;">
-                    <span style="font-size:0.7rem;">🤖</span>
-                    <span style="font-size:0.7rem; letter-spacing:0.04em;">AI</span>
-                    <span class="badge badge-ai-pulse" style="font-size:9px; padding:1px 4px; min-width:0;">READY</span>
-                </button>
-            </div>
         </header>
 
         <!-- Viewport Container -->
@@ -237,9 +239,10 @@
             <section class="page-view active" id="page-dashboard">
                 <div class="view-header">
                     <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 01</span> <span class="slash">//</span> DASHBOARD</div>
                         <div class="view-subtitle">
                             <span class="pulse-dot" style="background:var(--rail-red);"></span>
-                            REAL-TIME MONITORING & DATA PROCESSING
+                            REAL-TIME MONITORING &amp; DATA PROCESSING
                         </div>
                         <h1 class="view-title">Logical Indian Railways Network Graph</h1>
                         <p class="view-desc">
@@ -307,6 +310,11 @@
                             <span>25 High-Density Zonal Hubs Active</span>
                             <span class="stat-change up">↑ +63 YoY</span>
                         </div>
+                        <div class="data-strip">
+                            <span><span class="ds-val">8,926</span> STATIONS</span>
+                            <span><span class="ds-val">25</span> HUBS</span>
+                            <span>KAVACH <span class="ds-val">ACTIVE</span></span>
+                        </div>
                     </div>
 
                     <div class="metric-card accent-blue spotlight-card">
@@ -318,6 +326,11 @@
                         <div class="metric-sub">
                             <span>Golden Quadrilateral &amp; Grand Trunk</span>
                             <span class="stat-change flat">→ Stable</span>
+                        </div>
+                        <div class="data-strip">
+                            <span><span class="ds-val">6</span> QUADRILATERAL</span>
+                            <span><span class="ds-val">2,410</span> KM TRUNK</span>
+                            <span>STATUS: <span class="ds-val" style="color:var(--emerald);">NOMINAL</span></span>
                         </div>
                     </div>
 
@@ -331,6 +344,11 @@
                             <span>Platform Density: <strong id="dashAvgDensity" style="color:var(--emerald);">54.2%</strong></span>
                             <span class="stat-change up">↑ Active</span>
                         </div>
+                        <div class="data-strip">
+                            <span>RATE: <span class="ds-val">3,000ms</span></span>
+                            <span>PEAK: <span class="ds-val">MAS PF-1</span></span>
+                            <span>EGRESS: <span class="ds-val" style="color:var(--emerald);">CLEAR</span></span>
+                        </div>
                     </div>
 
                     <div class="metric-card accent-green spotlight-card">
@@ -341,6 +359,11 @@
                         <div class="metric-val" id="dashDatasetRows">13,849</div>
                         <div class="metric-sub">
                             <span>100% Validated • 0 Key Collisions</span>
+                        </div>
+                        <div class="data-strip">
+                            <span>SCHEMA: <span class="ds-val">3NF</span></span>
+                            <span>PRAGMA: <span class="ds-val">WAL</span></span>
+                            <span>CORRUPT: <span class="ds-val" style="color:var(--emerald);">0%</span></span>
                         </div>
                     </div>
                 </div>
@@ -487,6 +510,7 @@
             <section class="page-view" id="page-console">
                 <div class="view-header">
                     <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 02</span> <span class="slash">//</span> OPERATIONS CONSOLE</div>
                         <div class="view-subtitle">
                             <span class="pulse-dot" style="background:var(--purple);"></span>
                             INTERACTIVE COMMAND & CONTROL TERMINAL
@@ -548,6 +572,7 @@
             <section class="page-view" id="page-network">
                 <div class="view-header">
                     <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 03</span> <span class="slash">//</span> NETWORK TOPOLOGY</div>
                         <div class="view-subtitle">INTER-HUB TOPOLOGY</div>
                         <h1 class="view-title">Logical Indian Railways Network Graph</h1>
                         <p class="view-desc">
@@ -622,6 +647,7 @@
             <section class="page-view" id="page-journey">
                 <div class="view-header">
                     <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 04</span> <span class="slash">//</span> JOURNEY ROUTER</div>
                         <div class="view-subtitle">CORRIDOR GRAPH ROUTER</div>
                         <h1 class="view-title">Railway Journey Planner</h1>
                         <p class="view-desc">
@@ -863,6 +889,7 @@
             <section class="page-view" id="page-stations">
                 <div class="view-header">
                     <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 05</span> <span class="slash">//</span> STATION DIRECTORY</div>
                         <div class="view-subtitle">STATION HIERARCHY & DIRECTORY</div>
                         <h1 class="view-title">Indian Railways Station Network Overview</h1>
                         <p class="view-desc">
@@ -913,6 +940,7 @@
             <section class="page-view" id="page-trains">
                 <div class="view-header">
                     <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 06</span> <span class="slash">//</span> TRAIN EXPLORER</div>
                         <div class="view-subtitle">EXPRESS TIMETABLE REGISTRY</div>
                         <h1 class="view-title">Indian Railways Train Explorer</h1>
                         <p class="view-desc">
@@ -956,6 +984,7 @@
             <section class="page-view" id="page-crowd">
                 <div class="view-header">
                     <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 07</span> <span class="slash">//</span> CROWD FOOTPRINT & SANDBOX</div>
                         <div class="view-subtitle" style="color:var(--amber);">
                             <span class="pulse-dot" style="background:var(--amber);"></span>
                             SIMULATED MODEL
@@ -1249,6 +1278,7 @@
             <section class="page-view" id="page-quality">
                 <div class="view-header">
                     <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 08</span> <span class="slash">//</span> DATA QUALITY & HEALTH</div>
                         <div class="view-subtitle">DERIVED METRICS</div>
                         <h1 class="view-title">Data Quality & Health Validation</h1>
                         <p class="view-desc">
@@ -1357,6 +1387,7 @@
             <section class="page-view" id="page-architecture">
                 <div class="view-header">
                     <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 09</span> <span class="slash">//</span> SYSTEM ARCHITECTURE</div>
                         <div class="view-subtitle">ENGINEERING BLUEPRINT</div>
                         <h1 class="view-title">System & Core Java Architecture</h1>
                         <p class="view-desc">
@@ -1442,6 +1473,7 @@
             <section class="page-view" id="page-database">
                 <div class="view-header">
                     <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 10</span> <span class="slash">//</span> DATABASE EXPLORER</div>
                         <div class="view-subtitle">REAL DATABASE INSPECTION & HIERARCHICAL TOPOLOGY</div>
                         <h1 class="view-title">SQLite Database Explorer & Station Tree</h1>
                         <p class="view-desc">
@@ -1620,6 +1652,7 @@
             <section class="page-view" id="page-feedback">
                 <div class="view-header">
                     <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 11</span> <span class="slash">//</span> OPERATIONS FEEDBACK</div>
                         <div class="view-subtitle">OPERATIONS FEEDBACK</div>
                         <h1 class="view-title">User Reviews & System Feedback</h1>
                         <p class="view-desc">
@@ -1704,6 +1737,7 @@
                  ═══════════════════════════════════════════════════════════ -->
             <section class="page-view" id="page-commuter">
                 <div class="commuter-portal-container">
+                    <div class="eyebrow" style="margin-bottom:0.75rem;"><span class="sys-num">SYSTEM 12</span> <span class="slash">//</span> PASSENGER COMMUTER PORTAL</div>
                     <div class="commuter-hero-card">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
                             <div>
@@ -1896,7 +1930,10 @@
     <aside class="station-drawer" id="stationDrawer">
         <div class="drawer-header">
             <div>
-                <span class="badge badge-real" id="drawerZoneBadge">Southern Railway</span>
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                    <span class="badge badge-real" id="drawerZoneBadge">Southern Railway</span>
+                    <span class="bp-chip"><span class="bp-ring" style="width:8px;height:8px;"></span> BLUEPRINT</span>
+                </div>
                 <h2 style="font-size:1.25rem; font-weight:700; margin-top:0.3rem;" id="drawerStationName">Chennai Central</h2>
                 <span style="font-size:0.80rem; font-family:var(--font-mono); color:var(--text-muted);" id="drawerStationCode">CODE: MAS</span>
             </div>
@@ -2066,7 +2103,10 @@
         <div class="modal-card" style="max-width:720px;">
             <div style="padding:1.25rem 1.5rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
                 <div>
-                    <span class="badge badge-real" id="ttTrainBadge">SUPERFAST</span>
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                        <span class="badge badge-real" id="ttTrainBadge">SUPERFAST</span>
+                        <span class="bp-chip"><span class="bp-ring" style="width:8px;height:8px;"></span> SCHEMATIC</span>
+                    </div>
                     <h3 style="font-size:1.15rem; font-weight:700; margin-top:0.25rem;" id="ttTrainTitle">12622 — Tamil Nadu Express</h3>
                     <span style="font-size:0.78rem; font-family:var(--font-mono); color:var(--text-muted);" id="ttTrainRoute">NDLS ➔ MAS • 2,180 km</span>
                     <div id="ttHeritageBox" style="margin-top:0.4rem; display:flex; align-items:center; gap:0.5rem; font-size:0.75rem; color:var(--text-secondary);">
@@ -2098,6 +2138,21 @@
         </div>
     </div>
 
+    <!-- ─── Machina HUD Bottom Telemetry Bar ──────────────────── -->
+    <div class="hud-bar-top" id="hudBarTop">
+        <div class="hud-brand">RAILFLOW <span class="slash">//</span> NETWORK INTELLIGENCE</div>
+        <div class="hud-index">SYS <b id="hud-block">01</b> / 12</div>
+        <div class="hud-nav-arrows">
+            <button id="arrow-up" title="Previous System View">&#9650;</button>
+            <button id="arrow-down" title="Next System View">&#9660;</button>
+        </div>
+        <span id="live-clock">00:00:00<span class="ms">.000</span></span>
+        <div class="hud-progress">
+            <div class="hud-progress-bar"><div class="hud-progress-fill" id="hud-bar" style="width:8.3%"></div></div>
+            <span class="hud-pct" id="hud-pct">8%</span>
+        </div>
+    </div>
+
     <!-- Master Railway Data Layer (Authoritative Frontend Fallback — real corridor & train data) -->
     <script src="js/data/masterRailwayData.js"></script>
     <!-- Central Telemetry & Feedback Tracker -->
@@ -2106,3 +2161,4 @@
     <script src="js/app.js"></script>
 </body>
 </html>
+
