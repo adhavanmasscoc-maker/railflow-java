@@ -44,4 +44,12 @@ public record TrainResponse(
                 t.getScheduledDeparture() != null ? t.getScheduledDeparture().toString() : ""
         );
     }
+
+    public int expectedPlatform() {
+        return 1;
+    }
+
+    public int getExpectedPlatform() {
+        return 1;
+    }
 }
