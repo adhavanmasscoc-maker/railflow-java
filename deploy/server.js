@@ -972,6 +972,75 @@ function handleApiRequest(pathname, searchParams, res, req) {
         return;
     }
 
+    // 10. RailFlow AI Operations Assistant (Gemini 2.5 Flash Ground Truth)
+    if (pathname === '/api/ask-railflow-ai') {
+        const handleAI = async (prompt) => {
+            if (!prompt || !prompt.trim()) {
+                res.statusCode = 400;
+                res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                return res.end(JSON.stringify({ error: 'Prompt is required' }));
+            }
+            try {
+                const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || "";
+                const systemDirective = `You are "RAILFLOW AI", the authoritative Indian Railways Operations and Passenger Assistant.
+Knowledge & Topology Ground Truth:
+- Southern Railway (SR) Main Chord Line connects Tiruchirappalli (TPJ) and Chennai Egmore (MS) via Ariyalur (ALU), Vriddhachalam (VRI), Villupuram (VM), Chengalpattu (CGL), and Tambaram (TBM).
+- Ariyalur (ALU) is on the Chord Line (~267 km from Chennai Egmore, ~70 km from TPJ). Key trains: 12638 Pandian SF Express, 12636 Vaigai SF Express, 12606 Pallavan SF Express, 12654 Rockfort SF Express, 16128 Guruvayur Express.
+- Chennai Central (MAS) is the terminus for Bangalore, Mumbai, Delhi, and Howrah trunks.
+- Chennai Egmore (MS) is the terminus for southern destinations (Madurai, Trichy, Tirunelveli, Kanyakumari).
+- Incorporate comprehensive real Indian Railways knowledge across the web: Kavach TCAS, Vande Bharat, automated block signalling, platform layouts, and PNR rules.
+- Format responses cleanly with Markdown headers, bold station codes, bullet points, and timings.`;
+
+                const fullPrompt = `${systemDirective}\n\nUser Question: ${prompt.trim()}`;
+                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+                
+                const response = await fetch(geminiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
+                        generationConfig: { temperature: 0.25, maxOutputTokens: 2048 }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errText = await response.text();
+                    throw new Error(`Gemini API error ${response.status}: ${errText}`);
+                }
+
+                const data = await response.json();
+                const answer = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received.";
+                res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                return res.end(JSON.stringify({ answer, status: 'success', model: 'gemini-2.5-flash', ok: true }));
+            } catch (err) {
+                console.error('[RailFlow AI Server Error]:', err.message);
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                return res.end(JSON.stringify({ error: err.message, status: 'error' }));
+            }
+        };
+
+        if (req && req.method === 'GET') {
+            const prompt = searchParams.get('prompt') || searchParams.get('q') || searchParams.get('query') || '';
+            return handleAI(prompt);
+        }
+
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                const data = JSON.parse(body || '{}');
+                const prompt = data.prompt || data.query || data.message || searchParams.get('q') || '';
+                return handleAI(prompt);
+            } catch (err) {
+                res.statusCode = 400;
+                res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                return res.end(JSON.stringify({ error: 'Invalid JSON body' }));
+            }
+        });
+        return;
+    }
+
     // Fallback: 404 API
     res.statusCode = 404;
     return res.end(JSON.stringify({ error: 'API endpoint not found', path: pathname }));

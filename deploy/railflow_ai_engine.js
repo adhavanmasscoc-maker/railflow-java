@@ -32,9 +32,13 @@ function loadEnv() {
 
 loadEnv();
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 
-                       process.env.GOOGLE_API_KEY || 
-                       "";
+const GEMINI_KEYS = [
+    process.env.GEMINI_API_KEY,
+    process.env.GOOGLE_API_KEY
+].filter(Boolean);
+
+const GROQ_KEY = process.env.GROQ_API_KEY || "";
+const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || "";
 
 let cachedSystemPrompt = null;
 
@@ -104,7 +108,11 @@ PRIMARY OBJECTIVES & GROUNDING:
 }
 
 /**
- * Ask RailFlow AI using Gemini 2.5 Flash (with 1.5 Flash fallback)
+ * Ask RailFlow AI using Multi-tier Resilient Architecture:
+ * 1. Google Gemini 2.5 Flash / 1.5 Flash (with key rotation)
+ * 2. Groq LLaMA 3.3 70B
+ * 3. OpenRouter DeepSeek Chat
+ * 4. Deterministic local railway intelligence
  */
 async function askRailFlowAI(userQuery) {
     if (!userQuery || !userQuery.trim()) {
@@ -114,45 +122,98 @@ async function askRailFlowAI(userQuery) {
     const systemContext = buildSystemContext();
     const promptText = `${systemContext}\n\n================ USER QUERY ================\n${userQuery.trim()}\n\nPlease answer accurately as RAILFLOW AI based on authentic Indian Railways ground truth:`;
 
-    const models = ['gemini-2.5-flash', 'gemini-1.5-flash'];
-    let lastError = null;
+    // ─── TIER 1: Google Gemini (Keys rotated automatically) ───
+    for (const key of GEMINI_KEYS) {
+        for (const model of ['gemini-2.5-flash', 'gemini-1.5-flash']) {
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            role: 'user',
+                            parts: [{ text: promptText }]
+                        }],
+                        generationConfig: {
+                            temperature: 0.25,
+                            maxOutputTokens: 2048
+                        }
+                    })
+                });
 
-    for (const model of models) {
-        try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        role: 'user',
-                        parts: [{ text: promptText }]
-                    }],
-                    generationConfig: {
-                        temperature: 0.25,
-                        maxOutputTokens: 2048
+                if (response.ok) {
+                    const data = await response.json();
+                    const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (answer && answer.trim()) {
+                        return answer;
                     }
-                })
-            });
-
-            if (!response.ok) {
-                const errBody = await response.text();
-                throw new Error(`HTTP ${response.status}: ${errBody}`);
+                }
+            } catch (err) {
+                console.warn(`[RailFlow AI] Gemini model ${model} call failed:`, err.message);
             }
-
-            const data = await response.json();
-            if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-                return data.candidates[0].content.parts[0].text;
-            } else if (data.error) {
-                throw new Error(data.error.message || 'Gemini API Error');
-            }
-        } catch (err) {
-            lastError = err;
-            console.warn(`[RailFlow AI] Model ${model} call failed:`, err.message);
         }
     }
 
-    // Fallback if network or API call fails: deterministic local intelligence
+    // ─── TIER 2: Groq Fallback ───
+    if (GROQ_KEY) {
+        try {
+            const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${GROQ_KEY}`
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.3-70b-versatile',
+                    messages: [
+                        { role: 'system', content: systemContext },
+                        { role: 'user', content: userQuery.trim() }
+                    ],
+                    temperature: 0.3,
+                    max_tokens: 2048
+                })
+            });
+            if (groqRes.ok) {
+                const data = await groqRes.json();
+                const answer = data.choices?.[0]?.message?.content;
+                if (answer && answer.trim()) return answer;
+            }
+        } catch (err) {
+            console.warn('[RailFlow AI] Groq fallback failed:', err.message);
+        }
+    }
+
+    // ─── TIER 3: OpenRouter Fallback ───
+    if (OPENROUTER_KEY) {
+        try {
+            const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${OPENROUTER_KEY}`
+                },
+                body: JSON.stringify({
+                    model: 'deepseek/deepseek-chat',
+                    messages: [
+                        { role: 'system', content: systemContext },
+                        { role: 'user', content: userQuery.trim() }
+                    ],
+                    temperature: 0.3,
+                    max_tokens: 2048
+                })
+            });
+            if (orRes.ok) {
+                const data = await orRes.json();
+                const answer = data.choices?.[0]?.message?.content;
+                if (answer && answer.trim()) return answer;
+            }
+        } catch (err) {
+            console.warn('[RailFlow AI] OpenRouter fallback failed:', err.message);
+        }
+    }
+
+    // ─── TIER 4: Fallback if network or API call fails: deterministic local intelligence ───
     return fallbackLocalAI(userQuery);
 }
 

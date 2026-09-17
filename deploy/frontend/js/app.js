@@ -612,32 +612,7 @@ const STATE = {
 const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
 
-// â”€â”€â”€ INITIALIZATION ON DOM READY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-document.addEventListener('DOMContentLoaded', () => {
-    initClock();
-    initNavigation();
-    initDualViewAndAudio();
-    initStationOperationsIntelligence();
-    initSearch();
-    initDrawersAndModals();
-    initNetworkGraphs();
-    initJourneyPlanner();
-    initStationsTreeAndTable();
-    initTrainsExplorer();
-    initCrowdMonitoring();
-    initDataQuality();
-    initDatabaseExplorer();
-    initFeedback();
-    initQuickPnrModal();
-    initKeyboardShortcuts();
-    initFobInterlockAndCompass();
-
-    // Start 3000ms Live Telemetry Scheduler
-    startTelemetryScheduler();
-
-    // Render default dashboard path
-    quickPlanRoute('NDLS', 'MAS');
-});
+// (RailFlow full lifecycle hydration occurs at the bottom of the script after all constants and modules are defined)
 
 // --- FOB SAFETY INTERLOCK & COACH WALKING COMPASS ENGINE ---
 function initFobInterlockAndCompass() {
@@ -834,7 +809,7 @@ function initFobInterlockAndCompass() {
     });
 }
 
-// â”€â”€â”€ 1. CLOCK & STATUS TICKER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- 1. CLOCK & STATUS TICKER ---
 function initClock() {
     const update = () => {
         const d = new Date();
@@ -848,20 +823,64 @@ function initClock() {
     setInterval(update, 1000);
 }
 
-// â”€â”€â”€ 2. NAVIGATION & ROUTER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── 2. NAVIGATION & URL ROUTER (pushState clean URLs) ──────────────────────
+// Maps page IDs to clean URL slugs for browser address bar
+const PAGE_ROUTES = {
+    'dashboard':    '/dashboard',
+    'console':      '/console',
+    'network':      '/network',
+    'journey':      '/journey',
+    'stations':     '/stations',
+    'trains':       '/trains',
+    'crowd':        '/crowd',
+    'commuter':     '/commuter',
+    'quality':      '/quality',
+    'architecture': '/architecture',
+    'database':     '/database',
+    'feedback':     '/feedback'
+};
+const ROUTE_TO_PAGE = {};
+Object.keys(PAGE_ROUTES).forEach(k => { ROUTE_TO_PAGE[PAGE_ROUTES[k]] = k; });
+
+function getPageFromUrl() {
+    const path = window.location.pathname.replace(/\/+$/, '') || '/dashboard';
+    return ROUTE_TO_PAGE[path] || 'dashboard';
+}
+
 function initNavigation() {
     $$('.nav-item').forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
             const page = item.dataset.page;
-            if (page) switchPage(page);
+            if (page) switchPage(page, true);
         });
     });
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', () => {
+        const page = getPageFromUrl();
+        switchPage(page, false);
+    });
+
+    // On initial page load, navigate to URL-defined page
+    const initialPage = getPageFromUrl();
+    if (initialPage !== 'dashboard') {
+        switchPage(initialPage, false);
+    }
 }
 
-function switchPage(pageId) {
+function switchPage(pageId, pushUrl) {
     if (!pageId) return;
     STATE.activePage = pageId;
+
+    // Update browser URL (pushState — no page reload)
+    if (pushUrl !== false) {
+        const route = PAGE_ROUTES[pageId] || '/dashboard';
+        const currentPath = window.location.pathname.replace(/\/+$/, '') || '/dashboard';
+        if (currentPath !== route) {
+            window.history.pushState({ page: pageId }, '', route);
+        }
+    }
 
     $$('.nav-item').forEach(el => {
         el.classList.toggle('active', el.dataset.page === pageId);
@@ -873,9 +892,11 @@ function switchPage(pageId) {
 
     // Sub-actions on page switch
     if (pageId === 'network') {
-        switchNetworkView('radar'); // RailRadar Live GPS stream is default FIRST sub-view
+        switchNetworkView('radar');
     } else if (pageId === 'dashboard') {
         renderNetworkGraph('dashGraphSvg', false);
+    } else if (pageId === 'console') {
+        initConsoleTerminal();
     }
 
     // Synchronize Dual-View Mode Switcher buttons
@@ -1482,6 +1503,17 @@ function quickPlanRoute(fromCode, toCode) {
     executeJourneyPlan();
 }
 window.quickPlanRoute = quickPlanRoute;
+
+function planRouteSilent(fromCode, toCode) {
+    const f = $('fromStationInput');
+    const t = $('toStationInput');
+    if (f && !f.value) f.value = fromCode;
+    if (t && !t.value) t.value = toCode;
+    if (typeof executeJourneyPlan === 'function') {
+        try { executeJourneyPlan(); } catch (e) {}
+    }
+}
+window.planRouteSilent = planRouteSilent;
 
 function resolveStationCode(val) {
     if (!val) return '';
@@ -4024,18 +4056,23 @@ async function handleAISend() {
     let finalAnswer = '';
     const endpoints = [
         '/api/ask-railflow-ai',
+        (window.location.origin && window.location.origin !== 'null' ? window.location.origin + '/api/ask-railflow-ai' : ''),
         'http://localhost:8080/api/ask-railflow-ai',
         'http://localhost:3001/api/ask-railflow-ai'
-    ];
+    ].filter(Boolean);
 
     let success = false;
     for (const ep of endpoints) {
         try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 12000);
             const res = await fetch(ep, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: text })
+                body: JSON.stringify({ prompt: text }),
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
             if (res.ok) {
                 const data = await res.json();
                 if (data && data.answer) {
@@ -4635,12 +4672,9 @@ function initMobileMenu() {
     });
 }
 
-// â”€â”€â”€ INSTANT SWITCH PAGE (0MS IMMEDIATE TRANSITION) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const _origSwitchPage = window.switchPage;
-window.switchPage = function(pageId) {
-    if (!pageId) return;
-    _origSwitchPage(pageId);
-};
+// ─── ENSURE SWITCH PAGE IS GLOBALLY ACCESSIBLE ──────────────────────────────
+window.switchPage = switchPage;
+window.navigateTo = switchPage;
 
 // â”€â”€â”€ TELEMETRY BADGE FLOAT UPDATER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function updateTelemetryBadgeFloat(tick) {
@@ -4771,3 +4805,382 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } catch (e) { /* ignore */ }
 })();
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  CONSOLE APPLICATION — Interactive Railway Operations Terminal
+// ═══════════════════════════════════════════════════════════════════════════════
+let CONSOLE_INITIALIZED = false;
+const CONSOLE_HISTORY = [];
+let CONSOLE_HISTORY_INDEX = -1;
+
+function initConsoleTerminal() {
+    if (CONSOLE_INITIALIZED) return;
+    CONSOLE_INITIALIZED = true;
+
+    const output = document.getElementById('consoleOutput');
+    const input = document.getElementById('consoleInput');
+    if (!output || !input) return;
+
+    // Boot sequence animation
+    const bootLines = [
+        { text: '╔══════════════════════════════════════════════════════════════╗', cls: 'console-border' },
+        { text: '║  RAILFLOW NETWORK INTELLIGENCE — OPERATIONS CONSOLE v2.0   ║', cls: 'console-header' },
+        { text: '║  Indian Railways Integrated Command & Control Terminal      ║', cls: 'console-sub' },
+        { text: '╚══════════════════════════════════════════════════════════════╝', cls: 'console-border' },
+        { text: '', cls: '' },
+        { text: '[BOOT] Initializing Railway Data Engine...', cls: 'console-info' },
+        { text: '[BOOT] Loading master station database... 8,926+ stations indexed', cls: 'console-success' },
+        { text: '[BOOT] Loading express train schedules... 6 national trunks active', cls: 'console-success' },
+        { text: '[BOOT] Southern Railway Chord Line: ALU ↔ VRI ↔ VM ↔ CGL ↔ TBM ↔ MS', cls: 'console-highlight' },
+        { text: '[BOOT] RailFlow AI Gemini 2.5 Flash copilot... ONLINE', cls: 'console-ai' },
+        { text: '[BOOT] Crowd telemetry daemon... running @3000ms intervals', cls: 'console-success' },
+        { text: '[BOOT] All systems nominal. Type "help" for available commands.', cls: 'console-info' },
+        { text: '', cls: '' },
+    ];
+
+    let i = 0;
+    const bootInterval = setInterval(() => {
+        if (i >= bootLines.length) {
+            clearInterval(bootInterval);
+            consoleWriteLine('railflow@ops:~$ ', 'console-prompt-static');
+            input.disabled = false;
+            input.focus();
+            return;
+        }
+        consoleWriteLine(bootLines[i].text, bootLines[i].cls);
+        i++;
+    }, 120);
+
+    // Input handling
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const cmd = input.value.trim();
+            if (!cmd) return;
+            CONSOLE_HISTORY.push(cmd);
+            CONSOLE_HISTORY_INDEX = CONSOLE_HISTORY.length;
+            consoleWriteLine(`railflow@ops:~$ ${cmd}`, 'console-cmd');
+            input.value = '';
+            processConsoleCommand(cmd);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (CONSOLE_HISTORY_INDEX > 0) {
+                CONSOLE_HISTORY_INDEX--;
+                input.value = CONSOLE_HISTORY[CONSOLE_HISTORY_INDEX];
+            }
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (CONSOLE_HISTORY_INDEX < CONSOLE_HISTORY.length - 1) {
+                CONSOLE_HISTORY_INDEX++;
+                input.value = CONSOLE_HISTORY[CONSOLE_HISTORY_INDEX];
+            } else {
+                CONSOLE_HISTORY_INDEX = CONSOLE_HISTORY.length;
+                input.value = '';
+            }
+        }
+    });
+}
+
+function consoleWriteLine(text, cls) {
+    const output = document.getElementById('consoleOutput');
+    if (!output) return;
+    const line = document.createElement('div');
+    line.className = `console-line ${cls || ''}`;
+    line.textContent = text;
+    output.appendChild(line);
+    output.scrollTop = output.scrollHeight;
+}
+
+function consoleWriteHTML(html, cls) {
+    const output = document.getElementById('consoleOutput');
+    if (!output) return;
+    const line = document.createElement('div');
+    line.className = `console-line ${cls || ''}`;
+    line.innerHTML = html;
+    output.appendChild(line);
+    output.scrollTop = output.scrollHeight;
+}
+
+async function processConsoleCommand(cmd) {
+    const parts = cmd.toLowerCase().split(/\s+/);
+    const command = parts[0];
+
+    switch (command) {
+        case 'help':
+            consoleWriteHTML(`
+<span class="console-highlight">╔═══ AVAILABLE COMMANDS ════════════════════════════════╗</span>
+<span class="console-info">  help          </span> — Show this help menu
+<span class="console-info">  status        </span> — System health & telemetry status
+<span class="console-info">  stations      </span> — List all indexed railway stations
+<span class="console-info">  trains        </span> — List express train services
+<span class="console-info">  route [A] [B] </span> — Find route between station codes
+<span class="console-info">  query [text]  </span> — Ask RailFlow AI (Gemini 2.5 Flash)
+<span class="console-info">  crowd         </span> — Live platform crowd density
+<span class="console-info">  corridors     </span> — Show national trunk corridors
+<span class="console-info">  station [code]</span> — Inspect specific station details
+<span class="console-info">  goto [page]   </span> — Navigate to a dashboard page
+<span class="console-info">  clear         </span> — Clear terminal output
+<span class="console-info">  uptime        </span> — Show session uptime
+<span class="console-info">  version       </span> — RailFlow version info
+<span class="console-highlight">╚══════════════════════════════════════════════════════╝</span>
+            `);
+            break;
+
+        case 'status':
+            const upMs = Date.now() - (window._RAILFLOW_BOOT_TIME || Date.now());
+            const upMin = Math.floor(upMs / 60000);
+            consoleWriteLine('', '');
+            consoleWriteHTML(`<span class="console-highlight">═══ SYSTEM STATUS ══════════════════════════════════</span>`);
+            consoleWriteLine(`  Engine:          RailFlow Network Intelligence v2.0`, 'console-success');
+            consoleWriteLine(`  Data Layer:      SQLite 3.50.3 WAL + JDBC`, 'console-success');
+            consoleWriteLine(`  Stations:        8,926+ indexed (Southern Railway focus)`, 'console-info');
+            consoleWriteLine(`  Express Trains:  ${typeof MASTER_TRAINS !== 'undefined' ? MASTER_TRAINS.length : '6+'} services`, 'console-info');
+            consoleWriteLine(`  AI Copilot:      Gemini 2.5 Flash — ONLINE`, 'console-ai');
+            consoleWriteLine(`  Telemetry:       3,000ms crowd simulation daemon`, 'console-success');
+            consoleWriteLine(`  Uptime:          ${upMin} min`, 'console-info');
+            consoleWriteLine(`  Pipeline:        ALL STAGES NOMINAL ✓`, 'console-success');
+            consoleWriteHTML(`<span class="console-highlight">════════════════════════════════════════════════════</span>`);
+            break;
+
+        case 'stations':
+            consoleWriteLine('[QUERY] Fetching station master list...', 'console-info');
+            try {
+                const stnRes = await fetch('/api/stations');
+                const stnData = await stnRes.json();
+                const stations = Array.isArray(stnData) ? stnData : (stnData.stations || []);
+                const top = stations.slice(0, 30);
+                consoleWriteHTML(`<span class="console-highlight">═══ STATION REGISTRY (showing ${top.length} of ${stations.length}) ═══</span>`);
+                consoleWriteHTML(`<span class="console-sub">  CODE   │ NAME                        │ ZONE   │ DIVISION</span>`);
+                consoleWriteHTML(`<span class="console-sub">  ───────┼─────────────────────────────┼────────┼─────────</span>`);
+                top.forEach(s => {
+                    const code = (s.code || s.station_code || '').padEnd(6);
+                    const name = (s.name || s.station_name || '').substring(0, 28).padEnd(28);
+                    const zone = (s.zone || s.railway_zone || 'SR').padEnd(6);
+                    const div = (s.division || '').padEnd(10);
+                    consoleWriteLine(`  ${code} │ ${name} │ ${zone} │ ${div}`, 'console-info');
+                });
+                if (stations.length > 30) consoleWriteLine(`  ... ${stations.length - 30} more stations. Use "station [CODE]" for details.`, 'console-sub');
+            } catch (e) {
+                consoleWriteLine(`[ERROR] Could not fetch stations: ${e.message}`, 'console-error');
+            }
+            break;
+
+        case 'trains':
+            consoleWriteLine('[QUERY] Fetching express train catalog...', 'console-info');
+            try {
+                const trnRes = await fetch('/api/trains');
+                const trnData = await trnRes.json();
+                const trains = Array.isArray(trnData) ? trnData : (trnData.trains || []);
+                const top = trains.slice(0, 25);
+                consoleWriteHTML(`<span class="console-highlight">═══ EXPRESS TRAIN REGISTRY (showing ${top.length} of ${trains.length}) ═══</span>`);
+                top.forEach(t => {
+                    const num = (t.train_number || t.number || '').toString().padEnd(6);
+                    const name = (t.train_name || t.name || '').substring(0, 32).padEnd(32);
+                    const src = (t.source_station_code || t.from || '').padEnd(5);
+                    const dst = (t.destination_station_code || t.to || '').padEnd(5);
+                    consoleWriteLine(`  ${num} │ ${name} │ ${src} → ${dst}`, 'console-info');
+                });
+            } catch (e) {
+                consoleWriteLine(`[ERROR] Could not fetch trains: ${e.message}`, 'console-error');
+            }
+            break;
+
+        case 'route':
+            const from = (parts[1] || '').toUpperCase();
+            const to = (parts[2] || '').toUpperCase();
+            if (!from || !to) {
+                consoleWriteLine('[USAGE] route <FROM_CODE> <TO_CODE>  (e.g., route ALU MS)', 'console-warn');
+                break;
+            }
+            consoleWriteLine(`[ROUTING] Computing path: ${from} → ${to}...`, 'console-info');
+            try {
+                const aiRes = await fetch(`/api/ask-railflow-ai?q=Route from ${from} to ${to} with all stops and timings`);
+                const aiData = await aiRes.json();
+                if (aiData.answer) {
+                    consoleWriteHTML(`<span class="console-ai">[RAILFLOW AI]</span>`);
+                    aiData.answer.split('\n').forEach(line => {
+                        consoleWriteLine('  ' + line, 'console-info');
+                    });
+                } else {
+                    consoleWriteLine('[ERROR] No route data returned.', 'console-error');
+                }
+            } catch (e) {
+                consoleWriteLine(`[ERROR] Route query failed: ${e.message}`, 'console-error');
+            }
+            break;
+
+        case 'query':
+        case 'ask':
+        case 'ai':
+            const question = parts.slice(1).join(' ');
+            if (!question) {
+                consoleWriteLine('[USAGE] query <your question>  (e.g., query ALU to TPJ trains)', 'console-warn');
+                break;
+            }
+            consoleWriteLine(`[AI] Querying RailFlow AI Gemini 2.5 Flash...`, 'console-ai');
+            try {
+                const res = await fetch(`/api/ask-railflow-ai?q=${encodeURIComponent(question)}`);
+                const data = await res.json();
+                if (data.answer) {
+                    consoleWriteHTML(`<span class="console-ai">╔═══ RAILFLOW AI RESPONSE ═══════════════════════════╗</span>`);
+                    data.answer.split('\n').forEach(line => {
+                        consoleWriteLine('  ' + line, 'console-info');
+                    });
+                    consoleWriteHTML(`<span class="console-ai">╚════════════════════════════════════════════════════╝</span>`);
+                } else {
+                    consoleWriteLine('[ERROR] No AI response received.', 'console-error');
+                }
+            } catch (e) {
+                consoleWriteLine(`[ERROR] AI query failed: ${e.message}`, 'console-error');
+            }
+            break;
+
+        case 'crowd':
+            consoleWriteLine('[TELEMETRY] Live platform crowd density snapshot:', 'console-info');
+            const hubs = [
+                { code: 'MAS', name: 'Chennai Central' },
+                { code: 'MS', name: 'Chennai Egmore' },
+                { code: 'ALU', name: 'Ariyalur' },
+                { code: 'TPJ', name: 'Tiruchirappalli Jn' },
+                { code: 'NDLS', name: 'New Delhi' },
+                { code: 'CSMT', name: 'Mumbai CSMT' },
+                { code: 'HWH', name: 'Howrah Jn' },
+            ];
+            hubs.forEach(h => {
+                const pct = Math.floor(35 + Math.random() * 55);
+                const bar = '█'.repeat(Math.floor(pct / 5)) + '░'.repeat(20 - Math.floor(pct / 5));
+                const status = pct > 80 ? '🔴 DENSE' : pct > 55 ? '🟡 MODERATE' : '🟢 NORMAL';
+                consoleWriteLine(`  ${h.code.padEnd(5)} │ ${h.name.padEnd(22)} │ ${bar} ${pct}% │ ${status}`, 'console-info');
+            });
+            break;
+
+        case 'corridors':
+            consoleWriteHTML(`<span class="console-highlight">═══ NATIONAL TRUNK CORRIDORS ═══════════════════════</span>`);
+            consoleWriteLine('  Northern Trunk  : NDLS (Delhi) → CNB (Kanpur) → ALD (Prayagraj) → HWH (Howrah)', 'console-info');
+            consoleWriteLine('  Western Trunk   : BCT (Mumbai) → ADI (Ahmedabad) → JP (Jaipur) → NDLS (Delhi)', 'console-info');
+            consoleWriteLine('  Central Corridor: CSMT (Mumbai) → PUNE → SUR → SC (Secunderabad)', 'console-info');
+            consoleWriteLine('  Southern Trunk  : MAS (Chennai) → AJJ → KPD → JTJ → SA → TPJ (Trichy)', 'console-info');
+            consoleWriteLine('  Chord Line (SR) : ALU → VRI → VM → CGL → TBM → MS (Chennai Egmore)', 'console-highlight');
+            consoleWriteLine('  South Coast     : MS → TBM → CGL → VM → VRI → TPJ → DG → MDU → TEN → CAPE', 'console-info');
+            consoleWriteHTML(`<span class="console-highlight">════════════════════════════════════════════════════</span>`);
+            break;
+
+        case 'station':
+            const sCode = (parts[1] || '').toUpperCase();
+            if (!sCode) {
+                consoleWriteLine('[USAGE] station <CODE>  (e.g., station ALU)', 'console-warn');
+                break;
+            }
+            consoleWriteLine(`[QUERY] Looking up station: ${sCode}...`, 'console-info');
+            try {
+                const res = await fetch(`/api/ask-railflow-ai?q=Full details about station ${sCode} including zone division platforms`);
+                const data = await res.json();
+                if (data.answer) {
+                    data.answer.split('\n').forEach(line => {
+                        consoleWriteLine('  ' + line, 'console-info');
+                    });
+                }
+            } catch (e) {
+                consoleWriteLine(`[ERROR] Station lookup failed: ${e.message}`, 'console-error');
+            }
+            break;
+
+        case 'goto':
+        case 'navigate':
+            const target = parts[1] || '';
+            if (PAGE_ROUTES[target]) {
+                consoleWriteLine(`[NAV] Switching to /${target}...`, 'console-success');
+                setTimeout(() => switchPage(target, true), 500);
+            } else {
+                consoleWriteLine(`[ERROR] Unknown page: "${target}". Available: ${Object.keys(PAGE_ROUTES).join(', ')}`, 'console-error');
+            }
+            break;
+
+        case 'clear':
+        case 'cls':
+            const output = document.getElementById('consoleOutput');
+            if (output) output.innerHTML = '';
+            consoleWriteLine('railflow@ops:~$ Terminal cleared.', 'console-prompt-static');
+            break;
+
+        case 'uptime':
+            const bootTime = window._RAILFLOW_BOOT_TIME || Date.now();
+            const elapsed = Date.now() - bootTime;
+            const mins = Math.floor(elapsed / 60000);
+            const secs = Math.floor((elapsed % 60000) / 1000);
+            consoleWriteLine(`[UPTIME] Session running for ${mins}m ${secs}s`, 'console-info');
+            break;
+
+        case 'version':
+            consoleWriteLine('  RailFlow Network Intelligence v2.0', 'console-highlight');
+            consoleWriteLine('  Core: Java 17+ / SQLite JDBC / Node.js', 'console-info');
+            consoleWriteLine('  AI: Google Gemini 2.5 Flash', 'console-ai');
+            consoleWriteLine('  Frontend: Vanilla JS / CSS / SVG', 'console-info');
+            consoleWriteLine('  Deployed: Vercel (aknex-railflow.vercel.app)', 'console-success');
+            break;
+
+        default:
+            // Try as AI query
+            consoleWriteLine(`[AI] Command "${command}" not recognized. Querying AI...`, 'console-warn');
+            try {
+                const res = await fetch(`/api/ask-railflow-ai?q=${encodeURIComponent(cmd)}`);
+                const data = await res.json();
+                if (data.answer) {
+                    consoleWriteHTML(`<span class="console-ai">[RAILFLOW AI]</span>`);
+                    data.answer.split('\n').forEach(line => {
+                        consoleWriteLine('  ' + line, 'console-info');
+                    });
+                }
+            } catch (e) {
+                consoleWriteLine(`[ERROR] Unknown command: "${command}". Type "help" for available commands.`, 'console-error');
+            }
+            break;
+    }
+}
+
+// Record boot time for uptime tracking
+window._RAILFLOW_BOOT_TIME = window._RAILFLOW_BOOT_TIME || Date.now();
+
+// ─── COMPLETE INITIALIZATION ON DOM READY & IMMEDIATE HYDRATION ─────────────────────
+function initAllRailFlowApp() {
+    if (window._RAILFLOW_INITIALIZED) return;
+    window._RAILFLOW_INITIALIZED = true;
+
+    const tasks = [
+        ['Clock', initClock],
+        ['Navigation', initNavigation],
+        ['DualViewAndAudio', initDualViewAndAudio],
+        ['StationOperations', initStationOperationsIntelligence],
+        ['Search', initSearch],
+        ['DrawersAndModals', initDrawersAndModals],
+        ['NetworkGraphs', initNetworkGraphs],
+        ['JourneyPlanner', initJourneyPlanner],
+        ['StationsTree', initStationsTreeAndTable],
+        ['TrainsExplorer', initTrainsExplorer],
+        ['CrowdMonitoring', initCrowdMonitoring],
+        ['DataQuality', initDataQuality],
+        ['DatabaseExplorer', initDatabaseExplorer],
+        ['Feedback', initFeedback],
+        ['QuickPnrModal', initQuickPnrModal],
+        ['KeyboardShortcuts', initKeyboardShortcuts],
+        ['FobInterlock', initFobInterlockAndCompass],
+        ['MobileMenu', initMobileMenu],
+        ['TelemetryScheduler', startTelemetryScheduler],
+        ['DefaultRoute', () => planRouteSilent('NDLS', 'MAS')]
+    ];
+
+    tasks.forEach(([name, fn]) => {
+        try {
+            if (typeof fn === 'function') fn();
+        } catch (err) {
+            console.warn(`[RailFlow Init] Module ${name} warning:`, err);
+        }
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllRailFlowApp);
+} else {
+    // DOM already loaded or interactive — initialize immediately!
+    initAllRailFlowApp();
+}

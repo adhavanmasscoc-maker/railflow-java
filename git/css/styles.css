@@ -317,6 +317,9 @@ body {
 .app-container {
     flex: 1;
     height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -561,11 +564,15 @@ body {
 
 /* â”€â”€â”€ Main Viewport & Pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .main-viewport {
-    flex: 1;
-    overflow-y: hidden;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto !important;
+    overflow-x: hidden;
     padding: 1.75rem 2rem 3rem;
     position: relative;
     background: var(--bg-base);
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
 }
 
 .page-view {
@@ -1371,11 +1378,15 @@ body {
     display: flex;
     flex-direction: column;
     transform: translateX(100%);
-    transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1), visibility 320ms;
+    pointer-events: none;
+    visibility: hidden;
 }
 
 .station-drawer.open, .ai-drawer.open {
     transform: translateX(0);
+    pointer-events: auto;
+    visibility: visible;
 }
 
 .drawer-header {
@@ -1501,10 +1512,12 @@ body {
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
+    pointer-events: none;
 }
 
 .modal-overlay.open {
     display: flex;
+    pointer-events: auto;
 }
 
 .modal-card {
@@ -2072,11 +2085,13 @@ body {
     z-index: 49;
     opacity: 0;
     transition: opacity 300ms ease;
+    pointer-events: none;
 }
 
 .sidebar-overlay.active {
     display: block;
     opacity: 1;
+    pointer-events: auto;
 }
 
 /* â”€â”€â”€ Toast Notification System â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */

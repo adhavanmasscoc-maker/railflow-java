@@ -612,32 +612,7 @@ const STATE = {
 const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
 
-// â”€â”€â”€ INITIALIZATION ON DOM READY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-document.addEventListener('DOMContentLoaded', () => {
-    initClock();
-    initNavigation();
-    initDualViewAndAudio();
-    initStationOperationsIntelligence();
-    initSearch();
-    initDrawersAndModals();
-    initNetworkGraphs();
-    initJourneyPlanner();
-    initStationsTreeAndTable();
-    initTrainsExplorer();
-    initCrowdMonitoring();
-    initDataQuality();
-    initDatabaseExplorer();
-    initFeedback();
-    initQuickPnrModal();
-    initKeyboardShortcuts();
-    initFobInterlockAndCompass();
-
-    // Start 3000ms Live Telemetry Scheduler
-    startTelemetryScheduler();
-
-    // Render default dashboard path
-    quickPlanRoute('NDLS', 'MAS');
-});
+// (RailFlow full lifecycle hydration occurs at the bottom of the script after all constants and modules are defined)
 
 // --- FOB SAFETY INTERLOCK & COACH WALKING COMPASS ENGINE ---
 function initFobInterlockAndCompass() {
@@ -1528,6 +1503,17 @@ function quickPlanRoute(fromCode, toCode) {
     executeJourneyPlan();
 }
 window.quickPlanRoute = quickPlanRoute;
+
+function planRouteSilent(fromCode, toCode) {
+    const f = $('fromStationInput');
+    const t = $('toStationInput');
+    if (f && !f.value) f.value = fromCode;
+    if (t && !t.value) t.value = toCode;
+    if (typeof executeJourneyPlan === 'function') {
+        try { executeJourneyPlan(); } catch (e) {}
+    }
+}
+window.planRouteSilent = planRouteSilent;
 
 function resolveStationCode(val) {
     if (!val) return '';
@@ -4070,18 +4056,23 @@ async function handleAISend() {
     let finalAnswer = '';
     const endpoints = [
         '/api/ask-railflow-ai',
+        (window.location.origin && window.location.origin !== 'null' ? window.location.origin + '/api/ask-railflow-ai' : ''),
         'http://localhost:8080/api/ask-railflow-ai',
         'http://localhost:3001/api/ask-railflow-ai'
-    ];
+    ].filter(Boolean);
 
     let success = false;
     for (const ep of endpoints) {
         try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 12000);
             const res = await fetch(ep, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: text })
+                body: JSON.stringify({ prompt: text }),
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
             if (res.ok) {
                 const data = await res.json();
                 if (data && data.answer) {
@@ -4681,12 +4672,9 @@ function initMobileMenu() {
     });
 }
 
-// â”€â”€â”€ INSTANT SWITCH PAGE (0MS IMMEDIATE TRANSITION) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const _origSwitchPage = window.switchPage;
-window.switchPage = function(pageId) {
-    if (!pageId) return;
-    _origSwitchPage(pageId);
-};
+// ─── ENSURE SWITCH PAGE IS GLOBALLY ACCESSIBLE ──────────────────────────────
+window.switchPage = switchPage;
+window.navigateTo = switchPage;
 
 // â”€â”€â”€ TELEMETRY BADGE FLOAT UPDATER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function updateTelemetryBadgeFloat(tick) {
@@ -5152,3 +5140,47 @@ async function processConsoleCommand(cmd) {
 
 // Record boot time for uptime tracking
 window._RAILFLOW_BOOT_TIME = window._RAILFLOW_BOOT_TIME || Date.now();
+
+// ─── COMPLETE INITIALIZATION ON DOM READY & IMMEDIATE HYDRATION ─────────────────────
+function initAllRailFlowApp() {
+    if (window._RAILFLOW_INITIALIZED) return;
+    window._RAILFLOW_INITIALIZED = true;
+
+    const tasks = [
+        ['Clock', initClock],
+        ['Navigation', initNavigation],
+        ['DualViewAndAudio', initDualViewAndAudio],
+        ['StationOperations', initStationOperationsIntelligence],
+        ['Search', initSearch],
+        ['DrawersAndModals', initDrawersAndModals],
+        ['NetworkGraphs', initNetworkGraphs],
+        ['JourneyPlanner', initJourneyPlanner],
+        ['StationsTree', initStationsTreeAndTable],
+        ['TrainsExplorer', initTrainsExplorer],
+        ['CrowdMonitoring', initCrowdMonitoring],
+        ['DataQuality', initDataQuality],
+        ['DatabaseExplorer', initDatabaseExplorer],
+        ['Feedback', initFeedback],
+        ['QuickPnrModal', initQuickPnrModal],
+        ['KeyboardShortcuts', initKeyboardShortcuts],
+        ['FobInterlock', initFobInterlockAndCompass],
+        ['MobileMenu', initMobileMenu],
+        ['TelemetryScheduler', startTelemetryScheduler],
+        ['DefaultRoute', () => planRouteSilent('NDLS', 'MAS')]
+    ];
+
+    tasks.forEach(([name, fn]) => {
+        try {
+            if (typeof fn === 'function') fn();
+        } catch (err) {
+            console.warn(`[RailFlow Init] Module ${name} warning:`, err);
+        }
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllRailFlowApp);
+} else {
+    // DOM already loaded or interactive — initialize immediately!
+    initAllRailFlowApp();
+}

@@ -14,9 +14,8 @@
     <script src="https://feedback.adhavanmasscoc.workers.dev/aknex-tracker.js" data-site="site_railflow" defer></script>
 </head>
 <body>
-
     <!-- ─── Mobile Sidebar Overlay ────────────────────────────── -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="document.getElementById('sidebar').classList.remove('mobile-open'); this.classList.remove('active');"></div>
     <!-- ─── Toast Container ───────────────────────────────────── -->
     <div class="toast-container" id="toastContainer"></div>
     <!-- ─── Floating Telemetry Badge (hidden from viewport per ops directive) ──────────────────────────── -->
@@ -49,63 +48,63 @@
 
         <nav class="sidebar-nav">
             <div class="nav-section-label">Operations Console</div>
-            <a href="/dashboard" class="nav-item active" data-page="dashboard" id="nav-dashboard">
+            <a href="/dashboard" class="nav-item active" data-page="dashboard" id="nav-dashboard" onclick="switchPage('dashboard'); return false;">
                 <span class="nav-emoji">📊</span>
                 <span>Dashboard</span>
                 <span class="nav-badge" style="background:var(--emerald-dim); color:var(--emerald);">LIVE</span>
             </a>
-            <a href="/console" class="nav-item" data-page="console" id="nav-console">
-                <span class="nav-emoji">💻</span>
+            <a href="/console" class="nav-item" data-page="console" id="nav-console" onclick="switchPage('console'); return false;">
+                <span class="nav-emoji">🖥️</span>
                 <span>Console</span>
                 <span class="nav-badge" style="background:var(--purple-dim); color:var(--purple);">TERMINAL</span>
             </a>
-            <a href="/network" class="nav-item" data-page="network" id="nav-network">
-                <span class="nav-emoji">🌐</span>
+            <a href="/network" class="nav-item" data-page="network" id="nav-network" onclick="switchPage('network'); return false;">
+                <span class="nav-emoji">🗺️</span>
                 <span>RailRadar Network</span>
                 <span class="nav-badge">SVG</span>
             </a>
-            <a href="/journey" class="nav-item" data-page="journey" id="nav-journey">
+            <a href="/journey" class="nav-item" data-page="journey" id="nav-journey" onclick="switchPage('journey'); return false;">
                 <span class="nav-emoji">🧭</span>
                 <span>Journey Planner</span>
                 <span class="nav-badge" style="background:var(--rail-red-dim); color:var(--rail-red);">ROUTER</span>
             </a>
-            <a href="/stations" class="nav-item" data-page="stations" id="nav-stations">
+            <a href="/stations" class="nav-item" data-page="stations" id="nav-stations" onclick="switchPage('stations'); return false;">
                 <span class="nav-emoji">🚉</span>
                 <span>Station Network</span>
                 <span class="nav-badge" id="navStationCount">25 Hubs</span>
             </a>
-            <a href="/trains" class="nav-item" data-page="trains" id="nav-trains">
+            <a href="/trains" class="nav-item" data-page="trains" id="nav-trains" onclick="switchPage('trains'); return false;">
                 <span class="nav-emoji">🚆</span>
                 <span>Train Explorer</span>
                 <span class="nav-badge">REAL DATA</span>
             </a>
-            <a href="/crowd" class="nav-item" data-page="crowd" id="nav-crowd">
+            <a href="/crowd" class="nav-item" data-page="crowd" id="nav-crowd" onclick="switchPage('crowd'); return false;">
                 <span class="nav-emoji">👥</span>
                 <span>Crowd Monitoring</span>
                 <span class="nav-badge" style="background:var(--amber-dim); color:var(--amber);">3000ms</span>
             </a>
-            <a href="/commuter" class="nav-item" data-page="commuter" id="nav-commuter">
+            <a href="/commuter" class="nav-item" data-page="commuter" id="nav-commuter" onclick="switchPage('commuter'); return false;">
                 <span class="nav-emoji">📱</span>
                 <span>Commuter Portal</span>
                 <span class="nav-badge" style="background:var(--cyan-dim); color:var(--cyan);">PASSENGER</span>
             </a>
 
             <div class="nav-section-label">Intelligence & Data Layer</div>
-            <a href="/quality" class="nav-item" data-page="quality" id="nav-quality">
+            <a href="/quality" class="nav-item" data-page="quality" id="nav-quality" onclick="switchPage('quality'); return false;">
                 <span class="nav-emoji">📈</span>
                 <span>Data Quality</span>
                 <span class="nav-badge">DERIVED</span>
             </a>
-            <a href="/architecture" class="nav-item" data-page="architecture" id="nav-architecture">
+            <a href="/architecture" class="nav-item" data-page="architecture" id="nav-architecture" onclick="switchPage('architecture'); return false;">
                 <span class="nav-emoji">🏛️</span>
                 <span>Architecture</span>
             </a>
-            <a href="/database" class="nav-item" data-page="database" id="nav-database">
+            <a href="/database" class="nav-item" data-page="database" id="nav-database" onclick="switchPage('database'); return false;">
                 <span class="nav-emoji">🗄️</span>
                 <span>Database Explorer</span>
                 <span class="nav-badge">JDBC</span>
             </a>
-            <a href="/feedback" class="nav-item" data-page="feedback" id="nav-feedback">
+            <a href="/feedback" class="nav-item" data-page="feedback" id="nav-feedback" onclick="switchPage('feedback'); return false;">
                 <span class="nav-emoji">💬</span>
                 <span>User Feedback</span>
             </a>
@@ -123,7 +122,7 @@
         <!-- Top Header -->
         <header class="top-header" id="topHeader">
             <!-- Mobile Hamburger -->
-            <button class="hamburger-btn" id="btnMobileMenu" title="Toggle Navigation Menu" aria-label="Toggle sidebar" aria-expanded="false">
+            <button class="hamburger-btn" id="btnMobileMenu" title="Toggle Navigation Menu" aria-label="Toggle sidebar" aria-expanded="false" onclick="document.getElementById('sidebar').classList.toggle('mobile-open'); document.getElementById('sidebarOverlay').classList.toggle('active');">
                 <span></span><span></span><span></span>
             </button>
             <!-- Global Search -->
@@ -169,15 +168,21 @@
                 </div>
 
                 <!-- Feature: Quick PNR Checker Launcher -->
-                <button class="btn btn-pnr-status" id="btnOpenPnrModal" title="Check Indian Railways 10-Digit PNR Status">
+                <button class="btn btn-pnr-status" id="btnOpenPnrModal" title="Check Indian Railways 10-Digit PNR Status" onclick="document.getElementById('pnrModal').classList.add('open');">
                     <span>🎫 PNR Status</span>
                 </button>
 
-                <button class="btn btn-guide" id="btnOperationsGuide" title="Open Operations Architecture Guide">
+                <button class="btn btn-guide" id="btnOperationsGuide" title="Open Operations Architecture Guide" onclick="document.getElementById('guideModal').classList.add('open');">
                     <span>📖 Operations Guide</span>
                 </button>
 
-                <button class="btn btn-ai-toggle" id="btnToggleAI" title="Open RailFlow AI Operations Terminal" style="padding:4px 8px; font-size:0.72rem; height:auto;">
+                <button class="btn btn-ai-toggle" id="btnToggleAI" title="Open RailFlow AI Operations Terminal" style="padding:4px 8px; font-size:0.72rem; height:auto;" onclick="document.getElementById('aiDrawer').classList.toggle('open');">
+                    <span style="font-size:0.7rem;">🤖</span>
+                    <span style="font-size:0.7rem; letter-spacing:0.04em;">AI</span>
+                    <span class="badge badge-ai-pulse" style="font-size:9px; padding:1px 4px; min-width:0;">READY</span>
+                </button>
+            </div>
+        </header>ailFlow AI Operations Terminal" style="padding:4px 8px; font-size:0.72rem; height:auto;">
                     <span style="font-size:0.7rem;">🤖</span>
                     <span style="font-size:0.7rem; letter-spacing:0.04em;">AI</span>
                     <span class="badge badge-ai-pulse" style="font-size:9px; padding:1px 4px; min-width:0;">READY</span>
@@ -1895,7 +1900,7 @@
                 <h2 style="font-size:1.25rem; font-weight:700; margin-top:0.3rem;" id="drawerStationName">Chennai Central</h2>
                 <span style="font-size:0.80rem; font-family:var(--font-mono); color:var(--text-muted);" id="drawerStationCode">CODE: MAS</span>
             </div>
-            <button class="drawer-close" id="btnCloseDrawer">&times;</button>
+            <button class="drawer-close" id="btnCloseDrawer" onclick="document.getElementById('stationDrawer').classList.remove('open');">&times;</button>
         </div>
         <div class="drawer-body" id="drawerBody">
             <div>
@@ -1943,7 +1948,7 @@
                 </div>
                 <h3 style="font-size:1.15rem; font-weight:700; color:var(--text-primary); margin-top:0.25rem;">RailFlow Autonomous Operations AI</h3>
             </div>
-            <button class="drawer-close" id="btnCloseAIDrawer">&times;</button>
+            <button class="drawer-close" id="btnCloseAIDrawer" onclick="document.getElementById('aiDrawer').classList.remove('open');">&times;</button>
         </div>
 
         <!-- Chat messages container -->
@@ -1981,7 +1986,7 @@
         <div class="modal-card">
             <div style="padding:1.25rem 1.5rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
                 <h3 style="font-size:1.15rem; font-weight:700;">RailFlow Operations Console Guide</h3>
-                <button class="drawer-close" id="btnCloseGuideModal">&times;</button>
+                <button class="drawer-close" id="btnCloseGuideModal" onclick="document.getElementById('guideModal').classList.remove('open');">&times;</button>
             </div>
             <div style="padding:1.5rem; display:flex; flex-direction:column; gap:1.25rem; font-size:0.90rem; line-height:1.6;">
                 <div>
@@ -2024,7 +2029,7 @@
                     <span class="badge badge-real">IRCTC GATEWAY</span>
                     <h3 style="font-size:1.15rem; font-weight:700;">Live 10-Digit PNR Status Query</h3>
                 </div>
-                <button class="drawer-close" id="btnClosePnrModal">&times;</button>
+                <button class="drawer-close" id="btnClosePnrModal" onclick="document.getElementById('pnrModal').classList.remove('open');">&times;</button>
             </div>
             <div style="padding:1.5rem; display:flex; flex-direction:column; gap:1.25rem;">
                 <div class="planner-form" style="grid-template-columns: 1fr auto; padding:0; border:none; background:transparent; box-shadow:none;">
@@ -2069,7 +2074,7 @@
                         <span id="ttHistoricalDetails" style="font-style:italic;">Iconic Indian Railways scheduled express service.</span>
                     </div>
                 </div>
-                <button class="drawer-close" id="btnCloseTimetableModal">&times;</button>
+                <button class="drawer-close" id="btnCloseTimetableModal" onclick="document.getElementById('trainTimetableModal').classList.remove('open');">&times;</button>
             </div>
             <div style="padding:1.5rem;">
                 <h4 style="font-size:0.80rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; margin-bottom:0.75rem;">Timetable Sequence & Intermediate Stoppages</h4>
