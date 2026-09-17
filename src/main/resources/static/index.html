@@ -98,6 +98,11 @@
             </a>
 
             <div class="nav-section-label">Intelligence & Data Layer</div>
+            <a href="#ai" class="nav-item" id="nav-ai" onclick="openAIDrawer(event); return false;" style="border-left: 2px solid #7C3AED;">
+                <span class="nav-emoji">🤖</span>
+                <span>RailFlow AI Copilot</span>
+                <span class="nav-badge" style="background:linear-gradient(135deg,#2563EB,#7C3AED); color:#fff; font-weight:700;">GEMINI</span>
+            </a>
             <a href="/quality" class="nav-item" data-page="quality" id="nav-quality" onclick="switchPage('quality'); return false;">
                 <span class="nav-emoji">📈</span>
                 <span>Data Quality</span>
@@ -184,7 +189,7 @@
                     <span>📖 Operations Guide</span>
                 </button>
 
-                <button class="btn btn-ai-toggle" id="btnToggleAI" title="Open RailFlow AI Operations Terminal" style="padding:4px 8px; font-size:0.72rem; height:auto;" onclick="document.getElementById('aiDrawer').classList.toggle('open');">
+                <button class="btn btn-ai-toggle" id="btnToggleAI" title="Open RailFlow AI Operations Terminal" style="padding:4px 8px; font-size:0.72rem; height:auto;" onclick="toggleAIDrawer(event);">
                     <span style="font-size:0.7rem;">🤖</span>
                     <span style="font-size:0.7rem; letter-spacing:0.04em;">AI</span>
                     <span class="badge badge-ai-pulse" style="font-size:9px; padding:1px 4px; min-width:0;">READY</span>
@@ -1976,6 +1981,7 @@
     </aside>
 
     <!-- ─── AI Operations Assistant Drawer ───────────────────────── -->
+    <div class="drawer-backdrop" id="aiDrawerBackdrop" onclick="closeAIDrawer(event);" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:10004; backdrop-filter:blur(2px);"></div>
     <aside class="ai-drawer" id="aiDrawer">
         <div class="ai-drawer-header">
             <div>
@@ -1985,7 +1991,7 @@
                 </div>
                 <h3 style="font-size:1.15rem; font-weight:700; color:var(--text-primary); margin-top:0.25rem;">RailFlow Autonomous Operations AI</h3>
             </div>
-            <button class="drawer-close" id="btnCloseAIDrawer" onclick="document.getElementById('aiDrawer').classList.remove('open');">&times;</button>
+            <button class="drawer-close" id="btnCloseAIDrawer" onclick="closeAIDrawer(event);">&times;</button>
         </div>
 
         <!-- Chat messages container -->

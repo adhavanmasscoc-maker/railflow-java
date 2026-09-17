@@ -4055,6 +4055,49 @@ function renderFeedbackList() {
 }
 
 // â”€â”€â”€ 12. AI OPERATIONS ASSISTANT DRAWER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function openAIDrawer(e) {
+    if (e) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+    }
+    const drawer = document.getElementById('aiDrawer');
+    if (drawer) {
+        drawer.classList.add('open');
+        const backdrop = document.getElementById('aiDrawerBackdrop');
+        if (backdrop) backdrop.style.display = 'block';
+        const input = document.getElementById('aiChatInput');
+        if (input) setTimeout(() => input.focus(), 120);
+    }
+}
+window.openAIDrawer = openAIDrawer;
+
+function closeAIDrawer(e) {
+    if (e) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+    }
+    const drawer = document.getElementById('aiDrawer');
+    if (drawer) drawer.classList.remove('open');
+    const backdrop = document.getElementById('aiDrawerBackdrop');
+    if (backdrop) backdrop.style.display = 'none';
+}
+window.closeAIDrawer = closeAIDrawer;
+
+function toggleAIDrawer(e) {
+    if (e) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+    }
+    const drawer = document.getElementById('aiDrawer');
+    if (!drawer) return;
+    if (drawer.classList.contains('open')) {
+        closeAIDrawer(e);
+    } else {
+        openAIDrawer(e);
+    }
+}
+window.toggleAIDrawer = toggleAIDrawer;
+
 function initDrawersAndModals() {
     // Station Drawer
     const btnCloseStation = $('btnCloseDrawer');
@@ -4062,14 +4105,14 @@ function initDrawersAndModals() {
 
     // AI Drawer
     const btnToggleAI = $('btnToggleAI');
-    if (btnToggleAI) btnToggleAI.addEventListener('click', () => {
-        $('aiDrawer').classList.toggle('open');
-    });
+    if (btnToggleAI) {
+        btnToggleAI.onclick = toggleAIDrawer;
+    }
 
     const btnCloseAI = $('btnCloseAIDrawer');
-    if (btnCloseAI) btnCloseAI.addEventListener('click', () => {
-        $('aiDrawer').classList.remove('open');
-    });
+    if (btnCloseAI) {
+        btnCloseAI.onclick = closeAIDrawer;
+    }
 
     const btnSendAI = $('btnSendAI');
     const inputAI = $('aiChatInput');
