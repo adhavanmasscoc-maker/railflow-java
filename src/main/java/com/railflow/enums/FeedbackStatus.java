@@ -7,5 +7,14 @@ package com.railflow.enums;
 public enum FeedbackStatus {
     NEW,
     REVIEWED,
-    RESOLVED
+    RESOLVED;
+
+    public static FeedbackStatus fromString(String val) {
+        if (val == null) return NEW;
+        try {
+            return FeedbackStatus.valueOf(val.toUpperCase().trim());
+        } catch (Exception e) {
+            return NEW;
+        }
+    }
 }
