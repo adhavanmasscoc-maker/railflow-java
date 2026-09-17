@@ -224,6 +224,180 @@ function calcDistance(fromCode, toCode) {
     return Math.round(R * c * 1.22); // 1.22 rail curvature factor
 }
 
+// ─── QUERY SEARCH HELPERS ───────────────────────────────────────────────────
+function searchStations(q, limit = 20) {
+    q = (q || '').trim().toUpperCase();
+    if (!q) {
+        return STATIONS.slice(0, limit);
+    }
+
+    const qNorm = q.replace(/[^A-Z0-9]/g, '');
+    const exactCode = [];
+    const aliasExact = [];
+    const prefixCode = [];
+    const prefixName = [];
+    const aliasPrefix = [];
+    const containsName = [];
+    const aliasContains = [];
+    const addressMatches = [];
+    const seenCodes = new Set();
+
+    function addMatch(s, targetList, matchedAlias = null) {
+        if (!s || seenCodes.has(s.code)) return;
+        seenCodes.add(s.code);
+        targetList.push(matchedAlias ? { ...s, aliasMatched: matchedAlias } : s);
+    }
+
+    // Rank 1: Direct exact match on Station Code (e.g. TPJ, NDLS, MAS)
+    const exactStn = STATION_BY_CODE.get(q);
+    if (exactStn) {
+        addMatch(exactStn, exactCode);
+    }
+
+    // Rank 2: Exact alias match (e.g. TRICHY -> TPJ, MADRAS -> MAS/MS, BANGALORE -> SBC)
+    const matchedAliasCodes = ALIAS_TO_CODES.get(q) || ALIAS_TO_CODES.get(qNorm);
+    if (matchedAliasCodes) {
+        for (const c of matchedAliasCodes) {
+            const s = STATION_BY_CODE.get(c);
+            if (s) addMatch(s, aliasExact, q);
+        }
+    }
+
+    // Rank 3 & 4: Code prefix & Name prefix
+    for (const s of STATIONS) {
+        if (seenCodes.has(s.code)) continue;
+        if (s.code.startsWith(q)) {
+            addMatch(s, prefixCode);
+        } else if (s.name.toUpperCase().startsWith(q)) {
+            addMatch(s, prefixName);
+        }
+    }
+
+    // Rank 5: Alias prefix (e.g. TRIC -> TRICHY -> TPJ)
+    for (const [alias, codes] of ALIAS_TO_CODES.entries()) {
+        if (alias.startsWith(q) && alias !== q) {
+            for (const c of codes) {
+                const s = STATION_BY_CODE.get(c);
+                if (s) addMatch(s, aliasPrefix, alias);
+            }
+        }
+    }
+
+    // Rank 6: Name contains
+    for (const s of STATIONS) {
+        if (seenCodes.has(s.code)) continue;
+        if (s.name.toUpperCase().includes(q)) {
+            addMatch(s, containsName);
+        }
+    }
+
+    // Rank 7: Alias contains
+    for (const [alias, codes] of ALIAS_TO_CODES.entries()) {
+        if (alias.includes(q) && !alias.startsWith(q)) {
+            for (const c of codes) {
+                const s = STATION_BY_CODE.get(c);
+                if (s) addMatch(s, aliasContains, alias);
+            }
+        }
+    }
+
+    // Rank 8: Lowest priority - address contains
+    if (seenCodes.size < limit) {
+        for (const s of STATIONS) {
+            if (seenCodes.has(s.code)) continue;
+            if (s.address && s.address.toUpperCase().includes(q)) {
+                addMatch(s, addressMatches);
+                if (seenCodes.size >= limit) break;
+            }
+        }
+    }
+
+    return [
+        ...exactCode,
+        ...aliasExact,
+        ...prefixCode,
+        ...prefixName,
+        ...aliasPrefix,
+        ...containsName,
+        ...aliasContains,
+        ...addressMatches
+    ].slice(0, limit);
+}
+
+function searchTrains(q, limit = 20) {
+    q = (q || '').trim().toUpperCase().replace(/^#/, '');
+    if (!q) {
+        return TRAINS.slice(0, limit).map(t => ({
+            trainNumber: t.trainNumber,
+            trainName: t.trainName,
+            type: t.type || 'EXPRESS',
+            source: t.source,
+            destination: t.destination,
+            frequency: t.frequency || 'Daily',
+            stopsCount: t.stops ? t.stops.length : 0,
+            platform: 'PF ' + ((parseInt(t.trainNumber, 10) % 8) + 1),
+            introducedYear: t.introducedYear,
+            inauguratedDate: t.inauguratedDate,
+            historicalDetails: t.historicalDetails
+        }));
+    }
+
+    const exact = [];
+    const prefixNum = [];
+    const nameMatch = [];
+    const stationMatch = [];
+    const seenNums = new Set();
+
+    // Check for aliases (e.g. TRICHY -> TPJ, MADRAS -> MAS, BANGALORE -> SBC)
+    const aliasCodes = new Set(ALIAS_TO_CODES.get(q) || []);
+    for (const [al, codes] of ALIAS_TO_CODES.entries()) {
+        if (al.includes(q)) {
+            codes.forEach(c => aliasCodes.add(c));
+        }
+    }
+
+    function addTrain(t, targetList) {
+        if (!t || seenNums.has(t.trainNumber)) return;
+        seenNums.add(t.trainNumber);
+        targetList.push(t);
+    }
+
+    // Check direct in-memory map
+    const direct = TRAIN_BY_NUMBER.get(q) || TRAIN_BY_NUMBER.get(q.replace(/^0+/, '')) || TRAIN_BY_NUMBER.get(q.padStart(5, '0'));
+    if (direct) addTrain(direct, exact);
+
+    for (const t of TRAINS) {
+        const num = t.trainNumber;
+        const name = (t.trainName || '').toUpperCase();
+        const src = (t.source || '').toUpperCase();
+        const dst = (t.destination || '').toUpperCase();
+
+        const matchesAlias = aliasCodes.has(src) || aliasCodes.has(dst) ||
+            (t.stops && t.stops.some(st => aliasCodes.has(st.stationCode)));
+
+        if (num === q) addTrain(t, exact);
+        else if (num.startsWith(q)) addTrain(t, prefixNum);
+        else if (name.includes(q)) addTrain(t, nameMatch);
+        else if (src.includes(q) || dst.includes(q) || matchesAlias) addTrain(t, stationMatch);
+
+        if (seenNums.size >= limit * 2) break;
+    }
+
+    return [...exact, ...prefixNum, ...nameMatch, ...stationMatch].slice(0, limit).map(t => ({
+        trainNumber: t.trainNumber,
+        trainName: t.trainName,
+        type: t.type || 'EXPRESS',
+        source: t.source,
+        destination: t.destination,
+        frequency: t.frequency || 'Daily',
+        stopsCount: t.stops ? t.stops.length : 0,
+        platform: 'PF ' + ((parseInt(t.trainNumber, 10) % 8) + 1),
+        introducedYear: t.introducedYear,
+        inauguratedDate: t.inauguratedDate,
+        historicalDetails: t.historicalDetails
+    }));
+}
+
 // ─── API HANDLER ──────────────────────────────────────────────────────────────
 function handleApiRequest(pathname, searchParams, res, req) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -236,108 +410,22 @@ function handleApiRequest(pathname, searchParams, res, req) {
         return res.end();
     }
 
+    // 0. Unified Global Search (Stations + Trains)
+    if (pathname === '/api/search') {
+        const q = (searchParams.get('q') || searchParams.get('query') || '').trim();
+        const limit = parseInt(searchParams.get('limit'), 10) || 10;
+        return res.end(JSON.stringify({
+            query: q,
+            stations: searchStations(q, limit),
+            trains: searchTrains(q, limit)
+        }));
+    }
+
     // 1. Station Autocomplete & Search (with High-Priority Canonical & Colloquial Alias Mapping)
     if (pathname === '/api/stations/search' || pathname === '/api/stations') {
-        const q = (searchParams.get('q') || searchParams.get('query') || '').trim().toUpperCase();
+        const q = (searchParams.get('q') || searchParams.get('query') || '').trim();
         const limit = parseInt(searchParams.get('limit'), 10) || 20;
-
-        if (!q) {
-            return res.end(JSON.stringify(STATIONS.slice(0, limit)));
-        }
-
-        const qNorm = q.replace(/[^A-Z0-9]/g, '');
-        const exactCode = [];
-        const aliasExact = [];
-        const prefixCode = [];
-        const prefixName = [];
-        const aliasPrefix = [];
-        const containsName = [];
-        const aliasContains = [];
-        const addressMatches = [];
-        const seenCodes = new Set();
-
-        function addMatch(s, targetList, matchedAlias = null) {
-            if (!s || seenCodes.has(s.code)) return;
-            seenCodes.add(s.code);
-            targetList.push(matchedAlias ? { ...s, aliasMatched: matchedAlias } : s);
-        }
-
-        // Rank 1: Direct exact match on Station Code (e.g. TPJ, NDLS, MAS)
-        const exactStn = STATION_BY_CODE.get(q);
-        if (exactStn) {
-            addMatch(exactStn, exactCode);
-        }
-
-        // Rank 2: Exact alias match (e.g. TRICHY -> TPJ, MADRAS -> MAS/MS, BANGALORE -> SBC)
-        const matchedAliasCodes = ALIAS_TO_CODES.get(q) || ALIAS_TO_CODES.get(qNorm);
-        if (matchedAliasCodes) {
-            for (const c of matchedAliasCodes) {
-                const s = STATION_BY_CODE.get(c);
-                if (s) addMatch(s, aliasExact, q);
-            }
-        }
-
-        // Rank 3 & 4: Code prefix & Name prefix
-        for (const s of STATIONS) {
-            if (seenCodes.has(s.code)) continue;
-            if (s.code.startsWith(q)) {
-                addMatch(s, prefixCode);
-            } else if (s.name.toUpperCase().startsWith(q)) {
-                addMatch(s, prefixName);
-            }
-        }
-
-        // Rank 5: Alias prefix (e.g. TRIC -> TRICHY -> TPJ)
-        for (const [alias, codes] of ALIAS_TO_CODES.entries()) {
-            if (alias.startsWith(q) && alias !== q) {
-                for (const c of codes) {
-                    const s = STATION_BY_CODE.get(c);
-                    if (s) addMatch(s, aliasPrefix, alias);
-                }
-            }
-        }
-
-        // Rank 6: Name contains
-        for (const s of STATIONS) {
-            if (seenCodes.has(s.code)) continue;
-            if (s.name.toUpperCase().includes(q)) {
-                addMatch(s, containsName);
-            }
-        }
-
-        // Rank 7: Alias contains
-        for (const [alias, codes] of ALIAS_TO_CODES.entries()) {
-            if (alias.includes(q) && !alias.startsWith(q)) {
-                for (const c of codes) {
-                    const s = STATION_BY_CODE.get(c);
-                    if (s) addMatch(s, aliasContains, alias);
-                }
-            }
-        }
-
-        // Rank 8: Lowest priority - address contains (demoted so highway road names don't displace canonical stations)
-        if (seenCodes.size < limit) {
-            for (const s of STATIONS) {
-                if (seenCodes.has(s.code)) continue;
-                if (s.address && s.address.toUpperCase().includes(q)) {
-                    addMatch(s, addressMatches);
-                    if (seenCodes.size >= limit) break;
-                }
-            }
-        }
-
-        const results = [
-            ...exactCode,
-            ...aliasExact,
-            ...prefixCode,
-            ...prefixName,
-            ...aliasPrefix,
-            ...containsName,
-            ...aliasContains,
-            ...addressMatches
-        ].slice(0, limit);
-
-        return res.end(JSON.stringify(results));
+        return res.end(JSON.stringify(searchStations(q, limit)));
     }
 
     // 1b. Stations by Division / Zone Endpoint
@@ -521,80 +609,43 @@ function handleApiRequest(pathname, searchParams, res, req) {
 
     // 4. Trains Search & Catalog Endpoint
     if (pathname === '/api/trains' || pathname === '/api/trains/search') {
-        const q = (searchParams.get('q') || searchParams.get('query') || '').trim().toUpperCase();
+        const q = (searchParams.get('q') || searchParams.get('query') || '').trim();
         const limit = parseInt(searchParams.get('limit'), 10) || 50;
+        return res.end(JSON.stringify(searchTrains(q, limit)));
+    }
 
-        if (!q) {
-            const top = TRAINS.slice(0, limit).map(t => ({
-                trainNumber: t.trainNumber,
-                trainName: t.trainName,
-                type: t.type || 'EXPRESS',
-                source: t.source,
-                destination: t.destination,
-                frequency: t.frequency || 'Daily',
-                stopsCount: t.stops ? t.stops.length : 0,
-                platform: 'PF ' + ((parseInt(t.trainNumber, 10) % 8) + 1),
-                introducedYear: t.introducedYear,
-                inauguratedDate: t.inauguratedDate,
-                historicalDetails: t.historicalDetails
-            }));
-            return res.end(JSON.stringify(top));
-        }
+    // 4b. Single Train by Number (Resilient 3-tier lookup: Memory -> Disk JSON -> Catalog search)
+    if (pathname.startsWith('/api/trains/')) {
+        const rawNum = decodeURIComponent(pathname.replace('/api/trains/', '')).trim();
+        const cleanNum = rawNum.replace(/^#/, '').trim();
 
-        const exact = [];
-        const prefixNum = [];
-        const nameMatch = [];
-        const stationMatch = [];
+        // Tier 1: In-memory map (exact, without leading zeroes, or padded to 5 digits)
+        let train = TRAIN_BY_NUMBER.get(cleanNum) ||
+                    TRAIN_BY_NUMBER.get(cleanNum.replace(/^0+/, '')) ||
+                    TRAIN_BY_NUMBER.get(cleanNum.padStart(5, '0'));
 
-        // Check for aliases (e.g. TRICHY -> TPJ, MADRAS -> MAS, BANGALORE -> SBC)
-        const aliasCodes = new Set(ALIAS_TO_CODES.get(q) || []);
-        for (const [al, codes] of ALIAS_TO_CODES.entries()) {
-            if (al.includes(q)) {
-                codes.forEach(c => aliasCodes.add(c));
+        // Tier 2: Static JSON file on disk (DATA/trains/:num.json)
+        if (!train) {
+            const diskFile = path.join(ROOT_DIR, 'DATA', 'trains', `${cleanNum}.json`);
+            if (fs.existsSync(diskFile)) {
+                try {
+                    const diskData = fs.readFileSync(diskFile, 'utf8');
+                    return res.end(diskData);
+                } catch (err) {
+                    console.warn('[Data Engine] Failed to read disk train file:', err.message);
+                }
             }
         }
 
-        for (const t of TRAINS) {
-            const num = t.trainNumber;
-            const name = (t.trainName || '').toUpperCase();
-            const src = (t.source || '').toUpperCase();
-            const dst = (t.destination || '').toUpperCase();
-
-            const matchesAlias = aliasCodes.has(src) || aliasCodes.has(dst) ||
-                (t.stops && t.stops.some(st => aliasCodes.has(st.stationCode)));
-
-            if (num === q) exact.push(t);
-            else if (num.startsWith(q)) prefixNum.push(t);
-            else if (name.includes(q)) nameMatch.push(t);
-            else if (src.includes(q) || dst.includes(q) || matchesAlias) stationMatch.push(t);
-
-            if (exact.length + prefixNum.length + nameMatch.length + stationMatch.length >= limit) break;
+        // Tier 3: Search in TRAINS list
+        if (!train) {
+            train = TRAINS.find(t => t.trainNumber === cleanNum || t.trainNumber.replace(/^0+/, '') === cleanNum);
         }
 
-        const matches = [...exact, ...prefixNum, ...nameMatch, ...stationMatch].slice(0, limit).map(t => ({
-            trainNumber: t.trainNumber,
-            trainName: t.trainName,
-            type: t.type || 'EXPRESS',
-            source: t.source,
-            destination: t.destination,
-            frequency: t.frequency || 'Daily',
-            stopsCount: t.stops ? t.stops.length : 0,
-            platform: 'PF ' + ((parseInt(t.trainNumber, 10) % 8) + 1),
-            introducedYear: t.introducedYear,
-            inauguratedDate: t.inauguratedDate,
-            historicalDetails: t.historicalDetails
-        }));
-
-        return res.end(JSON.stringify(matches));
-    }
-
-    // 4b. Single Train by Number
-    if (pathname.startsWith('/api/trains/')) {
-        const num = decodeURIComponent(pathname.replace('/api/trains/', '')).trim();
-        const train = TRAIN_BY_NUMBER.get(num);
         if (train) return res.end(JSON.stringify(train));
+
         res.statusCode = 404;
-        return res.end(JSON.stringify({ error: 'Train not found', trainNumber: num }));
+        return res.end(JSON.stringify({ error: 'Train not found', trainNumber: cleanNum }));
     }
 
     // 5. Network Geo Stations (All stations with coordinates for India SVG map)
