@@ -43,13 +43,26 @@ function getGeminiKeys() {
 
 function cleanAIResponse(text) {
     if (!text) return '';
-    return text.replace(/^(\s*[-–—*#]{2,}\s*)+/g, '').trim();
+    let cleaned = text.replace(/^(\s*[-–—*#]{2,}\s*)+/g, '').trim();
+    // Rebrand any Gemini mentions to Aknex AI
+    cleaned = cleaned
+        .replace(/Google\s+Gemini\s+2\.5\s+Flash/gi, 'Aknex AI')
+        .replace(/Gemini\s+2\.5\s+Flash/gi, 'Aknex AI')
+        .replace(/Gemini\s+2\.5/gi, 'Aknex AI')
+        .replace(/Google\s+Gemini/gi, 'Aknex AI')
+        .replace(/\bGemini\b/gi, 'Aknex AI');
+    return cleaned;
 }
 
 function getSystemDirective() {
-    return `You are "RAILFLOW AI", the authoritative Indian Railways Operations Copilot, Network Dispatcher, and Crowd Intelligence Engine.
-Role: Autonomous Railway Intelligence, Central Operations Control (COC) Copilot, and Commuter Guide.
+    return `You are "RAILFLOW AI", powered exclusively by the Aknex AI Neural Engine.
+You are the authoritative Indian Railways Operations Copilot, Central Operations Control (COC) Dispatcher, and Crowd Intelligence Engine.
+Role: Autonomous Railway Intelligence and Commuter Guide.
 Persona: Highly knowledgeable, operationally precise, and professional.
+
+CRITICAL BRANDING & IDENTITY RULES:
+- You are powered by "Aknex AI".
+- NEVER mention "Gemini", "Google Gemini", or "Google". If asked what model or engine powers you, always state "Aknex AI".
 
 CRITICAL FORMATTING RULES:
 - NEVER start your response with horizontal rules ('---' or '--'), ascii dividers, or decorative bracket tags.
@@ -190,14 +203,14 @@ module.exports = async (req, res) => {
                         const data = await response.json();
                         const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
                         if (answer && answer.trim()) {
-                            return res.status(200).json({ answer: cleanAIResponse(answer), status: 'success', model: model, ok: true });
+                            return res.status(200).json({ answer: cleanAIResponse(answer), status: 'success', model: 'aknex-ai', ok: true });
                         }
                     }
                 } catch (err) {}
             }
         }
 
-        // ─── TIER 2: OpenRouter Google Gemini 2.5 Flash ───
+        // ─── TIER 2: OpenRouter Aknex AI Fallback ───
         if (openRouterKey) {
             const orModels = ['google/gemini-2.5-flash', 'google/gemini-flash-1.5'];
             for (const model of orModels) {
@@ -229,7 +242,7 @@ module.exports = async (req, res) => {
                         const data = await orRes.json();
                         const answer = data.choices?.[0]?.message?.content;
                         if (answer && answer.trim()) {
-                            return res.status(200).json({ answer: cleanAIResponse(answer), status: 'success', model: model, ok: true });
+                            return res.status(200).json({ answer: cleanAIResponse(answer), status: 'success', model: 'aknex-ai', ok: true });
                         }
                     }
                 } catch (err) {}
@@ -266,7 +279,7 @@ module.exports = async (req, res) => {
                         const data = await groqRes.json();
                         const answer = data.choices?.[0]?.message?.content;
                         if (answer && answer.trim()) {
-                            return res.status(200).json({ answer: cleanAIResponse(answer), status: 'success', model: model, ok: true });
+                            return res.status(200).json({ answer: cleanAIResponse(answer), status: 'success', model: 'aknex-ai', ok: true });
                         }
                     }
                 } catch (err) {}

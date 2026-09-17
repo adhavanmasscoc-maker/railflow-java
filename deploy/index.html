@@ -101,7 +101,7 @@
             <a href="#ai" class="nav-item" id="nav-ai" onclick="openAIDrawer(event); return false;" style="border-left: 2px solid #7C3AED;">
                 <span class="nav-emoji">🤖</span>
                 <span>RailFlow AI Copilot</span>
-                <span class="nav-badge" style="background:linear-gradient(135deg,#2563EB,#7C3AED); color:#fff; font-weight:700;">GEMINI</span>
+                <span class="nav-badge" style="background:linear-gradient(135deg,#2563EB,#7C3AED); color:#fff; font-weight:700;">AKNEX AI</span>
             </a>
             <a href="/quality" class="nav-item" data-page="quality" id="nav-quality">
                 <span class="nav-emoji">📈</span>
@@ -378,22 +378,26 @@
                     <div class="panel">
                         <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                             <div style="display:flex; align-items:center; gap:0.5rem;">
-                                <span class="panel-title">🇮🇳 India Rail Info &mdash; Live Railway Network Atlas</span>
-                                <span class="badge" style="background:var(--emerald-dim); color:var(--emerald); font-weight:700;">LIVE ATLAS</span>
+                                <span class="panel-title" id="dashMapTitle">🇮🇳 Indian Railways Live Network Atlas</span>
+                                <span class="badge" id="dashMapBadge" style="background:var(--emerald-dim); color:var(--emerald); font-weight:700;">LIVE ATLAS</span>
                             </div>
-                            <div style="display:flex; gap:0.4rem; align-items:center;">
-                                <button class="btn btn-secondary" id="btnToggleAtlasMode" onclick="toggleAtlasMapMode()" style="font-size:0.72rem; padding:4px 8px;" title="Toggle between Live Atlas and Vector Topology">Topology SVG</button>
-                                <button class="btn btn-secondary" onclick="reloadAtlasFrame()" style="font-size:0.72rem; padding:4px 8px;" title="Reload Live Atlas">&#x21bb; Reload</button>
-                                <a href="https://indiarailinfo.com/atlas" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size:0.72rem; padding:4px 8px; text-decoration:none;" title="Open on indiarailinfo.com">Open Full &nearr;</a>
-                                <button class="btn btn-secondary" onclick="switchPage('network')" style="font-size:0.72rem; padding:4px 8px;">RailRadar &rarr;</button>
+                            <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
+                                <button class="btn btn-primary" id="btnMapOpenRailway" onclick="setDashboardMapMode('openrailway')" style="font-size:0.72rem; padding:4px 8px;" title="OpenRailwayMap live tracks, electrification & gauges">IR Live Tracks</button>
+                                <button class="btn btn-secondary" id="btnMapRadar" onclick="setDashboardMapMode('radar')" style="font-size:0.72rem; padding:4px 8px;" title="Live Satellite RailRadar">RailRadar</button>
+                                <button class="btn btn-secondary" id="btnMapTopology" onclick="setDashboardMapMode('topology')" style="font-size:0.72rem; padding:4px 8px;" title="Vector Topology Network Graph">Topology SVG</button>
+                                <a href="https://indiarailinfo.com/atlas" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size:0.72rem; padding:4px 8px; text-decoration:none;" title="Open official India Rail Info Atlas in a dedicated tab (bypasses browser verification blocks)">IndiaRailInfo ↗</a>
                             </div>
                         </div>
-                        <div class="panel-body" style="padding:0; position:relative; overflow:hidden; background:#0a0a0a; border-radius:0 0 var(--radius-md) var(--radius-md);">
-                            <!-- Real India Rail Info Atlas iframe -->
-                            <div id="atlasFrameContainer" style="width:100%; height:460px; position:relative; background:#0a0a0a;">
-                                <iframe id="indiaRailAtlasFrame" src="https://indiarailinfo.com/atlas" width="100%" height="100%" frameborder="0" style="width:100%; height:100%; border:none; display:block; background:#0a0a0a;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="India Rail Info Live Atlas"></iframe>
+                        <div class="panel-body" style="padding:0; position:relative; overflow:hidden; background:#0a0a0a; border-radius:0 0 var(--radius-md) var(--radius-md); min-height:460px;">
+                            <!-- Mode 1: OpenRailwayMap IR Live Tracks Embed (Default - Zero Verification Issues) -->
+                            <div id="dashMapOpenRailwayContainer" style="width:100%; height:460px; position:relative; background:#0a0a0a;">
+                                <iframe id="openRailwayFrame" src="https://www.openrailwaymap.org/?style=standard&lat=21.0&lon=78.5&zoom=5" width="100%" height="100%" frameborder="0" style="width:100%; height:100%; border:none; display:block; background:#0a0a0a;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="OpenRailwayMap Indian Railways Live Network"></iframe>
                             </div>
-                            <!-- Vector SVG Topology Map (switchable) -->
+                            <!-- Mode 2: RailRadar Satellite Live Stream -->
+                            <div id="dashMapRadarContainer" style="width:100%; height:460px; position:relative; background:#0a0a0a; display:none;">
+                                <iframe id="dashRadarFrame" src="about:blank" width="100%" height="100%" frameborder="0" style="width:100%; height:100%; border:none; display:block; background:#0a0a0a;" allowfullscreen loading="lazy" allow="geolocation" title="RailRadar Satellite Stream"></iframe>
+                            </div>
+                            <!-- Mode 3: Vector SVG Topology Map -->
                             <div id="atlasSvgContainer" class="graph-viewport" style="height:460px; border:none; border-radius:0; position:relative; display:none;">
                                 <svg class="graph-canvas" id="dashGraphSvg"></svg>
                             </div>
@@ -539,7 +543,7 @@
                         </p>
                     </div>
                     <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
-                        <span class="badge badge-ai">GEMINI 2.5 FLASH</span>
+                        <span class="badge badge-ai">AKNEX AI</span>
                         <span class="badge" style="background:var(--purple-dim); color:var(--purple);">INTERACTIVE</span>
                         <span class="badge badge-real">REAL DATA</span>
                     </div>
@@ -1999,7 +2003,7 @@
         <div class="ai-drawer-header">
             <div>
                 <div style="display:flex; align-items:center; gap:0.4rem;">
-                    <span class="badge badge-ai" id="aiModelBadge" style="font-weight:700; background:linear-gradient(135deg, #2563EB, #7C3AED); color:#fff;">🤖 RAILFLOW AI — GEMINI 2.5 FLASH</span>
+                    <span class="badge badge-ai" id="aiModelBadge" style="font-weight:700; background:linear-gradient(135deg, #2563EB, #7C3AED); color:#fff;">🤖 RAILFLOW AI — AKNEX AI</span>
                     <span class="badge badge-real">LIVE ENGINE</span>
                 </div>
                 <h3 style="font-size:1.15rem; font-weight:700; color:var(--text-primary); margin-top:0.25rem;">RailFlow Autonomous Operations AI</h3>

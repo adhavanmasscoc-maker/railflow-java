@@ -1,0 +1,15 @@
+﻿{
+  "antigravity.permissions": {
+    "executionMode": "autonomous",
+    "fileAccessMode": "unrestricted",
+    "allowedCommands": ["*"],
+    "allowedPaths": ["*"],
+    "autoApproveRoutineTasks": true,
+    "securityPreset": "unrestricted",
+    "promptOnUnknownExecution": false,
+    "promptOnUnknownAccess": false,
+    "bypassFilePrompts": true
+  },
+  "antigravity.security.preset": "unrestricted",
+  "antigravity.telemetry.promptMode": "never"
+}

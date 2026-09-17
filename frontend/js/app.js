@@ -4209,7 +4209,7 @@ async function handleAISend() {
     if (window.RAIL_AUDIO) window.RAIL_AUDIO.playSliderTick(0.5);
 
     const thinkingId = 'thinking-' + Date.now();
-    appendAIMessage('assistant', `<div id="${thinkingId}" class="ai-thinking"><span class="pulse-dot" style="background:#3B82F6;"></span> <em>RailFlow AI is consulting Indian Railways ground truth &amp; Gemini 2.5 Flash...</em></div>`);
+    appendAIMessage('assistant', `<div id="${thinkingId}" class="ai-thinking"><span class="pulse-dot" style="background:#3B82F6;"></span> <em>RailFlow AI is consulting Indian Railways ground truth &amp; Aknex AI...</em></div>`);
 
     let finalAnswer = '';
     const endpoints = [
@@ -4262,6 +4262,13 @@ function formatAIMarkdown(md) {
     if (!md) return '';
     // Strip any leading horizontal rules, dashes, or decorative ASCII symbols
     let cleaned = md.replace(/^(\s*[-–—*#]{2,}\s*)+/g, '').trim();
+    // Strictly rebrand any Gemini mentions to Aknex AI
+    cleaned = cleaned
+        .replace(/Google\s+Gemini\s+2\.5\s+Flash/gi, 'Aknex AI')
+        .replace(/Gemini\s+2\.5\s+Flash/gi, 'Aknex AI')
+        .replace(/Gemini\s+2\.5/gi, 'Aknex AI')
+        .replace(/Google\s+Gemini/gi, 'Aknex AI')
+        .replace(/\bGemini\b/gi, 'Aknex AI');
 
     let html = cleaned
         .replace(/&/g, '&amp;')
@@ -4375,7 +4382,7 @@ function generateAIResponse(query) {
         return `<b>${matchedTrain.number} — ${matchedTrain.name}:</b> ${matchedTrain.type} route ${matchedTrain.route}. Frequency: ${matchedTrain.freq}. Assigned Platform: ${matchedTrain.platform}. Status: ON TIME.`;
     }
 
-    return `<b>RailFlow AI Operations Engine:</b> Context verified against active SQLite database and live Gemini 2.5 Flash. Try asking about stations (ALU, MS, TPJ, MAS, NDLS), express routes, or Kavach signalling.`;
+    return `<b>RailFlow AI Operations Engine:</b> Context verified against active SQLite database and live Aknex AI. Try asking about stations (ALU, MS, TPJ, MAS, NDLS), express routes, or Kavach signalling.`;
 }
 
 // â”€â”€â”€ 13. GLOBAL SEARCH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -5004,7 +5011,7 @@ function initConsoleTerminal() {
         { text: '[BOOT] Loading master station database... 8,926+ stations indexed', cls: 'console-success' },
         { text: '[BOOT] Loading express train schedules... 6 national trunks active', cls: 'console-success' },
         { text: '[BOOT] Southern Railway Chord Line: ALU ↔ VRI ↔ VM ↔ CGL ↔ TBM ↔ MS', cls: 'console-highlight' },
-        { text: '[BOOT] RailFlow AI Gemini 2.5 Flash copilot... ONLINE', cls: 'console-ai' },
+        { text: '[BOOT] RailFlow AI Aknex AI copilot... ONLINE', cls: 'console-ai' },
         { text: '[BOOT] Crowd telemetry daemon... running @3000ms intervals', cls: 'console-success' },
         { text: '[BOOT] All systems nominal. Type "help" for available commands.', cls: 'console-info' },
         { text: '', cls: '' },
@@ -5086,7 +5093,7 @@ async function processConsoleCommand(cmd) {
 <span class="console-info">  stations      </span> — List all indexed railway stations
 <span class="console-info">  trains        </span> — List express train services
 <span class="console-info">  route [A] [B] </span> — Find route between station codes
-<span class="console-info">  query [text]  </span> — Ask RailFlow AI (Gemini 2.5 Flash)
+<span class="console-info">  query [text]  </span> — Ask RailFlow AI (Aknex AI)
 <span class="console-info">  crowd         </span> — Live platform crowd density
 <span class="console-info">  corridors     </span> — Show national trunk corridors
 <span class="console-info">  station [code]</span> — Inspect specific station details
@@ -5107,7 +5114,7 @@ async function processConsoleCommand(cmd) {
             consoleWriteLine(`  Data Layer:      SQLite 3.50.3 WAL + JDBC`, 'console-success');
             consoleWriteLine(`  Stations:        8,926+ indexed (Southern Railway focus)`, 'console-info');
             consoleWriteLine(`  Express Trains:  ${typeof MASTER_TRAINS !== 'undefined' ? MASTER_TRAINS.length : '6+'} services`, 'console-info');
-            consoleWriteLine(`  AI Copilot:      Gemini 2.5 Flash — ONLINE`, 'console-ai');
+            consoleWriteLine(`  AI Copilot:      Aknex AI — ONLINE`, 'console-ai');
             consoleWriteLine(`  Telemetry:       3,000ms crowd simulation daemon`, 'console-success');
             consoleWriteLine(`  Uptime:          ${upMin} min`, 'console-info');
             consoleWriteLine(`  Pipeline:        ALL STAGES NOMINAL ✓`, 'console-success');
@@ -5118,22 +5125,15 @@ async function processConsoleCommand(cmd) {
             consoleWriteLine('[QUERY] Fetching station master list...', 'console-info');
             try {
                 const stnRes = await fetch('/api/stations');
-                const stnData = await stnRes.json();
-                const stations = Array.isArray(stnData) ? stnData : (stnData.stations || []);
-                const top = stations.slice(0, 30);
-                consoleWriteHTML(`<span class="console-highlight">═══ STATION REGISTRY (showing ${top.length} of ${stations.length}) ═══</span>`);
-                consoleWriteHTML(`<span class="console-sub">  CODE   │ NAME                        │ ZONE   │ DIVISION</span>`);
-                consoleWriteHTML(`<span class="console-sub">  ───────┼─────────────────────────────┼────────┼─────────</span>`);
-                top.forEach(s => {
-                    const code = (s.code || s.station_code || '').padEnd(6);
-                    const name = (s.name || s.station_name || '').substring(0, 28).padEnd(28);
-                    const zone = (s.zone || s.railway_zone || 'SR').padEnd(6);
-                    const div = (s.division || '').padEnd(10);
-                    consoleWriteLine(`  ${code} │ ${name} │ ${zone} │ ${div}`, 'console-info');
+                const stns = await stnRes.json();
+                consoleWriteLine(`[STATIONS] Total indexed: ${stns.length || 0}`, 'console-success');
+                const sample = (stns || []).slice(0, 8);
+                sample.forEach(s => {
+                    consoleWriteLine(`  ${(s.code || '').padEnd(6)} │ ${(s.name || '').padEnd(26)} │ Zone: ${s.zone || 'IR'} │ Platforms: ${s.platforms || 2}`, 'console-info');
                 });
-                if (stations.length > 30) consoleWriteLine(`  ... ${stations.length - 30} more stations. Use "station [CODE]" for details.`, 'console-sub');
+                if ((stns || []).length > 8) consoleWriteLine(`  ... and ${(stns || []).length - 8} more stations.`, 'console-info');
             } catch (e) {
-                consoleWriteLine(`[ERROR] Could not fetch stations: ${e.message}`, 'console-error');
+                consoleWriteLine(`[ERROR] Failed to load stations: ${e.message}`, 'console-error');
             }
             break;
 
@@ -5286,7 +5286,7 @@ async function processConsoleCommand(cmd) {
         case 'version':
             consoleWriteLine('  RailFlow Network Intelligence v2.0', 'console-highlight');
             consoleWriteLine('  Core: Java 17+ / SQLite JDBC / Node.js', 'console-info');
-            consoleWriteLine('  AI: Google Gemini 2.5 Flash', 'console-ai');
+            consoleWriteLine('  AI: Aknex AI Engine', 'console-ai');
             consoleWriteLine('  Frontend: Vanilla JS / CSS / SVG', 'console-info');
             consoleWriteLine('  Deployed: Vercel (aknex-railflow.vercel.app)', 'console-success');
             break;
@@ -5310,34 +5310,84 @@ async function processConsoleCommand(cmd) {
     }
 }
 
-// ─── INDIA RAIL INFO ATLAS VIEWER CONTROLLER ──────────────────────────
-function toggleAtlasMapMode() {
-    const frameContainer = document.getElementById('atlasFrameContainer');
+// ─── DASHBOARD MULTI-SOURCE ATLAS MAP CONTROLLER ──────────────────────────
+function setDashboardMapMode(mode) {
+    const orContainer = document.getElementById('dashMapOpenRailwayContainer');
+    const radarContainer = document.getElementById('dashMapRadarContainer');
     const svgContainer = document.getElementById('atlasSvgContainer');
-    const btn = document.getElementById('btnToggleAtlasMode');
-    if (!frameContainer || !svgContainer) return;
+    const btnOR = document.getElementById('btnMapOpenRailway');
+    const btnRadar = document.getElementById('btnMapRadar');
+    const btnTopology = document.getElementById('btnMapTopology');
+    const title = document.getElementById('dashMapTitle');
+    const badge = document.getElementById('dashMapBadge');
 
-    if (frameContainer.style.display === 'none') {
-        frameContainer.style.display = 'block';
-        svgContainer.style.display = 'none';
-        if (btn) btn.textContent = 'Topology SVG';
-    } else {
-        frameContainer.style.display = 'none';
-        svgContainer.style.display = 'block';
-        if (btn) btn.textContent = 'Live Atlas';
+    [btnOR, btnRadar, btnTopology].forEach(b => {
+        if (b) {
+            b.classList.remove('btn-primary');
+            b.classList.add('btn-secondary');
+        }
+    });
+
+    if (orContainer) orContainer.style.display = 'none';
+    if (radarContainer) radarContainer.style.display = 'none';
+    if (svgContainer) svgContainer.style.display = 'none';
+
+    if (mode === 'openrailway') {
+        if (orContainer) orContainer.style.display = 'block';
+        if (btnOR) {
+            btnOR.classList.add('btn-primary');
+            btnOR.classList.remove('btn-secondary');
+        }
+        if (title) title.textContent = '🇮🇳 Indian Railways Live Network Atlas';
+        if (badge) {
+            badge.textContent = 'LIVE ATLAS';
+            badge.style.background = 'var(--emerald-dim)';
+            badge.style.color = 'var(--emerald)';
+        }
+    } else if (mode === 'radar') {
+        if (radarContainer) {
+            radarContainer.style.display = 'block';
+            const frame = document.getElementById('dashRadarFrame');
+            if (frame && (frame.src === 'about:blank' || !frame.src)) {
+                frame.src = 'https://railradar.in/railradar';
+            }
+        }
+        if (btnRadar) {
+            btnRadar.classList.add('btn-primary');
+            btnRadar.classList.remove('btn-secondary');
+        }
+        if (title) title.textContent = '🛰️ Live Satellite RailRadar Stream';
+        if (badge) {
+            badge.textContent = 'GPS RADAR';
+            badge.style.background = 'var(--blue-dim)';
+            badge.style.color = 'var(--blue)';
+        }
+    } else if (mode === 'topology') {
+        if (svgContainer) svgContainer.style.display = 'block';
+        if (btnTopology) {
+            btnTopology.classList.add('btn-primary');
+            btnTopology.classList.remove('btn-secondary');
+        }
+        if (title) title.textContent = '⚡ Indian Railways Vector Topology Graph';
+        if (badge) {
+            badge.textContent = 'VECTOR SVG';
+            badge.style.background = 'var(--purple-dim)';
+            badge.style.color = 'var(--purple)';
+        }
         renderNetworkGraph('dashGraphSvg', false);
     }
 }
-window.toggleAtlasMapMode = toggleAtlasMapMode;
+window.setDashboardMapMode = setDashboardMapMode;
 
-function reloadAtlasFrame() {
-    const frame = document.getElementById('indiaRailAtlasFrame');
-    if (frame) {
-        const currentSrc = frame.src.split('?')[0];
-        frame.src = currentSrc + '?t=' + Date.now();
+function toggleAtlasMapMode() {
+    const orContainer = document.getElementById('dashMapOpenRailwayContainer');
+    if (orContainer && orContainer.style.display !== 'none') {
+        setDashboardMapMode('topology');
+    } else {
+        setDashboardMapMode('openrailway');
     }
 }
-window.reloadAtlasFrame = reloadAtlasFrame;
+window.toggleAtlasMapMode = toggleAtlasMapMode;
 
 // Record boot time for uptime tracking
 window._RAILFLOW_BOOT_TIME = window._RAILFLOW_BOOT_TIME || Date.now();

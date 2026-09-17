@@ -488,7 +488,7 @@ function handleApiRequest(pathname, searchParams, res, req) {
                     }
                     const answer = await railFlowAIEngine.askRailFlowAI(prompt);
                     res.statusCode = 200;
-                    return res.end(JSON.stringify({ answer, status: 'success', model: 'gemini-2.5-flash' }));
+                    return res.end(JSON.stringify({ answer, status: 'success', model: 'aknex-ai' }));
                 } catch (err) {
                     res.statusCode = 500;
                     return res.end(JSON.stringify({ error: err.message || 'AI Processing Error' }));
@@ -502,7 +502,7 @@ function handleApiRequest(pathname, searchParams, res, req) {
                     if (!railFlowAIEngine) railFlowAIEngine = require('./railflow_ai_engine');
                     const answer = await railFlowAIEngine.askRailFlowAI(prompt);
                     res.statusCode = 200;
-                    return res.end(JSON.stringify({ answer, status: 'success', model: 'gemini-2.5-flash' }));
+                    return res.end(JSON.stringify({ answer, status: 'success', model: 'aknex-ai' }));
                 } catch (err) {
                     res.statusCode = 500;
                     return res.end(JSON.stringify({ error: err.message || 'AI Processing Error' }));
@@ -515,14 +515,78 @@ function handleApiRequest(pathname, searchParams, res, req) {
     // India Rail Info Live Atlas HTML Fetch / Proxy
     if (pathname === '/api/atlas-proxy' || pathname === '/api/atlas-html') {
         (async () => {
+            const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
             try {
                 const atlasRes = await fetch('https://indiarailinfo.com/atlas', {
                     headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                        'User-Agent': userAgent,
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                        'Accept-Language': 'en-US,en;q=0.9'
                     }
                 });
-                const html = await atlasRes.text();
+                let html = await atlasRes.text();
+
+                if (html.includes('iri-xsig') || html.includes('Browser verification failed')) {
+                    try {
+                        const sigMatch = html.match(/id="iri-xsig"\s+data-sig="([^"]+)"/);
+                        if (sigMatch) {
+                            const xsig = sigMatch[1];
+                            const parts = xsig.split('|');
+                            const x = parts[2] || 84;
+                            const token = [0, 5, 1, 1, 8, 1, 1, 0, x, xsig, 0].join(':');
+
+                            let cookies = [];
+                            if (atlasRes.headers.getSetCookie) {
+                                cookies = atlasRes.headers.getSetCookie().map(c => c.split(';')[0]);
+                            } else if (atlasRes.headers.get('set-cookie')) {
+                                cookies = [atlasRes.headers.get('set-cookie').split(';')[0]];
+                            }
+
+                            const verifyRes = await fetch(`https://indiarailinfo.com/verify-browser?t=${encodeURIComponent(token)}`, {
+                                headers: {
+                                    'User-Agent': userAgent,
+                                    'Referer': 'https://indiarailinfo.com/atlas',
+                                    'Cookie': cookies.join('; '),
+                                    'Accept': '*/*'
+                                }
+                            });
+
+                            if (verifyRes.headers.getSetCookie) {
+                                const newCookies = verifyRes.headers.getSetCookie().map(c => c.split(';')[0]);
+                                cookies = [...cookies, ...newCookies];
+                            }
+
+                            const verifiedRes = await fetch('https://indiarailinfo.com/atlas', {
+                                headers: {
+                                    'User-Agent': userAgent,
+                                    'Referer': 'https://indiarailinfo.com/',
+                                    'Cookie': cookies.join('; '),
+                                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                                }
+                            });
+
+                            const verifiedHtml = await verifiedRes.text();
+                            if (!verifiedHtml.includes('iri-xsig') && !verifiedHtml.includes('Browser verification failed')) {
+                                html = verifiedHtml;
+                                if (!html.includes('<base')) {
+                                    html = html.replace('<head>', '<head><base href="https://indiarailinfo.com/">');
+                                }
+                                res.setHeader('Content-Type', 'text/html; charset=utf-8');
+                                res.statusCode = 200;
+                                return res.end(html);
+                            }
+                        }
+                    } catch (e) {}
+
+                    const bridgeHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}body{background:#070B12;color:#E2E8F0;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;padding:1.5rem;}.card{background:rgba(15,23,42,0.9);border:1px solid #1E293B;border-radius:12px;padding:2rem;max-width:520px;}.badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:0.75rem;font-weight:700;background:rgba(239,68,68,0.15);color:#F87171;margin-bottom:1rem;}h2{font-size:1.3rem;margin-bottom:0.75rem;color:#F1F5F9;}p{font-size:0.88rem;color:#94A3B8;line-height:1.6;margin-bottom:1.5rem;}.btn{display:inline-flex;padding:10px 18px;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;cursor:pointer;border:none;margin:4px;}.btn-p{background:#EF4444;color:#fff;}.btn-s{background:#1E293B;color:#CBD5E1;border:1px solid #334155;}</style></head><body><div class="card"><span class="badge">🌐 SESSION AUTHENTICATION REQUIRED</span><h2>India Rail Info — Live Atlas</h2><p>India Rail Info protects its live atlas using first-party browser cookies that browsers restrict inside third-party iframes.</p><div><a href="https://indiarailinfo.com/atlas" target="_blank" rel="noopener noreferrer" class="btn btn-p">Open Live Atlas in Dedicated Window ↗</a><button class="btn btn-s" onclick="if(window.parent&&window.parent.setDashboardMapMode)window.parent.setDashboardMapMode('openrailway');">View OpenRailwayMap IR Live Layer</button></div></div></body></html>`;
+                    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+                    res.statusCode = 200;
+                    return res.end(bridgeHtml);
+                }
+
+                if (!html.includes('<base')) {
+                    html = html.replace('<head>', '<head><base href="https://indiarailinfo.com/">');
+                }
                 res.setHeader('Content-Type', 'text/html; charset=utf-8');
                 res.statusCode = 200;
                 return res.end(html);
@@ -1033,7 +1097,7 @@ Knowledge & Topology Ground Truth:
                 const data = await response.json();
                 const answer = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received.";
                 res.setHeader('Content-Type', 'application/json; charset=utf-8');
-                return res.end(JSON.stringify({ answer, status: 'success', model: 'gemini-2.5-flash', ok: true }));
+                return res.end(JSON.stringify({ answer, status: 'success', model: 'aknex-ai', ok: true }));
             } catch (err) {
                 console.error('[RailFlow AI Server Error]:', err.message);
                 res.statusCode = 500;
