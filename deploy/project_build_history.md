@@ -408,7 +408,50 @@ mvn clean test
 
 ---
 
-## 14. SUMMARY TABLE OF ENGINEERING DEFECTS & FIXES
+## 14. DAY 13: DATA RESILIENCE & 4-TIER TIMETABLE FALLBACK ENGINE
+
+### Context & Problem Statement
+During production deployment to serverless/static environments (such as Vercel CDN), the application encountered timetable query failures when users requested schedules for iconic trains (e.g., `#12637` Pandian Express, `#12635` Vaigai Express). Because serverless edge environments lack a persistent native SQLite binary or local file system handle, queries to `/api/timetable/:trainNumber` returned empty datasets or HTTP 500 errors.
+
+### Architectural Solution
+1. **Catalog & Stoppage Decomposition (`scripts/export_train_datasets.py`):**
+   - Extracted 5,208 individual train sequence JSON files from the master SQLite database into `DATA/trains/<trainNumber>.json`.
+   - Exported an indexed, compact train catalog `DATA/train_catalog.json` (7,358 entries) containing train numbers, names, originating/terminating stations, types, and zones.
+2. **Four-Tier Resilient Timetable Architecture (`js/app.js`):**
+   - **Tier 1 (Live SQLite REST API):** Queries `http://localhost:3000/api/timetable/:id` if local server or backend daemon is active.
+   - **Tier 2 (Static CDN JSON Sequence):** Automatically falls back to fetching `DATA/trains/${trainNumber}.json` with zero database dependencies.
+   - **Tier 3 (In-Memory Catalog + Station Registry):** Cross-references global train catalog and station coordinates to reconstruct basic routes.
+   - **Tier 4 (Dynamic Synthetic Interpolation):** As a failsafe, interpolates scheduled halts between source and destination stations with realistic intermediate halt times.
+3. **CDN Route Optimization (`vercel.json`):**
+   - Added rewrite rules routing `/api/timetable/*` directly to static stoppage assets with aggressive browser caching headers (`public, max-age=86400`).
+
+---
+
+## 15. DAY 14: COMPLETE UI/UX VISUAL OVERHAUL — VIBRANT RAILWAY COMMAND CENTER
+
+### Transformation Objectives
+The legacy UI suffered from a flat, corporate-white aesthetic that failed to convey the operational gravity of an Indian Railways network intelligence console. A complete redesign was executed with the following core design tokens:
+
+1. **Vibrant Command Center Color Palette:**
+   - Deep Midnight Canvas: `#0B1220` (Dark Navy Base) and `#0F172A` (Surface Navy)
+   - Accent & Railway Signals: `#EF3340` / `#DC2626` (IR Crimson Red), `#22D3EE` (Electric Cyan), `#F59E0B` (Amber Alert), `#10B981` (Emerald Clear)
+   - Card Surfaces: Deep charcoal with glassmorphism borders (`rgba(255, 255, 255, 0.08)`) and inset contrast glows.
+2. **Component Upgrades:**
+   - **Top Navigation Bar:** Integrated pulsating operational telemetry badge ("LIVE PIPELINE: SYNCED") with high-contrast zone filters and search bar.
+   - **Topology Network Graph:** Completely restyled SVG canvas in `js/app.js` with glowing node boundaries, animated route pulse strokes, and high-legibility station markers.
+   - **Station Intelligence Drawer:** Slide-out drawer with gradient badges, historical milestone timeline, live platform congestion indicators, and quick route actions.
+   - **Journey Planner & Timetable Modal:** High-density stoppage tables with platform allocation chips, distance markers, and arrival/departure countdowns.
+   - **AI Dispatcher Drawer:** Integrated conversational intelligence panel with railway dispatch suggestions.
+3. **Zero-UI-Leakage & Viewport Optimization:**
+   - Enforced strict `box-sizing: border-box`, `overflow: hidden`, and no white background bleed across all viewports (1920px desktop down to 360px mobile).
+   - Validated across multiple screen dimensions via headless browser recording artifacts.
+4. **Vercel Archive-Based Production Deployment:**
+   - Overcame Vercel's 5,000 files/day limit caused by thousands of stoppage JSONs by deploying using `vercel deploy --prod --archive=tgz`.
+   - Production URL: `https://aknex-railflow.vercel.app`.
+
+---
+
+## 16. SUMMARY TABLE OF ENGINEERING DEFECTS & FIXES
 
 | # | Bug / Bottleneck Encountered | Root Cause | Engineering Solution | Verification Method |
 | :-: | :--- | :--- | :--- | :--- |
@@ -420,7 +463,10 @@ mvn clean test
 | **6** | Search for `"trichy"` returning 0 results | Official code is `TPJ` and official name is `Tiruchchirappalli` | Built `DATA/aliases.json` with 9,456 canonical aliases and pre-filter normalization | Verified searching `"trichy"` returns `TPJ` as rank #1 |
 | **7** | Missing station heritage and platform connections | Raw CSVs only had timetable text without historical metadata | Authored and ran `scripts/enrich_historical_railway_data.py` | Verified 50+ curated stations, 30+ iconic trains, and 416k stops enriched |
 | **8** | Unfilled placeholders in academic PBL draft | Generic template text (`[value]`, `[summary]`, `[remarks]`) | Generated `pbl.md` and `pblv1.md` with complete real numbers, tables, and citations | Formally verified all 8 chapters and Anna University requirements |
+| **9** | `Train query failed` for train schedules on static cloud CDN | Vercel static serverless hosting lacks persistent native SQLite engine | Generated 5,208 train stoppage JSONs and built 4-tier resilient fallback in `js/app.js` | Verified instant timetable render for trains #12635, #12637, #12951 |
+| **10** | Generic white UI causing high eye strain and lacking railway identity | Corporate admin dashboard styles with white panels and low-contrast borders | Designed and implemented Vibrant Railway Network Command Center theme | Automated browser subagent recording verified 0 white leaks across 5 pages |
+| **11** | Vercel deploy rejection (`429: Too many requests - 5,000 files/day limit`) | Deploying 5,208 individual stoppage JSON files exceeded file upload quota | Packaged build directory as compressed tarball via `vercel deploy --prod --archive=tgz` | Successfully deployed to production at `https://aknex-railflow.vercel.app` |
 
 ---
 
-*End of Project Build History & Chronicle.*
+*End of Project Build History & Engineering Chronicle.*

@@ -377,7 +377,8 @@ function renderNetworkGraph(svgId, isFullInteractive = false) {
     grid.setAttribute('fill', 'var(--text-muted)');
     grid.setAttribute('font-size', '11');
     grid.setAttribute('font-family', 'var(--font-mono)');
-    grid.setAttribute('opacity', '0.6');
+    grid.setAttribute('opacity', '0.7');
+    grid.setAttribute('fill', '#8FA1BA');
     grid.textContent = 'INDIAN RAILWAYS NATIONAL TOPOLOGY MAP • GEOGRAPHIC PROJECTION (8°N–35.5°N, 68°E–97.5°E)';
     g.appendChild(grid);
 
@@ -400,9 +401,9 @@ function renderNetworkGraph(svgId, isFullInteractive = false) {
         line.setAttribute('x2', target.x);
         line.setAttribute('y2', target.y);
         line.setAttribute('class', 'graph-edge');
-        line.setAttribute('stroke', '#94a3b8');
+        line.setAttribute('stroke', '#526783');
         line.setAttribute('stroke-width', edge.from === 'NDLS' || edge.to === 'MAS' || edge.from === 'HWH' || edge.to === 'BCT' ? '2.5' : '1.5');
-        line.setAttribute('stroke-opacity', '0.7');
+        line.setAttribute('stroke-opacity', '0.75');
 
         const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
         title.textContent = `${edge.name} (${edge.from} ↔ ${edge.to}) • ${edge.dist} km`;
@@ -411,12 +412,12 @@ function renderNetworkGraph(svgId, isFullInteractive = false) {
         g.appendChild(line);
     });
 
-    // Node color mapping (Vibrant Light Mode palette)
+    // Node color mapping (Vibrant Command Center palette)
     const colorMap = {
-        trunk: '#dc2626',      // Crimson
-        junction: '#2563eb',   // Electric Blue
-        southern: '#059669',   // Systems Emerald
-        suburban: '#ea580c'    // Signal Orange
+        trunk: '#EF3340',      // Railway Red
+        junction: '#3B82F6',   // Electric Blue
+        southern: '#10B981',   // Systems Emerald
+        suburban: '#22D3EE'    // Cyan Network
     };
 
     // Render Nodes
@@ -429,18 +430,18 @@ function renderNetworkGraph(svgId, isFullInteractive = false) {
         // Outer circle with high-contrast ring
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('r', hub.tier === 'trunk' ? '13' : '9');
-        circle.setAttribute('fill', colorMap[hub.tier] || '#2563eb');
-        circle.setAttribute('stroke', '#ffffff');
+        circle.setAttribute('fill', colorMap[hub.tier] || '#3B82F6');
+        circle.setAttribute('stroke', '#0B1220');
         circle.setAttribute('stroke-width', '2.5');
 
-        // Node Label
+        // Node Label - Crisp High Contrast
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('class', 'graph-node-text');
         text.setAttribute('y', hub.tier === 'trunk' ? '-16' : '-12');
         text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('font-size', '10');
+        text.setAttribute('font-size', '11');
         text.setAttribute('font-weight', '700');
-        text.setAttribute('fill', '#1e293b');
+        text.setAttribute('fill', '#F3F7FF');
         text.textContent = hub.code;
 
         // Tooltip

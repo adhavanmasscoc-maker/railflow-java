@@ -73,7 +73,7 @@ RailFlow provides an automated, deterministic crowd monitoring and platform real
                   ┌────────────────────┴────────────────────┐
                   │                                         │
            19-VIEW WEB SPA                             CLI CONSOLE
-     (High-Contrast Slate Theme)                  (RailFlowConsole.java)
+    (Vibrant Command Center Theme)                (RailFlowConsole.java)
                   │                                         │
                   └────────────────────┬────────────────────┘
                                        │ HTTP REST / CLI Commands

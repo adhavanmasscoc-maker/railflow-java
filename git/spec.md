@@ -950,27 +950,30 @@ The Core Java console application ([RailFlowConsole.java](file:///d:/CS-ML-JAVA/
 👉 Enter your choice (1-10): 
 ```
 
-### 7.7 User Interface Views (19 SPA Screens & Architecture)
-The primary deployment interface ([frontend/index.html](file:///d:/CS-ML-JAVA/JAVA/RailwaySystem/frontend/index.html)) provides 19 rich, dark glassmorphic views:
-1. **Live Operations Dashboard (`dashboard`)**: Real-time crowd gauge, total capacity, occupancy charts.
-2. **Operations Center (`operations`)**: Tactical station schematic with live platform gate indicators.
-3. **Train Explorer (`trains`)**: Searchable tabular directory of 6,675+ trains.
-4. **Station Network (`stations`)**: National station directory indexing 8,926+ station codes.
-5. **Platform Control (`platforms`)**: Per-platform crowd sliders and gate toggles.
-6. **Crowd Monitoring (`crowd`)**: Dynamic passenger footfall charts with live ingress/egress.
-7. **Platform Optimizer (`optimization`)**: Algorithmic recommendation cards with one-click apply triggers.
-8. **Active Alerts (`alerts`)**: Priority-ranked list of critical overcrowding warnings.
-9. **CSV Data Explorer (`data`)**: Paginated data grid exploring 13,849 official CSV records.
-10. **Data Quality & Health (`quality`)**: Statistical validation metrics showing 99.8% record hygiene.
-11. **Railway Network Map (`network`)**: Sub-view switcher toggling between the **Interactive Topology Graph** (SVG station nodes) and **Live Satellite RailRadar** (GPS iframe).
-12. **Live PNR Status (`pnr`)**: 10-digit PNR tracker with local SQLite cache.
-13. **Live Running Status (`trainsearch`)**: Real-time train delay tracker and upcoming arrival estimates.
-14. **Journey Planner (`trainbetween`)**: Station-to-station train schedule finder.
-15. **Station Finder (`stationfinder`)**: Station code and division lookup utility.
-16. **Operational Timeline (`activity`)**: Chronological audit trail of crowd updates and executed actions.
-17. **Core Java Architecture (`architecture`)**: Interactive visual explorer detailing all 23 implemented Core Java concepts.
-18. **System Health & Logs (`status`)**: Telemetry monitor displaying JVM memory, active threads, and API latency.
-19. **User Reviews & Feedback (`feedback`)**: Persistent feedback submission form backed by SQLite storage.
+### 7.7 User Interface Views (19 SPA Screens & Command Center Architecture)
+The primary deployment interface ([frontend/index.html](file:///d:/CS-ML-JAVA/JAVA/RailwaySystem/frontend/index.html)) features a high-density, mission-critical **Vibrant Railway Network Command Center** design:
+- **Design System Tokens**: Deep Midnight Navy base (`#0B1220`, `#0F172A`), Indian Railways Crimson Red accents (`#EF3340`), Electric Cyan telemetry highlights (`#22D3EE`), and high-legibility typographic tokens.
+- **Data Resilience Engine**: Integrated 4-tier timetable fallback engine (Local SQLite API $\rightarrow$ Static CDN Stoppage JSON $\rightarrow$ In-Memory Train Catalog $\rightarrow$ Synthetic Route Interpolator) resolving schedules across 5,208+ trains with zero downtime.
+- **19 Operational Views**:
+  1. **Live Operations Dashboard (`dashboard`)**: Real-time crowd gauge, total capacity, occupancy charts with pulsating live pipeline indicator.
+  2. **Operations Center (`operations`)**: Tactical station schematic with live platform gate indicators.
+  3. **Train Explorer (`trains`)**: Searchable tabular directory of 6,675+ trains with direct timetable modal triggers.
+  4. **Station Network (`stations`)**: National station directory indexing 8,926+ station codes.
+  5. **Platform Control (`platforms`)**: Per-platform crowd sliders and gate toggles.
+  6. **Crowd Monitoring (`crowd`)**: Dynamic passenger footfall charts with live ingress/egress.
+  7. **Platform Optimizer (`optimization`)**: Algorithmic recommendation cards with one-click apply triggers.
+  8. **Active Alerts (`alerts`)**: Priority-ranked list of critical overcrowding warnings.
+  9. **CSV Data Explorer (`data`)**: Paginated data grid exploring 13,849 official CSV records.
+  10. **Data Quality & Health (`quality`)**: Statistical validation metrics showing 99.8% record hygiene.
+  11. **Railway Network Map (`network`)**: Sub-view switcher toggling between the **Interactive Topology Graph** (animated glowing SVG station nodes) and **Live Satellite RailRadar** (GPS iframe).
+  12. **Live PNR Status (`pnr`)**: 10-digit PNR tracker with local SQLite cache.
+  13. **Live Running Status (`trainsearch`)**: Real-time train delay tracker and upcoming arrival estimates.
+  14. **Journey Planner (`trainbetween`)**: Station-to-station train schedule finder with multi-class filtering.
+  15. **Station Finder (`stationfinder`)**: Station code and division lookup utility with colloquial alias resolution.
+  16. **Operational Timeline (`activity`)**: Chronological audit trail of crowd updates and executed actions.
+  17. **Core Java Architecture (`architecture`)**: Interactive visual explorer detailing all 23 implemented Core Java concepts.
+  18. **System Health & Logs (`status`)**: Telemetry monitor displaying JVM memory, active threads, and API latency.
+  19. **User Reviews & Feedback (`feedback`)**: Persistent feedback submission form backed by SQLite storage.
 
 - **Telemetry & Analytics Integration**: Embedded directly in the document `<head>`:
   ```html
