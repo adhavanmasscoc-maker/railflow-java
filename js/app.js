@@ -876,70 +876,74 @@ function initNavigation() {
 
 let lastNavSwitchTime = 0;
 
+// ─── FAST PAGE SWITCHER — O(1) direct element access, no querySelectorAll ───
+// Build lookup maps once on first call (lazy-init, never re-queried)
+let _pageViewMap = null;   // pageId -> .page-view element
+let _navItemMap  = null;   // pageId -> .nav-item element
+let _switchLock  = false;  // debounce guard — ignore rapid repeat clicks
+let _prevPageId  = null;   // track previous page for minimal DOM change
+
+function _buildNavMaps() {
+    _pageViewMap = new Map();
+    _navItemMap  = new Map();
+    document.querySelectorAll('.page-view').forEach(el => {
+        const id = el.id.replace(/^page-/, '');
+        _pageViewMap.set(id, el);
+    });
+    document.querySelectorAll('.nav-item[data-page]').forEach(el => {
+        _navItemMap.set(el.dataset.page, el);
+    });
+}
+
 function switchPage(pageId, pushUrl) {
     if (!pageId) return;
 
-    const targetView = document.getElementById(`page-${pageId}`);
-    if (!targetView) return;
-
-    // Avoid redundant work if already on active page and target view is active
-    if (STATE.activePage === pageId && targetView.classList.contains('active')) {
-        return;
+    // Debounce: ignore if same page or locked by a rapid previous click
+    if (_switchLock || pageId === _prevPageId) {
+        if (pageId === _prevPageId) return; // same page, truly skip
+        return; // locked, drop extra clicks
     }
 
+    // Lazy-build the maps on first navigation
+    if (!_pageViewMap) _buildNavMaps();
+
+    const targetView = _pageViewMap.get(pageId);
+    if (!targetView) return;
+
+    // Set debounce lock — release after one frame (prevents queuing lag)
+    _switchLock = true;
+    requestAnimationFrame(() => { _switchLock = false; });
+
+    // ── 1. Hide ONLY the previously active page (not all 12) ──
+    if (_prevPageId && _prevPageId !== pageId) {
+        const prevView = _pageViewMap.get(_prevPageId);
+        if (prevView) prevView.classList.remove('active');
+        const prevNav = _navItemMap.get(_prevPageId);
+        if (prevNav) prevNav.classList.remove('active');
+    }
+
+    // ── 2. Show new page ──
+    targetView.classList.add('active');
+    const newNav = _navItemMap.get(pageId);
+    if (newNav) newNav.classList.add('active');
+
+    _prevPageId = pageId;
     STATE.activePage = pageId;
 
-    // 1. Update browser URL safely with try...catch
+    // ── 3. Update browser URL ──
     if (pushUrl !== false) {
         try {
             const route = PAGE_ROUTES[pageId] || '/dashboard';
-            const currentPath = window.location.pathname.replace(/\/+$/, '') || '/dashboard';
-            if (currentPath !== route) {
+            if (window.location.pathname.replace(/\/+$/, '') !== route) {
                 window.history.pushState({ page: pageId }, '', route);
             }
-        } catch (e) {
-            // Silently handle any pushState domain/origin or rate-limit exceptions
-        }
+        } catch (e) {}
     }
 
-    // 2. Guaranteed atomic, synchronous class switching (never leaves multiple views active)
-    document.querySelectorAll('.nav-item').forEach(el => {
-        if (el.dataset.page === pageId) {
-            el.classList.add('active');
-        } else {
-            el.classList.remove('active');
-        }
-    });
-
-    document.querySelectorAll('.page-view').forEach(el => {
-        if (el === targetView) {
-            el.classList.add('active');
-        } else {
-            el.classList.remove('active');
-        }
-    });
-
-    // 3. Sub-actions wrapped safely so an error in one never freezes navigation
-    try {
-        if (pageId === 'network') {
-            switchNetworkView('radar');
-        } else if (pageId === 'dashboard') {
-            const svgEl = $('dashGraphSvg');
-            if (svgEl && (!targetView.dataset.graphRendered || svgEl.children.length === 0)) {
-                renderNetworkGraph('dashGraphSvg', false);
-                targetView.dataset.graphRendered = 'true';
-            }
-        } else if (pageId === 'console') {
-            initConsoleTerminal();
-        }
-    } catch (subErr) {
-        console.warn('[Navigation] Non-fatal sub-action notice:', subErr.message);
-    }
-
-    // 4. Synchronize Dual-View Mode Switcher buttons
+    // ── 4. Dual-View mode switcher sync ──
     try {
         const btnController = $('btnModeController');
-        const btnCommuter = $('btnModeCommuter');
+        const btnCommuter   = $('btnModeCommuter');
         if (btnController && btnCommuter) {
             if (pageId === 'commuter') {
                 btnCommuter.classList.add('active');
@@ -953,17 +957,34 @@ function switchPage(pageId, pushUrl) {
         }
     } catch (e) {}
 
-    // 5. Scroll viewport to top
+    // ── 5. Scroll viewport to top ──
     const viewport = $('mainViewport');
     if (viewport) viewport.scrollTop = 0;
 
-    // 6. Update Machina HUD Telemetry
-    try {
+    // ── 6. Lazy page sub-actions (deferred to next frame to keep nav instant) ──
+    requestAnimationFrame(() => {
+        try {
+            if (pageId === 'network') {
+                switchNetworkView('radar');
+            } else if (pageId === 'dashboard') {
+                const svgEl = $('dashGraphSvg');
+                if (svgEl && (!targetView.dataset.graphRendered || svgEl.children.length === 0)) {
+                    renderNetworkGraph('dashGraphSvg', false);
+                    targetView.dataset.graphRendered = 'true';
+                }
+            } else if (pageId === 'console') {
+                initConsoleTerminal();
+            }
+        } catch (subErr) {
+            console.warn('[Navigation] Non-fatal sub-action:', subErr.message);
+        }
         updateHudTelemetry(pageId);
-    } catch (e) {}
+    });
 }
 window.switchPage = switchPage;
 window.navigateTo = switchPage;
+
+
 
 // ─── MACHINA HUD TELEMETRY & NAVIGATION ─────────────────────────────
 const HUD_PAGES = [
