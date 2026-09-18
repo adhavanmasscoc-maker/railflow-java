@@ -800,10 +800,15 @@ function initFobInterlockAndCompass() {
     const btnSpeak = $('btnSpeakCompass');
     if (btnSpeak) btnSpeak.addEventListener('click', function() {
         if (!lastGuidance) return;
+        if (STATE.audioMuted) {
+            Toast.info('Audio Muted', 'Unmute audio to hear coach guidance.', 2000);
+            return;
+        }
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             const utt = new SpeechSynthesisUtterance(lastGuidance);
             utt.rate = 0.92;
+            utt.volume = STATE.audioVolume;
             window.speechSynthesis.speak(utt);
         }
     });
@@ -1002,8 +1007,28 @@ function initMachinaHud() {
         const ms = String(Math.floor(now.getMilliseconds())).padStart(3, '0');
         el.innerHTML = `${h}:${m}:${s}<span class="ms">.${ms}</span>`;
     }
+    // Use rAF loop instead of setInterval for smooth, battery-friendly millisecond clock
+    let _hudClockRaf = null;
+    let _hudLastSec = -1;
+    function _hudClockLoop() {
+        const el = $('live-clock');
+        if (el && !document.hidden) {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            const ms = String(Math.floor(now.getMilliseconds() / 10)).padStart(2, '0');
+            // Only update innerHTML when second changes (100ms resolution, not 47ms)
+            const secKey = h + m + s;
+            if (secKey !== _hudLastSec || now.getMilliseconds() < 20) {
+                _hudLastSec = secKey;
+                el.innerHTML = `${h}:${m}:${s}<span class="ms">.${ms}</span>`;
+            }
+        }
+        _hudClockRaf = requestAnimationFrame(_hudClockLoop);
+    }
     updateHudLiveClock();
-    setInterval(updateHudLiveClock, 47);
+    _hudClockRaf = requestAnimationFrame(_hudClockLoop);
 
     // 2. HUD arrow navigation with rapid-click debounce
     let lastArrowClick = 0;
@@ -1431,7 +1456,7 @@ function initDashboardLiveDeckLoop() {
     renderPlatformSafetyDeck();
     renderDispatchLiveFeed();
 
-    // Clock ticker and periodic live deck refresh
+    // Clock ticker and periodic live deck refresh — only when tab is visible & page is active
     setInterval(() => {
         const clockEl = $('pipelineClock');
         if (clockEl) {
@@ -1442,10 +1467,14 @@ function initDashboardLiveDeckLoop() {
     }, 1000);
 
     setInterval(() => {
+        // Skip expensive re-renders if tab is hidden or user is on a different page
+        if (document.hidden) return;
+        const dashPage = document.getElementById('page-dashboard');
+        if (!dashPage || !dashPage.classList.contains('active')) return;
         renderDashboardFleetDeck();
         renderPlatformSafetyDeck();
         renderDispatchLiveFeed();
-    }, 3000);
+    }, 5000);
 }
 
 function applyGraphTransform(svgId) {
@@ -2382,12 +2411,14 @@ function startTelemetryScheduler() {
 function tickTelemetrySimulation() {
     STATE.telemetryTick++;
 
+    // Skip expensive DOM updates when tab is not visible
+    if (document.hidden) return;
+
     const badge = $('crowdTickBadge');
     if (badge) badge.textContent = `Tick #${STATE.telemetryTick}`;
 
     const lastUpdated = $('crowdLastUpdated');
     if (lastUpdated) lastUpdated.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
-
     // Randomize platform densities slightly to simulate realistic passenger flux
     let totalCrowd = 0;
     let totalCap = 0;
@@ -2492,18 +2523,22 @@ function renderPlatformBars(stationCode) {
 }
 
 function playTelemetryBeep() {
+    // Respect global mute state
+    if (STATE.audioMuted) return;
     try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+        RAIL_AUDIO.initCtx();
+        if (!RAIL_AUDIO.ctx) return;
+        const t = RAIL_AUDIO.ctx.currentTime;
+        const osc = RAIL_AUDIO.ctx.createOscillator();
+        const gain = RAIL_AUDIO.ctx.createGain();
         osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        gain.connect(RAIL_AUDIO.ctx.destination);
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.15);
+        osc.frequency.setValueAtTime(880, t);
+        gain.gain.setValueAtTime(Math.min(0.04, STATE.audioVolume * 0.05), t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+        osc.start(t);
+        osc.stop(t + 0.15);
     } catch (e) {}
 }
 

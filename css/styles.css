@@ -106,8 +106,9 @@
 }
 
 html {
-    zoom: 0.9;
+    /* removed zoom:0.9 — it breaks mobile viewport calculations */
 }
+
 
 html, body {
     height: 100%;
@@ -4524,3 +4525,743 @@ body {
 .main-viewport {
     padding-bottom: 42px;
 }
+
+/* ═════════════════════════════════════════════════════════════════════════
+   JOURNEY PLANNER METRICS STRIP & CORRIDOR ENHANCEMENTS
+   ═════════════════════════════════════════════════════════════════════════ */
+.journey-metrics-strip {
+    display: flex;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 0.6rem;
+}
+.j-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+}
+.j-pill:hover {
+    border-color: var(--rail-red);
+    transform: translateY(-1px);
+}
+.j-pill.j-dist { border-color: rgba(59, 130, 246, 0.4); background: rgba(59, 130, 246, 0.1); color: #93C5FD; }
+.j-pill.j-time { border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.1); color: #FCD34D; }
+.j-pill.j-stops { border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.1); color: #6EE7B7; }
+.j-pill.j-direct { border-color: rgba(139, 92, 246, 0.4); background: rgba(139, 92, 246, 0.1); color: #C4B5FD; }
+.journey-stn {
+    color: #F8FAFC;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+.journey-arrow {
+    color: var(--rail-red);
+    font-weight: 900;
+    margin: 0 0.2rem;
+    display: inline-block;
+    animation: pulse-arrow 1.8s ease-in-out infinite;
+}
+@keyframes pulse-arrow {
+    0%, 100% { transform: translateX(0); opacity: 0.8; }
+    50% { transform: translateX(3px); opacity: 1; filter: drop-shadow(0 0 6px var(--rail-red)); }
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   STATION NETWORK HIERARCHY TREE — HIGH VISIBILITY CYBER STYLING
+   ═════════════════════════════════════════════════════════════════════════ */
+.tree-container {
+    background: #080D18;
+    border: 1px solid #1E293B;
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.tree-apex-card {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(15, 23, 42, 0.85));
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.tree-apex-card:hover {
+    border-color: var(--rail-red);
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.2);
+}
+.tree-zone-card {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid #1E293B;
+    border-radius: 8px;
+    margin-bottom: 0.6rem;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+.tree-zone-card:hover {
+    border-color: rgba(59, 130, 246, 0.4);
+}
+.tree-zone-header {
+    padding: 0.65rem 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    background: rgba(30, 41, 59, 0.4);
+    transition: background 0.2s ease;
+}
+.tree-zone-header:hover {
+    background: rgba(30, 41, 59, 0.8);
+}
+.tree-zone-header .zone-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #F1F5F9;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.tree-zone-header .zone-caret {
+    font-size: 0.75rem;
+    color: #64748B;
+    transition: transform 0.2s ease;
+}
+.tree-zone-card.collapsed .zone-caret {
+    transform: rotate(-90deg);
+}
+.tree-zone-card.collapsed .tree-zone-body {
+    display: none;
+}
+.tree-zone-body {
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    border-top: 1px solid #1E293B;
+}
+.tree-station-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.45rem 0.7rem;
+    background: rgba(10, 15, 26, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    transition: all 0.15s ease;
+}
+.tree-station-card:hover {
+    background: rgba(30, 58, 138, 0.15);
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: translateX(3px);
+}
+.tree-stn-code {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--rail-red);
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+.tree-stn-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #E2E8F0;
+}
+.tree-pf-chip {
+    font-size: 0.70rem;
+    font-weight: 600;
+    color: #34D399;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   SYSTEM 09 — INTERACTIVE TRAIN ARCHITECTURE PIPELINE
+   ═════════════════════════════════════════════════════════════════════════ */
+.arch-pipeline-wrap {
+    position: relative;
+    padding: 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+.pipeline-track-container {
+    position: relative;
+    padding-left: 56px;
+}
+/* Vertical Railroad Track */
+.pipeline-rail-track {
+    position: absolute;
+    top: 20px;
+    bottom: 20px;
+    left: 24px;
+    width: 14px;
+    border-left: 3px solid #475569;
+    border-right: 3px solid #475569;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 10px,
+        #334155 10px,
+        #334155 14px
+    );
+    z-index: 1;
+}
+.pipeline-rail-track.active-track {
+    border-color: #06B6D4;
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+}
+/* Animated Train Locomotive */
+.pipeline-train-loco {
+    position: absolute;
+    left: 11px;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #EF4444, #B91C1C);
+    border: 2px solid #FCA5A5;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    z-index: 10;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.7);
+    transition: top 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.pipeline-train-loco::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 14px;
+    width: 8px;
+    height: 8px;
+    background: #FEF08A;
+    border-radius: 50%;
+    box-shadow: 0 0 12px 4px #FDE047;
+}
+/* Architectural Stages */
+.pipeline-stage {
+    position: relative;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid #1E293B;
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+.pipeline-stage:hover {
+    border-color: #38BDF8;
+    transform: translateX(4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+.pipeline-stage.stage-active {
+    border-color: #F59E0B;
+    background: rgba(30, 41, 59, 0.95);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
+}
+.pipeline-stage.stage-completed {
+    border-color: #10B981;
+    background: rgba(15, 23, 42, 0.92);
+}
+.pipeline-stage.stage-completed .stage-signal {
+    background: #10B981;
+    box-shadow: 0 0 10px #10B981;
+}
+.stage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.stage-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #F8FAFC;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.stage-signal {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #EF4444;
+    box-shadow: 0 0 6px #EF4444;
+    transition: all 0.3s ease;
+}
+.stage-desc {
+    font-size: 0.82rem;
+    color: #94A3B8;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+}
+.stage-tech-tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.stage-pill {
+    font-family: var(--font-mono);
+    font-size: 0.70rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #CBD5E1;
+}
+.stage-metric-badge {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #34D399;
+}
+.pipeline-status-card {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.7));
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   RAILFLOW PERFORMANCE & MOBILE OVERHAUL v3.0
+   GPU Compositing · Hidden-Page Savings · Responsive Header ·
+   Mobile Bottom Nav · Touch-Friendly Targets · Reduced Motion
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ─── GPU Layer Promotion for Animated Elements ──────────────────────── */
+.sidebar,
+.station-drawer,
+.ai-drawer,
+.search-results-dropdown,
+.top-header,
+.toast-container {
+    will-change: transform;
+}
+
+.pulse-dot,
+.pulse-ring,
+.hud-frame .ck {
+    will-change: opacity, transform;
+}
+
+/* Contain layout/paint within cards to prevent full-page relayout */
+.metric-card,
+.panel-card,
+.fleet-row,
+.platform-bar-bg,
+.alert-carousel-card {
+    contain: layout paint;
+}
+
+/* ─── Hidden Page Rendering Savings ─────────────────────────────────── */
+/* Pages that are not active don't need to be painted */
+.page-view:not(.active) {
+    content-visibility: hidden;
+    display: none;
+}
+
+/* ─── Reduce Expensive Backdrop Blur on Lower-End Devices ────────────── */
+@media (max-width: 768px) {
+    .top-header {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: #0F172A;
+    }
+    .hud-bar-top {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(11, 18, 32, 0.98);
+    }
+    /* Disable HUD corner ticks on mobile (saves animation overhead) */
+    .hud-frame .ck {
+        display: none;
+    }
+}
+
+/* ─── Mobile Header: Collapse Correctly ─────────────────────────────── */
+@media (max-width: 768px) {
+    .top-header {
+        height: 56px;
+        padding: 0 0.75rem;
+        gap: 0.5rem;
+        flex-wrap: nowrap;
+        overflow: hidden;
+    }
+
+    /* Search takes remaining space */
+    .search-container {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: unset;
+    }
+
+    .search-input-wrapper {
+        padding: 0.38rem 0.65rem;
+    }
+
+    .search-input {
+        font-size: 0.8rem;
+    }
+
+    .search-input::placeholder {
+        font-size: 0.76rem;
+    }
+
+    /* Hide non-critical header items on mobile */
+    .pipeline-ticker,
+    .btn-guide,
+    .btn-pnr-status,
+    .sound-slider-wrapper {
+        display: none !important;
+    }
+
+    /* Shrink view mode toggle text */
+    .view-mode-toggle .mode-text {
+        display: none;
+    }
+
+    .view-mode-btn {
+        padding: 0.35rem 0.55rem;
+        font-size: 0.72rem;
+        min-height: 32px;
+    }
+
+    .audio-control-dock {
+        gap: 0;
+    }
+
+    .btn-sound-mute {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        font-size: 0.95rem;
+    }
+
+    /* Compact AI button */
+    .btn-ai-toggle {
+        padding: 0.35rem 0.55rem !important;
+        font-size: 0.72rem !important;
+        height: auto !important;
+    }
+
+    .btn-ai-toggle .badge-ai-pulse {
+        display: none;
+    }
+
+    /* Hamburger visible */
+    .hamburger-btn {
+        flex-shrink: 0;
+    }
+}
+
+/* ─── Mobile Viewport: Main Content ─────────────────────────────────── */
+@media (max-width: 768px) {
+    body {
+        overflow: hidden;
+    }
+
+    /* Ensure content doesn't overflow horizontally */
+    .main-viewport {
+        padding: 0.85rem 0.85rem 5rem; /* bottom for mobile nav */
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Page gaps */
+    .page-view {
+        gap: 1rem;
+    }
+
+    /* View headers stack better */
+    .view-header {
+        gap: 0.65rem;
+    }
+
+    .view-title {
+        font-size: 1.25rem !important;
+    }
+
+    /* All grid panels become single column */
+    .metrics-grid,
+    .db-explorer-grid,
+    [class*="grid-cols"],
+    .bottom-deck-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Tables: horizontal scroll */
+    .table-responsive-wrapper,
+    .sql-mini-table,
+    .data-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Prevent table cells from forcing wide layout */
+    table {
+        min-width: 480px;
+    }
+
+    /* Override any fixed widths */
+    .panel-card,
+    .metric-card,
+    .card {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    /* Corridor preset chips: scroll horizontally */
+    .corridor-preset-bar {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0.5rem;
+    }
+
+    /* Drawers: full screen on mobile */
+    .station-drawer,
+    .ai-drawer {
+        width: 100vw !important;
+        max-width: 100vw !important;
+    }
+
+    /* Planner form */
+    .planner-form {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Alert carousel */
+    .alert-carousel-container {
+        margin: 0 -0.1rem;
+    }
+
+    /* Fleet rows: compact */
+    .fleet-row {
+        grid-template-columns: 1.5fr 1fr 0.8fr !important;
+        font-size: 0.7rem !important;
+    }
+
+    /* HUD bar: smaller on mobile */
+    .hud-bar-top {
+        height: 30px;
+        font-size: 0.62rem;
+        padding: 0 0.75rem;
+    }
+
+    /* Bottom nav padding to prevent content behind hud bar */
+    .main-viewport {
+        padding-bottom: calc(30px + 4rem);
+    }
+}
+
+/* ─── Touch Targets: 44px minimum ───────────────────────────────────── */
+@media (max-width: 768px) {
+    .btn,
+    .nav-item,
+    .view-mode-btn,
+    .btn-corridor-chip,
+    .swap-btn,
+    input[type="range"],
+    select {
+        min-height: 44px;
+    }
+
+    /* But compact badges don't need full touch target */
+    .badge {
+        min-height: unset;
+    }
+
+    /* Table cells: enough spacing */
+    .data-table-wrap td,
+    .data-table-wrap th {
+        padding: 0.5rem 0.65rem !important;
+    }
+
+    /* Inputs bigger */
+    input[type="text"],
+    input[type="search"],
+    input[type="number"],
+    select,
+    textarea {
+        font-size: 16px !important; /* prevents iOS zoom-in on focus */
+        min-height: 44px;
+    }
+}
+
+/* ─── Mobile Bottom Navigation (for key pages) ───────────────────────── */
+@media (max-width: 768px) {
+    /* Floating bottom nav bar */
+    .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 30px; /* above hud bar */
+        left: 0;
+        right: 0;
+        height: 52px;
+        background: rgba(11, 18, 32, 0.97);
+        border-top: 1px solid #263752;
+        z-index: 9000;
+        align-items: center;
+        justify-content: space-around;
+        padding: 0 0.5rem;
+        backdrop-filter: none;
+    }
+
+    .mobile-bottom-nav .mnav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+        font-size: 0.55rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 0.35rem 0.65rem;
+        border-radius: 8px;
+        transition: color 120ms ease;
+        min-width: 48px;
+        min-height: 44px;
+        justify-content: center;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        font-family: var(--font-sans);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 600;
+    }
+
+    .mobile-bottom-nav .mnav-item .mnav-icon {
+        font-size: 1.15rem;
+        line-height: 1;
+    }
+
+    .mobile-bottom-nav .mnav-item.active,
+    .mobile-bottom-nav .mnav-item:hover {
+        color: var(--cyan);
+    }
+}
+
+/* Desktop: hide bottom nav */
+@media (min-width: 769px) {
+    .mobile-bottom-nav { display: none; }
+}
+
+/* ─── Extra-Small Phones (≤ 400px) ──────────────────────────────────── */
+@media (max-width: 400px) {
+    .main-viewport {
+        padding: 0.65rem 0.65rem calc(30px + 4rem);
+    }
+
+    .view-mode-toggle {
+        display: none; /* too narrow — accessible via sidebar */
+    }
+
+    .top-header {
+        gap: 0.35rem;
+    }
+
+    /* Only show hamburger + search + AI btn */
+    .audio-control-dock {
+        display: none;
+    }
+
+    .search-input::placeholder {
+        font-size: 0.7rem;
+    }
+}
+
+/* ─── Smooth Scroll & Scroll Snap Helpers ────────────────────────────── */
+.main-viewport {
+    scroll-behavior: smooth;
+}
+
+/* ─── Reduce animation cost on low-power devices ─────────────────────── */
+@media (prefers-reduced-motion: reduce), (update: slow) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ─── Fix sidebar nav overflow (text was being clipped) ─────────────── */
+.sidebar-nav {
+    overflow-y: auto;
+}
+
+/* ─── SVG Network Graph: Mobile constraints ──────────────────────────── */
+@media (max-width: 768px) {
+    .network-graph-container svg,
+    .network-svg-wrap svg {
+        max-height: 55vh;
+        width: 100% !important;
+    }
+}
+
+/* ─── Prevent text overflow in table cells ───────────────────────────── */
+.data-table-wrap td {
+    word-break: break-word;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ─── Metric Cards: Better mobile layout ─────────────────────────────── */
+@media (max-width: 768px) {
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.65rem !important;
+    }
+
+    .metric-card {
+        padding: 0.75rem !important;
+    }
+
+    .metric-value {
+        font-size: 1.4rem !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .metrics-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+

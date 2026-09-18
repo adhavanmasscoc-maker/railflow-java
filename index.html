@@ -743,13 +743,14 @@
                         <div>
                             <span class="badge badge-derived" id="resCorridorBadge">Real Railway Route</span>
                             <h2 style="font-size:1.35rem; font-weight:700; color:var(--text-primary); margin-top:0.4rem;" id="resJourneyTitle">
-                                New Delhi (NDLS) &rarr; Chennai Central (MAS)
+                                NEW DELHI (NDLS) &rarr; CHENNAI CENTRAL (MAS)
                             </h2>
                             <p style="font-size:0.85rem; color:var(--text-muted);" id="resJourneySummary">
                                 Calculating optimal schedule...
                             </p>
+                            <div class="journey-metrics-strip" id="journeyMetricsStrip" style="margin-top:0.75rem;"></div>
                         </div>
-                        <div style="display:flex; gap:0.5rem;">
+                        <div style="display:flex; gap:0.5rem; align-items:flex-start;">
                             <span class="badge badge-real" id="resTrainCountBadge">Searching Routes...</span>
                         </div>
                     </div>
@@ -924,9 +925,13 @@
                 <div style="display:grid; grid-template-columns: 1fr 2fr; gap:1.5rem;">
                     <!-- Interactive Tree -->
                     <div class="tree-container">
-                        <h3 style="font-size:0.92rem; font-weight:700; color:var(--text-primary); margin-bottom:0.5rem;">
-                            Railway Operational Hierarchy
-                        </h3>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                            <h3 style="font-size:0.92rem; font-weight:700; color:var(--text-primary); margin:0;">
+                                Railway Operational Hierarchy
+                            </h3>
+                            <span class="badge badge-real" style="font-size:0.65rem;">LIVE ZONES</span>
+                        </div>
+                        <input type="text" id="stationTreeFilter" placeholder="Search zone, hub, or station code..." style="width:100%; padding:0.4rem 0.75rem; font-size:0.78rem; border:1px solid var(--border-strong); border-radius:var(--radius-sm); outline:none; background:var(--bg-subtle); color:var(--text-primary); margin-bottom:0.75rem; box-sizing:border-box;">
                         <div id="stationHierarchyTree"></div>
                     </div>
 
@@ -1420,11 +1425,193 @@
                 </div>
 
                 <div class="panel">
-                    <div class="panel-header">
+                    <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
                         <span class="panel-title">End-to-End Enterprise Architectural Topology</span>
+                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                            <button class="btn btn-primary" id="btnRunArchPipeline" onclick="runPipelineTrainSimulation()" style="font-size:0.78rem; padding:0.35rem 0.85rem;">
+                                <span class="btn-icon">🚂</span> Run Pipeline Train
+                            </button>
+                            <button class="btn btn-secondary" id="btnResetArchPipeline" onclick="resetPipelineTrainSimulation()" style="font-size:0.78rem; padding:0.35rem 0.75rem;">
+                                <span class="btn-icon">🔄</span> Reset
+                            </button>
+                            <button class="btn btn-secondary" id="btnToggleAsciiBlueprint" onclick="toggleArchBlueprintView()" style="font-size:0.78rem; padding:0.35rem 0.75rem;">
+                                <span class="btn-icon">📐</span> Blueprint ASCII
+                            </button>
+                        </div>
                     </div>
                     <div class="panel-body">
-                        <pre style="font-family:var(--font-mono); font-size:0.80rem; line-height:1.6; background:var(--bg-subtle); padding:1.25rem; border-radius:var(--radius-md); overflow-x:auto; color:var(--text-code); border:1px solid var(--border);">
+                        <!-- Real-time Pipeline Telemetry Bar -->
+                        <div class="pipeline-status-card" id="pipelineStatusCard">
+                            <div>
+                                <div style="font-size:0.70rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted);">
+                                    Active Telemetry Stream
+                                </div>
+                                <div style="font-size:0.95rem; font-weight:800; color:var(--text-primary); margin-top:2px;" id="pipelineActiveStageName">
+                                    Ready to Ingest Dataflow
+                                </div>
+                            </div>
+                            <div style="display:flex; gap:1.25rem; align-items:center; flex-wrap:wrap;">
+                                <div>
+                                    <div style="font-size:0.68rem; color:var(--text-muted);">PIPELINE SPEED</div>
+                                    <div style="font-family:var(--font-mono); font-size:0.82rem; font-weight:700; color:var(--cyan);" id="pipelineSpeedVal">3,000 ms / hop</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:0.68rem; color:var(--text-muted);">STAGE STATUS</div>
+                                    <div style="font-family:var(--font-mono); font-size:0.82rem; font-weight:700; color:var(--emerald);" id="pipelineStatusText">STANDBY</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Train-Themed Architecture Pipeline -->
+                        <div class="arch-pipeline-wrap" id="architectureTrainPipeline">
+                            <div class="pipeline-track-container" id="pipelineTrackContainer">
+                                <!-- Vertical Railroad Track -->
+                                <div class="pipeline-rail-track" id="pipelineRailTrack"></div>
+                                <!-- Animated Train Locomotive -->
+                                <div class="pipeline-train-loco" id="pipelineTrainLoco" title="Dataflow Pipeline Locomotive">🚂</div>
+
+                                <!-- Tier 7: Frontend -->
+                                <div class="pipeline-stage" id="archStage6" onclick="jumpToPipelineStage(6)" style="margin-bottom:1rem;">
+                                    <div class="stage-header">
+                                        <div class="stage-title">
+                                            <span class="stage-signal" id="signal-6"></span>
+                                            <span>TIER 7: FRONTEND OPERATIONS CONSOLE</span>
+                                        </div>
+                                        <span class="stage-metric-badge">UI TERMINAL</span>
+                                    </div>
+                                    <p class="stage-desc">
+                                        Aknex RailFlow Cyber Dashboard, Leaflet Live Atlas, Instant PNR & Route Lookup, Real-time Platform Capacity Telemetry.
+                                    </p>
+                                    <div class="stage-tech-tags">
+                                        <span class="stage-pill">Vanilla JS ES2022</span>
+                                        <span class="stage-pill">Leaflet.js Engine</span>
+                                        <span class="stage-pill">Cyber HUD</span>
+                                        <span class="stage-pill">Aknex AI Core</span>
+                                    </div>
+                                </div>
+
+                                <!-- Tier 6: REST API Gateway -->
+                                <div class="pipeline-stage" id="archStage5" onclick="jumpToPipelineStage(5)" style="margin-bottom:1rem;">
+                                    <div class="stage-header">
+                                        <div class="stage-title">
+                                            <span class="stage-signal" id="signal-5"></span>
+                                            <span>TIER 6: REST & WEBSOCKET PROTOCOL GATEWAY</span>
+                                        </div>
+                                        <span class="stage-metric-badge">JSON STREAM</span>
+                                    </div>
+                                    <p class="stage-desc">
+                                        Asynchronous HTTP REST endpoints (`/api/journey/plan`, `/api/stations`, `/api/trains`) and live crowd dispatch telemetry.
+                                    </p>
+                                    <div class="stage-tech-tags">
+                                        <span class="stage-pill">Spring Web MVC</span>
+                                        <span class="stage-pill">Jackson JSON</span>
+                                        <span class="stage-pill">CORS Filter</span>
+                                    </div>
+                                </div>
+
+                                <!-- Tier 5: Core Java & Spring Boot Services -->
+                                <div class="pipeline-stage" id="archStage4" onclick="jumpToPipelineStage(4)" style="margin-bottom:1rem;">
+                                    <div class="stage-header">
+                                        <div class="stage-title">
+                                            <span class="stage-signal" id="signal-4"></span>
+                                            <span>TIER 5: SPRING BOOT & CORE JAVA APPLICATION SERVICES</span>
+                                        </div>
+                                        <span class="stage-metric-badge">BUSINESS LOGIC</span>
+                                    </div>
+                                    <p class="stage-desc">
+                                        Multi-threaded core services: <code>JourneyService</code> (Graph BFS shortest-path & multi-hub routing), <code>NetworkService</code> (17 Zonal Hub corridors), and <code>CrowdSimulationService</code> (3,000ms Concurrency Daemon).
+                                    </p>
+                                    <div class="stage-tech-tags">
+                                        <span class="stage-pill">Java 17 Records</span>
+                                        <span class="stage-pill">BFS Graph Algo</span>
+                                        <span class="stage-pill">ScheduledExecutorService</span>
+                                    </div>
+                                </div>
+
+                                <!-- Tier 4: DAO & Repository Layer -->
+                                <div class="pipeline-stage" id="archStage3" onclick="jumpToPipelineStage(3)" style="margin-bottom:1rem;">
+                                    <div class="stage-header">
+                                        <div class="stage-title">
+                                            <span class="stage-signal" id="signal-3"></span>
+                                            <span>TIER 4: DAO & ENTERPRISE REPOSITORY LAYER</span>
+                                        </div>
+                                        <span class="stage-metric-badge">DATA MAPPERS</span>
+                                    </div>
+                                    <p class="stage-desc">
+                                        Defensive data access using parameterized <code>PreparedStatement</code> and type-safe mappers (<code>StationRepository</code>, <code>TrainRepository</code>, <code>CrowdTelemetryDao</code>). Zero SQL injection risk.
+                                    </p>
+                                    <div class="stage-tech-tags">
+                                        <span class="stage-pill">PreparedStatement</span>
+                                        <span class="stage-pill">RowMapper&lt;T&gt;</span>
+                                        <span class="stage-pill">HikariCP Pool</span>
+                                    </div>
+                                </div>
+
+                                <!-- Tier 3: JDBC Driver -->
+                                <div class="pipeline-stage" id="archStage2" onclick="jumpToPipelineStage(2)" style="margin-bottom:1rem;">
+                                    <div class="stage-header">
+                                        <div class="stage-title">
+                                            <span class="stage-signal" id="signal-2"></span>
+                                            <span>TIER 3: NATIVE JDBC DRIVER BRIDGE</span>
+                                        </div>
+                                        <span class="stage-metric-badge">PERSISTENCE BRIDGE</span>
+                                    </div>
+                                    <p class="stage-desc">
+                                        Low-overhead direct JDBC connection driver with PRAGMA optimizations (<code>journal_mode=WAL</code>, <code>synchronous=NORMAL</code>) for concurrent high-speed reads.
+                                    </p>
+                                    <div class="stage-tech-tags">
+                                        <span class="stage-pill">org.sqlite.JDBC</span>
+                                        <span class="stage-pill">WAL Journal Mode</span>
+                                        <span class="stage-pill">Shared Cache</span>
+                                    </div>
+                                </div>
+
+                                <!-- Tier 2: SQLite Persistence Engine -->
+                                <div class="pipeline-stage" id="archStage1" onclick="jumpToPipelineStage(1)" style="margin-bottom:1rem;">
+                                    <div class="stage-header">
+                                        <div class="stage-title">
+                                            <span class="stage-signal" id="signal-1"></span>
+                                            <span>TIER 2: SQLITE PERSISTENCE ENGINE & RELATIONAL REGISTRY</span>
+                                        </div>
+                                        <span class="stage-metric-badge">SQL PERSISTENCE</span>
+                                    </div>
+                                    <p class="stage-desc">
+                                        Indexed master tables: <code>stations</code>, <code>trains</code>, <code>train_routes</code>, <code>crowd_telemetry</code>, <code>platforms</code>, <code>search_aliases</code> with composite foreign keys and B-Tree indexes.
+                                    </p>
+                                    <div class="stage-tech-tags">
+                                        <span class="stage-pill">SQLite 3 Relational</span>
+                                        <span class="stage-pill">B-Tree Indexes</span>
+                                        <span class="stage-pill">ACID Transactions</span>
+                                    </div>
+                                </div>
+
+                                <!-- Tier 1: CSV Ingestion Pipeline -->
+                                <div class="pipeline-stage" id="archStage0" onclick="jumpToPipelineStage(0)">
+                                    <div class="stage-header">
+                                        <div class="stage-title">
+                                            <span class="stage-signal" id="signal-0"></span>
+                                            <span>TIER 1: ENTERPRISE CSV INGESTOR & MASTER DATASET</span>
+                                        </div>
+                                        <span class="stage-metric-badge">ORIGIN SOURCE</span>
+                                    </div>
+                                    <p class="stage-desc">
+                                        RFC 4180 streaming ingestion pipeline parsing <code>ALL_RAILWAY_DATA.csv</code> (22.1 MB, 10,000+ routes, 8,000+ stations) with high-speed memory-buffered batch inserts.
+                                    </p>
+                                    <div class="stage-tech-tags">
+                                        <span class="stage-pill">ALL_RAILWAY_DATA.csv (22.1 MB)</span>
+                                        <span class="stage-pill">RFC 4180 Parser</span>
+                                        <span class="stage-pill">Batch Insert (5000/chunk)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Toggleable Original ASCII Schematic Blueprint -->
+                        <div id="architectureAsciiView" style="display:none; margin-top:1.5rem;">
+                            <div style="font-size:0.75rem; font-weight:700; color:var(--cyan); margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.06em;">
+                                System ASCII Architectural Blueprint
+                            </div>
+                            <pre style="font-family:var(--font-mono); font-size:0.80rem; line-height:1.6; background:var(--bg-subtle); padding:1.25rem; border-radius:var(--radius-md); overflow-x:auto; color:var(--text-code); border:1px solid var(--border);">
                              FRONTEND OPERATIONS CONSOLE
                                         │
                                REST / WebSocket (JSON)
@@ -1456,7 +1643,8 @@
                          (RFC 4180 Ingestion Pipeline)
                                         │
                             ALL_RAILWAY_DATA.csv (22.1 MB)
-                        </pre>
+                            </pre>
+                        </div>
                     </div>
                 </div>
 
@@ -2176,6 +2364,30 @@
         </div>
     </div>
 
+    <!-- ─── Mobile Bottom Navigation (visible only on mobile) ──────── -->
+    <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Mobile Quick Navigation">
+        <button class="mnav-item active" id="mnav-dashboard" onclick="switchPage('dashboard'); document.querySelectorAll('.mnav-item').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
+            <span class="mnav-icon">📊</span>
+            <span>Dashboard</span>
+        </button>
+        <button class="mnav-item" id="mnav-planner" onclick="switchPage('planner'); document.querySelectorAll('.mnav-item').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
+            <span class="mnav-icon">🗺️</span>
+            <span>Planner</span>
+        </button>
+        <button class="mnav-item" id="mnav-network" onclick="switchPage('network'); document.querySelectorAll('.mnav-item').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
+            <span class="mnav-icon">🌐</span>
+            <span>Network</span>
+        </button>
+        <button class="mnav-item" id="mnav-crowd" onclick="switchPage('crowd'); document.querySelectorAll('.mnav-item').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
+            <span class="mnav-icon">👥</span>
+            <span>Crowd</span>
+        </button>
+        <button class="mnav-item" id="mnav-commuter" onclick="switchPage('commuter'); document.querySelectorAll('.mnav-item').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
+            <span class="mnav-icon">📱</span>
+            <span>Commuter</span>
+        </button>
+    </nav>
+
     <!-- Master Railway Data Layer (Authoritative Frontend Fallback — real corridor & train data) -->
     <script src="js/data/masterRailwayData.js"></script>
     <!-- Central Telemetry & Feedback Tracker -->
@@ -2184,4 +2396,5 @@
     <script src="js/app.js"></script>
 </body>
 </html>
+
 
