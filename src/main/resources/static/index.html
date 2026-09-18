@@ -1992,6 +1992,168 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- ═══ RAILFLOW PROJECT INFORMATION & INTERACTIVE JAVA CONSOLE ═══ -->
+                <div class="panel" style="margin-top:1.5rem;">
+                    <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+                        <span class="panel-title">⚡ RailFlow Interactive Java Console</span>
+                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                            <span class="badge badge-real" style="font-size:0.68rem;">BASH + JAVA HYBRID</span>
+                            <button class="btn btn-secondary" onclick="clearArchConsole()" style="font-size:0.72rem; padding:0.3rem 0.65rem;">Clear</button>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding:0;">
+                        <div id="archConsoleOutput" style="font-family:var(--font-mono); font-size:0.76rem; line-height:1.65; background:#0B0E14; color:#A3E635; padding:1rem 1.25rem; min-height:260px; max-height:400px; overflow-y:auto; border-radius:0 0 var(--radius-md) var(--radius-md);">
+                            <div style="color:#64748B;">Welcome to RailFlow Interactive Console v2.0</div>
+                            <div style="color:#64748B;">Java 17+ LTS • SQLite 3 WAL • Spring Boot Runtime</div>
+                            <div style="color:#64748B;">Type a command or click any preset below.</div>
+                            <div style="color:#64748B;">──────────────────────────────────────────</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0; border-top:1px solid var(--border);">
+                            <span style="font-family:var(--font-mono); font-size:0.78rem; color:var(--emerald); padding:0 0.75rem; white-space:nowrap;">railflow@jvm:~$</span>
+                            <input type="text" id="archConsoleInput" style="flex:1; font-family:var(--font-mono); font-size:0.78rem; background:transparent; border:none; color:var(--text-primary); padding:0.65rem 0.5rem; outline:none;" placeholder="Enter command (try: help, stats, schema, routes, trains, stations, bfs, javac, mvn, gradle)" autocomplete="off">
+                        </div>
+                    </div>
+                    <div style="padding:0.75rem 1.25rem; display:flex; flex-wrap:wrap; gap:0.4rem; border-top:1px solid var(--border);">
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('help')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">help</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('stats')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">stats</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('schema')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">schema</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('routes 12638')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">routes 12638</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('trains --express')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">trains --express</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('stations --hub')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">stations --hub</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('bfs MAS NDLS')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">bfs MAS→NDLS</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('javac --version')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">javac --version</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('mvn package')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">mvn package</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('gradle build')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">gradle build</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('sqlite3 railway.db')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">sqlite3 db</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('pragma')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">pragma</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('validate')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">validate</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('health')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">health</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('tree')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">tree</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('neofetch')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">neofetch</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('benchmark')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">benchmark</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('kavach status')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">kavach status</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('crowd sim')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">crowd sim</button>
+                        <button class="btn btn-secondary" onclick="runArchConsoleCmd('git log')" style="font-size:0.68rem; padding:0.25rem 0.55rem;">git log</button>
+                    </div>
+                </div>
+
+                <!-- ═══ RAILFLOW FEATURES & PROJECT DATA TREE ═══ -->
+                <div class="panel" style="margin-top:1.25rem;">
+                    <div class="panel-header">
+                        <span class="panel-title">🌲 RailFlow Platform — Complete Features & Data Tree</span>
+                    </div>
+                    <div class="panel-body">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+                            <!-- LEFT: Features Tree -->
+                            <div>
+                                <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; color:var(--cyan); letter-spacing:0.06em; margin-bottom:0.5rem;">Platform Features (All Real Data)</div>
+                                <pre style="font-family:var(--font-mono); font-size:0.72rem; line-height:1.55; color:var(--text-code); background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-sm); overflow-x:auto; margin:0; border:1px solid var(--border);">RailFlow v2.0 — Indian Railways Network Intelligence
+├── 🔍 Instant Search Engine
+│   ├── SQLite FTS5 Full-Text Search
+│   ├── Station name / code / alias lookup
+│   ├── Train number / name autocomplete
+│   ├── Type-ahead suggestions (< 50ms)
+│   └── Parameterized SQL (zero injection)
+├── 🗺️ Live Network Atlas
+│   ├── Leaflet.js OpenStreetMap tiles
+│   ├── 8,989 geo-referenced IR stations
+│   ├── Interactive SVG topology graph
+│   └── Station detail drawer with heritage data
+├── 🚂 Train Operations Registry
+│   ├── 5,208 master trains (Rajdhani, Shatabdi, Vande Bharat, Express)
+│   ├── 416,637 halt records with platform/timing
+│   ├── Complete route sequences (stop ordering preserved)
+│   └── Train-to-station foreign key integrity
+├── 🛤️ Journey Planner (BFS Graph)
+│   ├── Multi-hub shortest path traversal
+│   ├── 21,318 directional graph edges
+│   ├── 17 Zonal Railway hub corridors
+│   └── Disconnected station detection
+├── 🤖 RailFlow AI Assistant
+│   ├── Gemini / Groq / OpenRouter multi-provider
+│   ├── Ground-truth context injection from SQLite
+│   ├── Anti-hallucination safety layer
+│   └── Natural language railway Q&A
+├── 👥 Crowd Telemetry Simulation
+│   ├── ScheduledExecutorService (4s daemon)
+│   ├── Platform capacity & density metrics
+│   ├── Stampede hazard early warning
+│   └── Heuristic platform re-allocation
+├── 📱 Commuter Portal
+│   ├── PNR status lookup (provider-backed)
+│   ├── Station-level arrival/departure boards
+│   └── Mobile-first responsive layout
+├── 🗄️ Database Explorer
+│   ├── Live SQL query execution monitor
+│   ├── Hierarchical station tree (animated growth)
+│   ├── Schema introspection & table audit
+│   └── Admin mode (password-gated)
+├── 🏛️ System Architecture
+│   ├── 7-tier interactive pipeline animation
+│   ├── Animated train locomotive (CSS transitions)
+│   ├── ASCII schematic blueprint toggle
+│   └── Live pipeline telemetry status bar
+└── 🛰️ Fleet & Kavach Ops
+    ├── RDSO Kavach TCAS v4.0 specifications
+    ├── Southern Railway chord line telemetry
+    ├── Project directory tree
+    └── Data provenance & authoritative references</pre>
+                            </div>
+                            <!-- RIGHT: Data & Build Info -->
+                            <div>
+                                <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; color:var(--cyan); letter-spacing:0.06em; margin-bottom:0.5rem;">Data Sources & Build Specifications</div>
+                                <div style="font-family:var(--font-mono); font-size:0.72rem; line-height:1.55; color:var(--text-code); background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-sm); border:1px solid var(--border); margin-bottom:1rem;">
+                                    <div style="color:var(--emerald); font-weight:700;">━━ DATA PROVENANCE ━━</div>
+                                    <div>📂 DataMeet Indian Railways GeoJSON</div>
+                                    <div>   └─ github.com/datameet/railways</div>
+                                    <div>📂 CRIS / NTES Official Timetables</div>
+                                    <div>   └─ Schedules, halts, distances, platforms</div>
+                                    <div>📂 IRCTC Master Train Directory</div>
+                                    <div>   └─ Express, Rajdhani, Shatabdi, Vande Bharat</div>
+                                    <div>📂 RDSO Kavach TCAS Spec v4.0</div>
+                                    <div>   └─ RDSO/SPN/196/2020 (Lucknow)</div>
+                                    <div>📂 Railway Board Operating Manuals</div>
+                                    <div>   └─ Platform clearance & headway protocols</div>
+                                    <div style="margin-top:0.5rem; color:var(--amber); font-weight:700;">━━ ZERO FABRICATION ━━</div>
+                                    <div>✓ 0 fabricated train routes</div>
+                                    <div>✓ 0 invented station names</div>
+                                    <div>✓ 0 fake departure/arrival times</div>
+                                    <div>✓ All data sourced from IR open data</div>
+                                </div>
+                                <div style="font-family:var(--font-mono); font-size:0.72rem; line-height:1.55; color:var(--text-code); background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                                    <div style="color:var(--cyan); font-weight:700;">━━ BUILD SPECIFICATIONS ━━</div>
+                                    <div>Runtime ........... Java 17+ LTS (OpenJDK 21)</div>
+                                    <div>Framework ......... Spring Boot 3.x + Vanilla JS</div>
+                                    <div>Database .......... SQLite 3 (WAL mode, NORMAL sync)</div>
+                                    <div>JDBC Driver ....... org.sqlite.JDBC</div>
+                                    <div>Frontend .......... ES2022 + Leaflet.js 1.9+</div>
+                                    <div>Build Tool ........ Maven (pom.xml)</div>
+                                    <div>AI Providers ...... Gemini • Groq • OpenRouter</div>
+                                    <div>Deploy Target ..... Vercel Edge + Node.js Backend</div>
+                                    <div style="margin-top:0.5rem; color:var(--emerald); font-weight:700;">━━ MASTER REGISTRY ━━</div>
+                                    <div>Stations .......... 8,989</div>
+                                    <div>Master Trains ..... 5,208</div>
+                                    <div>Halt Records ...... 416,637</div>
+                                    <div>Graph Edges ....... 21,318</div>
+                                    <div>Zonal Hubs ........ 17</div>
+                                    <div>Search Aliases .... Active (FTS indexed)</div>
+                                </div>
+
+                                <div style="margin-top:1rem; font-size:0.72rem; line-height:1.55;">
+                                    <div style="font-weight:700; text-transform:uppercase; color:var(--cyan); letter-spacing:0.06em; margin-bottom:0.35rem;">Authoritative References</div>
+                                    <div style="display:flex; flex-direction:column; gap:0.3rem; color:var(--text-secondary);">
+                                        <a href="https://indianrailways.gov.in" target="_blank" rel="noopener" style="color:var(--link); text-decoration:none;">🔗 Indian Railways Official Portal</a>
+                                        <a href="https://rdso.indianrailways.gov.in" target="_blank" rel="noopener" style="color:var(--link); text-decoration:none;">🔗 RDSO Lucknow (Kavach TCAS)</a>
+                                        <a href="https://github.com/datameet/railways" target="_blank" rel="noopener" style="color:var(--link); text-decoration:none;">🔗 DataMeet Indian Railways Project</a>
+                                        <a href="https://www.sqlite.org/wal.html" target="_blank" rel="noopener" style="color:var(--link); text-decoration:none;">🔗 SQLite WAL Mode Technical Notes</a>
+                                        <a href="https://openjdk.org/projects/jdk/21/" target="_blank" rel="noopener" style="color:var(--link); text-decoration:none;">🔗 OpenJDK 21 Specifications</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- ═══════════════════════════════════════════════════════════
