@@ -989,6 +989,11 @@ function switchPage(pageId, pushUrl) {
                 }
             } else if (pageId === 'console') {
                 initConsoleTerminal();
+            } else if (pageId === 'architecture') {
+                if (typeof positionPipelineLoco === 'function') {
+                    positionPipelineLoco(archCurrentStage);
+                    updatePipelineStageUi(archCurrentStage);
+                }
             } else if (pageId === 'crowd') {
                 renderPlatformBars(STATE.selectedCrowdStation);
                 if (typeof updateChokepointsDensity === 'function') updateChokepointsDensity();
@@ -6045,6 +6050,203 @@ window.toggleAtlasMapMode = toggleAtlasMapMode;
 // Record boot time for uptime tracking
 window._RAILFLOW_BOOT_TIME = window._RAILFLOW_BOOT_TIME || Date.now();
 
+/* ═════════════════════════════════════════════════════════════════════════
+   SYSTEM 09 — INTERACTIVE ARCHITECTURE PIPELINE TRAIN SIMULATION
+   ═════════════════════════════════════════════════════════════════════════ */
+const ARCH_STAGES = [
+    { id: 0, elId: 'archStage0', signalId: 'signal-0', name: 'TIER 1: CSV Ingestion Pipeline', desc: 'RFC 4180 streaming parser reading ALL_RAILWAY_DATA.csv', speed: '1,200 ms / hop' },
+    { id: 1, elId: 'archStage1', signalId: 'signal-1', name: 'TIER 2: SQLite Persistence Engine', desc: 'WAL mode B-Tree indexed relational storage', speed: '800 ms / hop' },
+    { id: 2, elId: 'archStage2', signalId: 'signal-2', name: 'TIER 3: Native JDBC Driver Bridge', desc: 'org.sqlite.JDBC connection pool with prepared statements', speed: '600 ms / hop' },
+    { id: 3, elId: 'archStage3', signalId: 'signal-3', name: 'TIER 4: DAO & Repository Layer', desc: 'Type-safe StationRepository & TrainRepository mappers', speed: '500 ms / hop' },
+    { id: 4, elId: 'archStage4', signalId: 'signal-4', name: 'TIER 5: Core Java & Spring Boot Services', desc: 'JourneyService BFS graph traversal & Crowd daemon', speed: '400 ms / hop' },
+    { id: 5, elId: 'archStage5', signalId: 'signal-5', name: 'TIER 6: REST API Protocol Gateway', desc: 'Asynchronous Spring Web MVC JSON endpoints & CORS', speed: '300 ms / hop' },
+    { id: 6, elId: 'archStage6', signalId: 'signal-6', name: 'TIER 7: Frontend Operations Console', desc: 'Interactive Leaflet Atlas, Cyber HUD & Aknex AI', speed: '200 ms / hop' }
+];
+
+let archPipelineTimer = null;
+let archCurrentStage = 0;
+let archPipelineRunning = false;
+
+function positionPipelineLoco(stageIndex) {
+    const loco = document.getElementById('pipelineTrainLoco');
+    const stageEl = document.getElementById('archStage' + stageIndex);
+    const trackContainer = document.getElementById('pipelineTrackContainer');
+    if (!loco || !stageEl || !trackContainer) return;
+
+    const stageRect = stageEl.getBoundingClientRect();
+    const containerRect = trackContainer.getBoundingClientRect();
+    const targetTop = (stageRect.top - containerRect.top) + (stageEl.offsetHeight / 2) - 20;
+    loco.style.top = Math.max(10, targetTop) + 'px';
+
+    loco.style.transform = 'scale(1.18)';
+    setTimeout(() => {
+        if (loco) loco.style.transform = 'scale(1.0)';
+    }, 280);
+}
+
+function updatePipelineStageUi(stageIndex) {
+    ARCH_STAGES.forEach((stage, idx) => {
+        const stageEl = document.getElementById(stage.elId);
+        const signalEl = document.getElementById(stage.signalId);
+        if (!stageEl) return;
+
+        stageEl.classList.remove('stage-active');
+        if (idx === stageIndex) {
+            stageEl.classList.add('stage-active');
+            if (signalEl) {
+                signalEl.style.background = '#10B981';
+                signalEl.style.boxShadow = '0 0 12px #10B981';
+            }
+        } else if (idx < stageIndex) {
+            stageEl.classList.add('stage-completed');
+            if (signalEl) {
+                signalEl.style.background = '#06B6D4';
+                signalEl.style.boxShadow = '0 0 8px #06B6D4';
+            }
+        } else {
+            stageEl.classList.remove('stage-completed');
+            if (signalEl) {
+                signalEl.style.background = '#EF4444';
+                signalEl.style.boxShadow = '0 0 6px #EF4444';
+            }
+        }
+    });
+
+    const activeStage = ARCH_STAGES[stageIndex];
+    if (activeStage) {
+        const nameEl = document.getElementById('pipelineActiveStageName');
+        const speedEl = document.getElementById('pipelineSpeedVal');
+        const statusEl = document.getElementById('pipelineStatusText');
+        if (nameEl) nameEl.textContent = activeStage.name;
+        if (speedEl) speedEl.textContent = activeStage.speed;
+        if (statusEl) {
+            statusEl.textContent = `DATAFLOW IN TRANSIT • STAGE ${stageIndex + 1}/7`;
+            statusEl.style.color = 'var(--cyan)';
+        }
+    }
+}
+
+window.jumpToPipelineStage = function(stageIndex) {
+    if (stageIndex < 0 || stageIndex >= ARCH_STAGES.length) return;
+    archCurrentStage = stageIndex;
+    positionPipelineLoco(archCurrentStage);
+    updatePipelineStageUi(archCurrentStage);
+};
+
+window.runPipelineTrainSimulation = function() {
+    const btn = document.getElementById('btnRunArchPipeline');
+    const statusEl = document.getElementById('pipelineStatusText');
+
+    if (archPipelineRunning) {
+        archPipelineRunning = false;
+        clearInterval(archPipelineTimer);
+        archPipelineTimer = null;
+        if (btn) btn.innerHTML = '<span class="btn-icon">🚂</span> Run Pipeline Train';
+        if (statusEl) {
+            statusEl.textContent = 'PAUSED';
+            statusEl.style.color = 'var(--amber)';
+        }
+        return;
+    }
+
+    archPipelineRunning = true;
+    if (btn) btn.innerHTML = '<span class="btn-icon">⏸️</span> Pause Pipeline';
+    
+    positionPipelineLoco(archCurrentStage);
+    updatePipelineStageUi(archCurrentStage);
+
+    archPipelineTimer = setInterval(() => {
+        archCurrentStage++;
+        if (archCurrentStage >= ARCH_STAGES.length) {
+            archCurrentStage = ARCH_STAGES.length - 1;
+            positionPipelineLoco(archCurrentStage);
+            updatePipelineStageUi(archCurrentStage);
+
+            if (statusEl) {
+                statusEl.textContent = 'PIPELINE RUN COMPLETE • READY';
+                statusEl.style.color = 'var(--emerald)';
+            }
+            
+            setTimeout(() => {
+                if (archPipelineRunning) {
+                    archCurrentStage = 0;
+                    positionPipelineLoco(archCurrentStage);
+                    updatePipelineStageUi(archCurrentStage);
+                }
+            }, 2000);
+            return;
+        }
+
+        positionPipelineLoco(archCurrentStage);
+        updatePipelineStageUi(archCurrentStage);
+    }, 1800);
+};
+
+window.resetPipelineTrainSimulation = function() {
+    archPipelineRunning = false;
+    clearInterval(archPipelineTimer);
+    archPipelineTimer = null;
+    archCurrentStage = 0;
+
+    const btn = document.getElementById('btnRunArchPipeline');
+    if (btn) btn.innerHTML = '<span class="btn-icon">🚂</span> Run Pipeline Train';
+
+    const statusEl = document.getElementById('pipelineStatusText');
+    if (statusEl) {
+        statusEl.textContent = 'STANDBY';
+        statusEl.style.color = 'var(--emerald)';
+    }
+
+    const nameEl = document.getElementById('pipelineActiveStageName');
+    if (nameEl) nameEl.textContent = 'Ready to Ingest Dataflow';
+
+    const speedEl = document.getElementById('pipelineSpeedVal');
+    if (speedEl) speedEl.textContent = '3,000 ms / hop';
+
+    ARCH_STAGES.forEach(stage => {
+        const stageEl = document.getElementById(stage.elId);
+        const signalEl = document.getElementById(stage.signalId);
+        if (stageEl) {
+            stageEl.classList.remove('stage-active', 'stage-completed');
+        }
+        if (signalEl) {
+            signalEl.style.background = '#EF4444';
+            signalEl.style.boxShadow = '0 0 6px #EF4444';
+        }
+    });
+
+    positionPipelineLoco(0);
+};
+
+window.toggleArchBlueprintView = function() {
+    const pipelineView = document.getElementById('architectureTrainPipeline');
+    const asciiView = document.getElementById('architectureAsciiView');
+    const btn = document.getElementById('btnToggleAsciiBlueprint');
+    if (!pipelineView || !asciiView) return;
+
+    if (asciiView.style.display === 'none' || !asciiView.style.display) {
+        asciiView.style.display = 'block';
+        pipelineView.style.display = 'none';
+        if (btn) btn.innerHTML = '<span class="btn-icon">🚂</span> Interactive Track';
+    } else {
+        asciiView.style.display = 'none';
+        pipelineView.style.display = 'flex';
+        if (btn) btn.innerHTML = '<span class="btn-icon">📐</span> Blueprint ASCII';
+        setTimeout(() => positionPipelineLoco(archCurrentStage), 100);
+    }
+};
+
+function initArchitecturePipeline() {
+    setTimeout(() => {
+        positionPipelineLoco(0);
+        updatePipelineStageUi(0);
+    }, 300);
+
+    window.addEventListener('resize', () => {
+        positionPipelineLoco(archCurrentStage);
+    });
+}
+
 // ─── COMPLETE INITIALIZATION ON DOM READY & IMMEDIATE HYDRATION ─────────────────────
 function initAllRailFlowApp() {
     if (window._RAILFLOW_INITIALIZED) return;
@@ -6070,6 +6272,7 @@ function initAllRailFlowApp() {
         ['FobInterlock', initFobInterlockAndCompass],
         ['MobileMenu', initMobileMenu],
         ['MachinaHud', initMachinaHud],
+        ['ArchitecturePipeline', initArchitecturePipeline],
         ['TelemetryScheduler', startTelemetryScheduler],
         ['DefaultRoute', () => planRouteSilent('NDLS', 'MAS')]
     ];
