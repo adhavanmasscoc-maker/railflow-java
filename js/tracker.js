@@ -89,8 +89,13 @@
             this._persist(STORAGE_KEY_FEEDBACK, this.feedbackBuffer);
             this._notifyListeners('feedback', entry);
 
-            // Log event quietly
-            console.log('[RailTracker] Feedback logged:', entry.id, entry.category || 'General');
+            // Forward to AKNEX Cloudflare Worker SDK if available
+            if (window.AKNEX && typeof window.AKNEX.submitFeedback === 'function') {
+                window.AKNEX.submitFeedback(entry).catch(() => {});
+            }
+
+            // Log event quietly without UI intrusion
+            console.log('[RailTracker] Feedback logged silently:', entry.id, entry.category || 'General');
             return entry;
         }
 

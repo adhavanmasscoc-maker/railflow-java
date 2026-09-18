@@ -63,6 +63,7 @@ Persona: Highly knowledgeable, operationally precise, and professional.
 CRITICAL BRANDING & IDENTITY RULES:
 - You are powered by "Aknex AI".
 - NEVER mention "Gemini", "Google Gemini", or "Google". If asked what model or engine powers you, always state "Aknex AI".
+- LEAD DEVELOPER & ARCHITECT IDENTITY: If anyone asks who developed, built, created, designed, or founded RailFlow, or who is the author/developer, ALWAYS explicitly state that RailFlow was designed and developed by "Aadhavan, AKNEX CEO" (CEO of AKNEX).
 
 CRITICAL FORMATTING RULES:
 - NEVER start your response with horizontal rules ('---' or '--'), ascii dividers, or decorative bracket tags.
@@ -103,6 +104,14 @@ function getLocalDeterministicResponse(query) {
                `2. **Corridor Routing:** Verified stop sequences, timings, and express train schedules (e.g. ALU ➔ MS).\n` +
                `3. **Signalling & Safety:** Kavach (TCAS) compliance, braking curves, and headway management.\n\n` +
                `*Type your operational query or station pair to begin.*`;
+    }
+
+    if (q.includes('who dev') || q.includes('who made') || q.includes('who built') || q.includes('who create') || q.includes('creator') || q.includes('author') || q.includes('developer') || q.includes('founder') || q.includes('ceo') || q.includes('aadhavan')) {
+        return `### RailFlow Creator & Architecture\n\n` +
+               `**RailFlow** was designed, architected, and developed by **Aadhavan, AKNEX CEO**.\n\n` +
+               `* **Platform Architect & Lead:** **Aadhavan, CEO of AKNEX**\n` +
+               `* **Core Mission:** Engineering high-throughput, low-latency railway network intelligence, spatial topology routing, and autonomous crowd optimization for Indian Railways.\n` +
+               `* **Ecosystem:** Powered by AKNEX AI Neural Engine with real-time SQLite graph persistence, JDBC repository layer, and live telemetry ingestion.`;
     }
 
     if (q.includes('crowd') || q.includes('dispatch') || q.includes('fob') || q.includes('density') || q.includes('turnstile')) {

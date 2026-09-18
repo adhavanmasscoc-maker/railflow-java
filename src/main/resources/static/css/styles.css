@@ -1,11 +1,20 @@
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   RAILFLOW â€” Vibrant Railway Network Command Center Design System
+   RAILFLOW — Vibrant Railway Network Command Center Design System
    Visual Direction: Dark Blue-Gray Command Console, Cyber Telemetry,
                      Railway Crimson, Electric Blue, Cyan Network,
                      Systems Emerald, Warning Amber, AI Violet
    Typography: Space Grotesk (Display/Sans) & JetBrains Mono (Telemetry/Code)
    Theme: High-Density, Vibrant, Professional Operations Dashboard
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+html {
+    zoom: 0.80; /* 20% proportional scale reduction for sleek high-density operations view without line reduction */
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
 
 :root {
     /* Primary Backgrounds */
@@ -24,7 +33,7 @@
     --bg-elevated:      #202F48;
     --bg-elevated-hi:   #243550;
 
-    /* Borders â€” Subtle Illuminated Contours */
+    /* Borders — Subtle Illuminated Contours */
     --border:           #2A3A55; /* Default Contour Outline */
     --border-strong:    #344765; /* Prominent Border */
     --border-subtle:    #1E2C44;
@@ -98,7 +107,7 @@
     --transition-slow:  300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* â”€â”€â”€ Global Reset & Body Setup (Zero UI Leak) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Global Reset & Body Setup (Zero UI Leak) ───────────────── */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -127,7 +136,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* â”€â”€â”€ Custom Command Center Scrollbars â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Custom Command Center Scrollbars ───────────────────────── */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -143,19 +152,23 @@ body {
     background: #4B6385;
 }
 
-/* â”€â”€â”€ Sidebar Navigation (Command Center Console) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Sidebar Navigation (Command Center Console) ─────────────── */
 .sidebar {
     width: var(--sidebar-width);
     min-width: var(--sidebar-width);
     height: 100vh;
+    height: 100dvh;
     background: linear-gradient(180deg, #111B2E 0%, #0B1220 100%);
     border-right: 1px solid #263752;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
     z-index: 50;
     transition: width var(--transition-slow);
     user-select: none;
+    position: relative;
 }
 
 .sidebar-header {
@@ -212,12 +225,14 @@ body {
 }
 
 .sidebar-nav {
-    flex: 1;
-    overflow-y: hidden;
-    padding: 1rem 0.75rem;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.75rem 0.65rem;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.2rem;
+    scrollbar-width: thin;
 }
 
 .nav-section-label {
@@ -239,9 +254,12 @@ body {
     text-decoration: none;
     font-size: 0.88rem;
     font-weight: 500;
-    transition: all var(--transition-fast);
+    transition: all 120ms cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     border: 1px solid transparent;
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 .nav-item:hover {
@@ -303,18 +321,20 @@ body {
 }
 
 .sidebar-footer {
-    padding: 0.85rem 1.25rem;
+    flex-shrink: 0;
+    margin-top: auto;
+    padding: 0.65rem 1rem;
     border-top: 1px solid #263752;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 0.72rem;
+    font-size: 0.70rem;
     font-family: var(--font-mono);
     color: var(--text-muted);
-    background: #0B1220;
+    background: #090E17;
 }
 
-/* â”€â”€â”€ Top Header & Global Search â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Top Header & Global Search ─────────────────────────────── */
 .app-container {
     flex: 1;
     height: 100vh;
@@ -474,7 +494,7 @@ body {
     50% { opacity: 0.45; transform: scale(0.85); box-shadow: 0 0 2px var(--emerald); }
 }
 
-/* â”€â”€â”€ Buttons & Badges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Buttons & Badges ───────────────────────────────────────── */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -563,7 +583,7 @@ body {
     box-shadow: 0 0 10px rgba(139, 92, 246, 0.1);
 }
 
-/* â”€â”€â”€ Main Viewport & Pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Main Viewport & Pages ──────────────────────────────────── */
 .main-viewport {
     flex: 1 1 auto;
     min-height: 0;
@@ -574,6 +594,9 @@ body {
     background: var(--bg-base);
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 .page-view {
@@ -582,11 +605,17 @@ body {
     gap: 1.5rem;
     max-width: 1440px;
     margin: 0 auto;
-    animation: none;
+    opacity: 0;
+    contain: layout paint style;
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    transition: opacity 120ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .page-view.active {
     display: flex;
+    opacity: 1;
 }
 
 .view-header {
@@ -628,7 +657,7 @@ body {
     line-height: 1.55;
 }
 
-/* â”€â”€â”€ Pipeline Lifecycle Card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Pipeline Lifecycle Card ────────────────────────────────── */
 .pipeline-card {
     background: #162033;
     border: 1px solid #2A3A55;
@@ -740,7 +769,7 @@ body {
     color: #F3F7FF;
 }
 
-/* â”€â”€â”€ Metric Cards Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Metric Cards Grid ──────────────────────────────────────── */
 .metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -809,7 +838,7 @@ body {
     gap: 0.35rem;
 }
 
-/* â”€â”€â”€ Panels & Tables â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Panels & Tables ────────────────────────────────────────── */
 .panel {
     background: #162033;
     border: 1px solid #2A3A55;
@@ -886,7 +915,7 @@ body {
     border-bottom: none;
 }
 
-/* â”€â”€â”€ Graph Viewport & Canvas (Command Center Canvas) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Graph Viewport & Canvas (Command Center Canvas) ────────── */
 .graph-viewport {
     height: 600px;
     background: radial-gradient(circle at center, #172A46 0%, #0B1220 75%);
@@ -1008,7 +1037,7 @@ body {
     text-anchor: middle;
 }
 
-/* â”€â”€â”€ Journey Planner & Route Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Journey Planner & Route Strip ──────────────────────────── */
 .planner-form {
     background: #162033;
     border: 1px solid #2A3A55;
@@ -1164,65 +1193,257 @@ body {
     color: #8FA1BA;
 }
 
-/* â”€â”€â”€ Station Network Tree (Growing Visual Tree) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Station Network Tree (Hierarchical Command Accordion) ─── */
 .tree-container {
-    background: #162033;
-    border: 1px solid #2A3A55;
+    background: #0D1626;
+    border: 1px solid #243550;
     border-radius: var(--radius-md);
-    padding: 1.25rem;
-    max-height: 540px;
-    overflow-y: hidden;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    padding: 1rem;
+    max-height: 580px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.tree-node {
+.tree-apex-card {
+    background: linear-gradient(135deg, rgba(239, 51, 64, 0.16), rgba(15, 23, 42, 0.92));
+    border: 1px solid rgba(239, 51, 64, 0.4);
+    border-radius: 8px;
+    padding: 0.75rem 0.9rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    box-shadow: 0 4px 15px rgba(239, 51, 64, 0.12);
+}
+
+.tree-apex-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tree-apex-title {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #F8FAFC;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0.55rem 0.8rem;
-    margin-bottom: 0.4rem;
-    border-radius: var(--radius-sm);
-    background: #18253A;
-    border: 1px solid #2A3A55;
-    cursor: pointer;
-    transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--shadow-sm);
-    color: #F3F7FF;
+    gap: 8px;
 }
 
-.tree-node:hover {
-    border-color: var(--rail-red);
-    background: #202F48;
+.tree-apex-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: #94A3B8;
+}
+
+.tree-apex-chip {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    padding: 2px 7px;
+    color: #CBD5E1;
+    font-weight: 600;
+}
+
+.tree-pill-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 0.4rem;
+}
+
+.tree-pill {
+    background: #162238;
+    border: 1px solid #283C5C;
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-size: 0.70rem;
+    font-weight: 700;
+    color: #94A3B8;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.tree-pill:hover, .tree-pill.active {
+    background: #2563EB;
+    border-color: #3B82F6;
+    color: #FFFFFF;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.35);
+}
+
+.tree-zone-card {
+    background: #121C2F;
+    border: 1px solid #22344F;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tree-zone-card:hover {
+    border-color: #3B82F6;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.tree-zone-header {
+    padding: 0.65rem 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background: #16243C;
+    user-select: none;
+    transition: background 0.15s ease;
+}
+
+.tree-zone-header:hover {
+    background: #1C2E4C;
+}
+
+.tree-zone-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tree-zone-badge {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(59, 130, 246, 0.18);
+    color: #60A5FA;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.tree-zone-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #F1F5F9;
+}
+
+.tree-zone-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tree-zone-count {
+    font-size: 0.70rem;
+    color: #8FA1BA;
+    font-weight: 600;
+}
+
+.tree-zone-caret {
+    font-size: 0.70rem;
+    color: #94A3B8;
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.tree-zone-card.collapsed .tree-zone-caret {
+    transform: rotate(-90deg);
+}
+
+.tree-zone-card.collapsed .tree-zone-body {
+    display: none;
+}
+
+.tree-zone-body {
+    padding: 0.5rem 0.65rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    background: #0E1726;
+    border-top: 1px solid #1E2E48;
+}
+
+.tree-station-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0.65rem;
+    background: #141F33;
+    border: 1px solid #20314C;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.tree-station-card:hover {
+    background: #1B2C47;
+    border-color: #3B82F6;
     transform: translateX(3px);
 }
 
-.tree-node.selected {
-    border-color: var(--rail-red);
-    background: rgba(239, 51, 64, 0.15);
-    box-shadow: 0 0 0 1px var(--rail-red);
+.tree-station-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
 }
 
-.tree-node-root {
-    background: linear-gradient(135deg, #1E2C44, #18253A);
-    border-left: 4px solid var(--rail-red);
+.tree-stn-code {
+    font-family: var(--font-mono);
+    font-size: 0.80rem;
+    font-weight: 800;
+    color: var(--rail-red);
+    background: rgba(239, 51, 64, 0.14);
+    border: 1px solid rgba(239, 51, 64, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.tree-stn-name {
+    font-size: 0.80rem;
+    font-weight: 600;
+    color: #E2E8F0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tree-station-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.tree-pf-chip {
+    font-size: 0.68rem;
     font-weight: 700;
+    color: #34D399;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.28);
+    padding: 1px 6px;
+    border-radius: 4px;
 }
 
-.tree-node-zone {
-    border-left: 3px solid #3B82F6;
-    margin-left: 0.5rem;
+.tree-inspect-btn {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: #1E293B;
+    color: #94A3B8;
+    border: 1px solid #334155;
+    cursor: pointer;
+    transition: all 0.15s ease;
 }
 
-.tree-node-division {
-    border-left: 3px solid #10B981;
-    margin-left: 0.75rem;
-}
-
-.tree-node-station {
-    border-left: 3px solid #F59E0B;
-    margin-left: 1rem;
-    padding: 0.4rem 0.65rem;
-    font-size: 0.8rem;
+.tree-inspect-btn:hover {
+    background: #2563EB;
+    color: #FFF;
+    border-color: #3B82F6;
 }
 
 .tree-branch {
@@ -1272,7 +1493,7 @@ body {
     color: #ffffff;
 }
 
-/* â”€â”€â”€ Crowd Monitoring Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Crowd Monitoring Grid ─────────────────────────────────── */
 .provenance-card {
     background: #162033;
     border: 1px solid #2A3A55;
@@ -1364,7 +1585,7 @@ body {
     font-family: var(--font-mono);
 }
 
-/* â”€â”€â”€ Drawers (Station Detail & AI Assistant) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Drawers (Station Detail & AI Assistant) ─────────────────── */
 .station-drawer, .ai-drawer {
     position: fixed;
     top: 0;
@@ -1513,7 +1734,7 @@ body {
     flex-shrink: 0;
 }
 
-/* â”€â”€â”€ Modals (Command Center Overlays) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Modals (Command Center Overlays) ───────────────────────── */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -1550,7 +1771,7 @@ body {
     to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* â”€â”€â”€ SQL Terminal & Background Monitor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── SQL Terminal & Background Monitor ──────────────────────── */
 .sql-terminal {
     background: #090D16;
     color: #E2E8F0;
@@ -1653,7 +1874,7 @@ body {
     box-shadow: 0 0 10px var(--rail-red-glow);
 }
 
-/* â”€â”€â”€ Responsive Breakpoints (1920 down to 360px) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Responsive Breakpoints (1920 down to 360px) ─────────────── */
 @media (max-width: 1200px) {
     .metrics-grid {
         grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -1736,7 +1957,7 @@ body {
     }
 }
 
-/* â”€â”€â”€ Accessibility: Reduced Motion â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Accessibility: Reduced Motion ──────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -1747,12 +1968,12 @@ body {
 }
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   RAILFLOW 2.0 â€” PREMIUM UI ENHANCEMENT PACK
+   RAILFLOW 2.0 — PREMIUM UI ENHANCEMENT PACK
    Mobile Navigation, Toasts, Skeletons, Corridor Cards,
    Page Progress Bar, Telemetry Heatmap, AI Typing Indicator
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* â”€â”€â”€ Page-Level Top Progress Bar (Permanently Removed for Instant 0ms Latency) â”€â”€â”€ */
+/* ─── Page-Level Top Progress Bar (Permanently Removed for Instant 0ms Latency) ─── */
 .page-progress-bar {
     display: none !important;
     width: 0 !important;
@@ -1761,7 +1982,7 @@ body {
     pointer-events: none !important;
 }
 
-/* â”€â”€â”€ CUSTOM BUTTON LAYOUTS WITH EMOJIS & 0ms FAST RESPONSE â”€â”€â”€â”€â”€ */
+/* ─── CUSTOM BUTTON LAYOUTS WITH EMOJIS & 0ms FAST RESPONSE ───── */
 .swap-btn {
     width: 44px;
     height: 44px;
@@ -2034,7 +2255,7 @@ body {
     background: rgba(16, 185, 129, 0.05);
 }
 
-/* â”€â”€â”€ Mobile Hamburger Button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Mobile Hamburger Button ─────────────────────────────────── */
 .hamburger-btn {
     display: none;
     background: transparent;
@@ -2087,7 +2308,7 @@ body {
     }
 }
 
-/* â”€â”€â”€ Mobile Sidebar Overlay Backdrop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Mobile Sidebar Overlay Backdrop ────────────────────────── */
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -2106,7 +2327,7 @@ body {
     pointer-events: auto;
 }
 
-/* â”€â”€â”€ Toast Notification System â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Toast Notification System ──────────────────────────────── */
 .toast-container {
     position: fixed;
     bottom: 1.5rem;
@@ -2214,7 +2435,7 @@ body {
 .toast.toast-info    { --toast-accent: var(--cyan); border-color: rgba(34, 211, 238, 0.30); }
 .toast.toast-info .toast-icon { color: var(--cyan); }
 
-/* â”€â”€â”€ Skeleton Loader System â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Skeleton Loader System ──────────────────────────────────── */
 @keyframes shimmer {
     0%   { background-position: -600px 0; }
     100% { background-position: 600px 0; }
@@ -2263,7 +2484,7 @@ body {
     gap: 0.75rem;
 }
 
-/* â”€â”€â”€ Enhanced Corridor Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Enhanced Corridor Cards ─────────────────────────────────── */
 .corridor-card {
     cursor: pointer;
     padding: 0.85rem 1rem;
@@ -2335,7 +2556,7 @@ body {
     transform: translateY(-50%) translateX(3px);
 }
 
-/* â”€â”€â”€ Status Indicator Dots â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Status Indicator Dots ───────────────────────────────────── */
 .status-indicator {
     display: inline-block;
     width: 8px;
@@ -2363,7 +2584,7 @@ body {
     animation: pulseGlow 1s infinite ease-in-out;
 }
 
-/* â”€â”€â”€ AI Typing Indicator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── AI Typing Indicator ─────────────────────────────────────── */
 .ai-typing {
     display: flex;
     align-items: center;
@@ -2393,7 +2614,7 @@ body {
     40% { transform: scale(1); opacity: 1; }
 }
 
-/* â”€â”€â”€ Telemetry Heatmap Grid (Crowd Monitor enhancement) â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Telemetry Heatmap Grid (Crowd Monitor enhancement) ─────── */
 .telemetry-heatmap {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -2425,7 +2646,7 @@ body {
     50%       { opacity: 0.6; }
 }
 
-/* â”€â”€â”€ Loading Spinner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Loading Spinner ─────────────────────────────────────────── */
 .spinner {
     display: inline-block;
     width: 20px;
@@ -2457,7 +2678,7 @@ body {
     to { transform: rotate(360deg); }
 }
 
-/* â”€â”€â”€ Network Pulse Animation on Edges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Network Pulse Animation on Edges ────────────────────────── */
 .graph-edge-pulse {
     stroke: var(--cyan);
     stroke-width: 2.5;
@@ -2470,7 +2691,7 @@ body {
     to { stroke-dashoffset: -40; }
 }
 
-/* â”€â”€â”€ Enhanced Metric Cards â€” Color Accent Variants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Enhanced Metric Cards — Color Accent Variants ──────────── */
 .metric-card.accent-red    { --card-accent: var(--rail-red); }
 .metric-card.accent-blue   { --card-accent: var(--blue); }
 .metric-card.accent-cyan   { --card-accent: var(--cyan); }
@@ -2478,7 +2699,7 @@ body {
 .metric-card.accent-amber  { --card-accent: var(--amber); }
 .metric-card.accent-purple { --card-accent: var(--purple); }
 
-/* â”€â”€â”€ Timetable Modal Enhanced States â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Timetable Modal Enhanced States ────────────────────────── */
 .tt-loading-state {
     display: flex;
     align-items: center;
@@ -2521,7 +2742,7 @@ body {
     font-weight: 600;
 }
 
-/* â”€â”€â”€ Platform Bar Enhanced States â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Platform Bar Enhanced States ───────────────────────────── */
 .platform-bar-fill.normal   { background: linear-gradient(90deg, var(--emerald), #6EE7B7); }
 .platform-bar-fill.warning  { background: linear-gradient(90deg, var(--amber), #FCD34D); }
 .platform-bar-fill.critical {
@@ -2534,7 +2755,7 @@ body {
     50%       { box-shadow: 0 0 10px rgba(239, 51, 64, 0.5); }
 }
 
-/* â”€â”€â”€ Keyboard Shortcut Pill â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Keyboard Shortcut Pill ──────────────────────────────────── */
 .kbd {
     display: inline-flex;
     align-items: center;
@@ -2548,7 +2769,7 @@ body {
     box-shadow: 0 2px 0 #0B1220;
 }
 
-/* â”€â”€â”€ Data Source Provenance Ribbon â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Data Source Provenance Ribbon ──────────────────────────── */
 .source-ribbon {
     display: inline-flex;
     align-items: center;
@@ -2567,7 +2788,7 @@ body {
 .source-ribbon.catalog   { background: rgba(245, 158, 11, 0.12); color: #FBBF24; border: 1px solid rgba(245,158,11,0.25); }
 .source-ribbon.interp    { background: rgba(139, 92, 246, 0.12); color: #A78BFA; border: 1px solid rgba(139,92,246,0.25); }
 
-/* â”€â”€â”€ Floating Live Telemetry Counter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Floating Live Telemetry Counter ───────────────────────── */
 .telemetry-badge-float {
     position: fixed;
     bottom: 1.5rem;
@@ -2601,7 +2822,7 @@ body {
     }
 }
 
-/* â”€â”€â”€ Graph Node Glow Pulse â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Graph Node Glow Pulse ───────────────────────────────────── */
 .graph-node-active circle {
     animation: nodeActivePulse 2.5s ease-in-out infinite;
 }
@@ -2611,7 +2832,7 @@ body {
     50%       { filter: drop-shadow(0 0 14px rgba(239, 51, 64, 0.8)); }
 }
 
-/* â”€â”€â”€ Train Type Badge Color Map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Train Type Badge Color Map ──────────────────────────────── */
 .train-type-badge {
     display: inline-flex;
     align-items: center;
@@ -2633,7 +2854,7 @@ body {
 .train-type-badge.EXPRESS     { background: rgba(16,185,129,0.15); color: #6EE7B7; border: 1px solid rgba(16,185,129,0.3); }
 .train-type-badge.MAIL        { background: rgba(245,158,11,0.15); color: #FCD34D; border: 1px solid rgba(245,158,11,0.3); }
 
-/* â”€â”€â”€ Panel Accent Borders â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Panel Accent Borders ────────────────────────────────────── */
 .panel.accent-top-red    { border-top: 3px solid var(--rail-red); }
 .panel.accent-top-blue   { border-top: 3px solid var(--blue); }
 .panel.accent-top-cyan   { border-top: 3px solid var(--cyan); }
@@ -2641,7 +2862,7 @@ body {
 .panel.accent-top-amber  { border-top: 3px solid var(--amber); }
 .panel.accent-top-purple { border-top: 3px solid var(--purple); }
 
-/* â”€â”€â”€ Search Results Enhanced â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Search Results Enhanced ─────────────────────────────────── */
 .search-item-type-badge {
     display: inline-flex;
     align-items: center;
@@ -2658,7 +2879,7 @@ body {
 .search-item-type-badge.train   { background: rgba(239,51,64,0.15); color: var(--rail-red); }
 .search-item-type-badge.zone    { background: rgba(59,130,246,0.15); color: var(--blue); }
 
-/* â”€â”€â”€ Keyboard Shortcut Tooltip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Keyboard Shortcut Tooltip ───────────────────────────────── */
 [data-shortcut]::after {
     content: attr(data-shortcut);
     position: absolute;
@@ -2679,7 +2900,7 @@ body {
     z-index: 1000;
 }
 
-/* â”€â”€â”€ Stat Change Indicator (Up/Down arrows on metrics) â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Stat Change Indicator (Up/Down arrows on metrics) ──────── */
 .stat-change {
     display: inline-flex;
     align-items: center;
@@ -2693,7 +2914,7 @@ body {
 .stat-change.down { color: var(--rail-red); }
 .stat-change.flat { color: var(--text-muted); }
 
-/* â”€â”€â”€ Version Chip in Sidebar Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Version Chip in Sidebar Footer ─────────────────────────── */
 .version-chip {
     font-size: 0.60rem;
     font-family: var(--font-mono);
@@ -2707,7 +2928,7 @@ body {
     letter-spacing: 0.06em;
 }
 
-/* â”€â”€â”€ Full-Width Loading Overlay for Modal / Drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Full-Width Loading Overlay for Modal / Drawer ──────────── */
 .content-loading {
     display: flex;
     flex-direction: column;
@@ -2725,7 +2946,7 @@ body {
     border-width: 2.5px;
 }
 
-/* â”€â”€â”€ Command Center Gradient Spotlight â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Command Center Gradient Spotlight ──────────────────────── */
 .spotlight-card {
     position: relative;
     overflow: hidden;
@@ -2745,7 +2966,7 @@ body {
 
 .spotlight-card > * { position: relative; z-index: 1; }
 
-/* â”€â”€â”€ Telemetry Tick Number Badge (Crowd Page) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Telemetry Tick Number Badge (Crowd Page) ───────────────── */
 .telemetry-tick-counter {
     font-family: var(--font-mono);
     font-size: 0.85rem;
@@ -2757,7 +2978,7 @@ body {
     border-radius: 999px;
 }
 
-/* â”€â”€â”€ Interactive Corridor Path Highlight in Route Strip â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Interactive Corridor Path Highlight in Route Strip ─────── */
 .route-stop.start .stop-marker {
     background: var(--rail-red);
     border-color: #F3F7FF;
@@ -2772,7 +2993,7 @@ body {
     box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
 }
 
-/* â”€â”€â”€ Sidebar collapse for desktop medium screens â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Sidebar collapse for desktop medium screens ─────────────── */
 @media (max-width: 1200px) and (min-width: 1025px) {
     .sidebar {
         width: 220px;
@@ -2783,12 +3004,12 @@ body {
     }
 }
 
-/* â”€â”€â”€ Admin Panel Lock Card Polish â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Admin Panel Lock Card Polish ────────────────────────────── */
 .admin-lock-card {
     background: linear-gradient(145deg, rgba(220, 38, 38, 0.04), transparent);
 }
 
-/* â”€â”€â”€ Table Row Action Hover Reveal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Table Row Action Hover Reveal ──────────────────────────── */
 .data-table tbody tr .action-reveal {
     opacity: 0;
     transition: opacity var(--transition-fast);
@@ -2798,7 +3019,7 @@ body {
     opacity: 1;
 }
 
-/* â”€â”€â”€ Responsive Tweaks for Tablet â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Responsive Tweaks for Tablet ───────────────────────────── */
 @media (max-width: 900px) {
     .view-title {
         font-size: 1.3rem;
@@ -2811,7 +3032,7 @@ body {
     }
 }
 
-/* â”€â”€â”€ Print: Strip all telemetry / dark backgrounds â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Print: Strip all telemetry / dark backgrounds ──────────── */
 @media print {
     body { background: #ffffff; color: #000000; }
     .sidebar, .top-header, .toast-container, .telemetry-badge-float,
@@ -2838,7 +3059,6 @@ body {
 
 .page-view {
     animation: none !important;
-    transition: none !important;
 }
 
 /* 2. Manual Emoji Styles */
@@ -2862,11 +3082,14 @@ body {
     border: 1px solid rgba(234, 88, 12, 0.45) !important;
     color: #fb923c !important;
     font-weight: 600;
-    padding: 0.45rem 0.85rem;
+    padding: 0.22rem 0.55rem !important;
+    min-height: 28px !important;
+    height: 28px !important;
+    font-size: 0.72rem !important;
     border-radius: var(--radius-sm);
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.35rem;
     transition: all 150ms ease;
 }
 .btn-pnr-status:hover {
@@ -2881,11 +3104,14 @@ body {
     border: 1px solid rgba(59, 130, 246, 0.4) !important;
     color: #60a5fa !important;
     font-weight: 600;
-    padding: 0.45rem 0.85rem;
+    padding: 0.22rem 0.55rem !important;
+    min-height: 28px !important;
+    height: 28px !important;
+    font-size: 0.72rem !important;
     border-radius: var(--radius-sm);
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.35rem;
     transition: all 150ms ease;
 }
 .btn-guide:hover {
@@ -2900,11 +3126,14 @@ body {
     border: 1px solid rgba(168, 85, 247, 0.45) !important;
     color: #c084fc !important;
     font-weight: 600;
-    padding: 0.45rem 0.85rem;
+    padding: 0.20rem 0.50rem !important;
+    min-height: 28px !important;
+    height: 28px !important;
+    font-size: 0.70rem !important;
     border-radius: var(--radius-sm);
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.35rem;
     transition: all 150ms ease;
 }
 .btn-ai-toggle:hover {
@@ -3086,10 +3315,10 @@ body {
 }
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   AKNEX RAILFLOW 3.0 â€” AUTOMATED STATION OPERATIONS & COMMUTER INTELLIGENCE
+   AKNEX RAILFLOW 3.0 — AUTOMATED STATION OPERATIONS & COMMUTER INTELLIGENCE
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* â”€â”€â”€ Dual-View Mode Switcher (Controller HUD vs Commuter Portal) â”€â”€â”€ */
+/* ─── Dual-View Mode Switcher (Controller HUD vs Commuter Portal) ─── */
 .view-mode-toggle {
     display: inline-flex;
     align-items: center;
@@ -3140,7 +3369,7 @@ body {
     font-size: 0.85rem;
 }
 
-/* â”€â”€â”€ PA Audio & Volume Controller Dock â”€â”€â”€ */
+/* ─── PA Audio & Volume Controller Dock ─── */
 .audio-control-dock {
     display: inline-flex;
     align-items: center;
@@ -3193,7 +3422,7 @@ body {
     min-width: 26px;
 }
 
-/* â”€â”€â”€ Module A: Alert Carousel & Conflict Dispatcher â”€â”€â”€ */
+/* ─── Module A: Alert Carousel & Conflict Dispatcher ─── */
 .alert-carousel-container {
     margin-bottom: 1.25rem;
     animation: alertSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -3330,7 +3559,7 @@ body {
     box-shadow: 0 0 24px rgba(239, 51, 64, 0.7);
 }
 
-/* â”€â”€â”€ Emergency Strobe Gate Hold Banner â”€â”€â”€ */
+/* ─── Emergency Strobe Gate Hold Banner ─── */
 .strobe-gate-banner {
     background: linear-gradient(90deg, #EF3340 0%, #B91C1C 50%, #EF3340 100%);
     background-size: 200% 100%;
@@ -3362,7 +3591,7 @@ body {
     margin-left: 6px;
 }
 
-/* â”€â”€â”€ Module B: FOB & Vertical Chokepoints Topology â”€â”€â”€ */
+/* ─── Module B: FOB & Vertical Chokepoints Topology ─── */
 .fob-topology-container {
     background: var(--bg-surface);
     border: 1px solid var(--border);
@@ -3449,7 +3678,7 @@ body {
 .chokepoint-meter-fill.warning { background: var(--amber); }
 .chokepoint-meter-fill.critical { background: var(--rail-red); }
 
-/* â”€â”€â”€ Module C: Coach-Wise Crowd Density Strip â”€â”€â”€ */
+/* ─── Module C: Coach-Wise Crowd Density Strip ─── */
 .coach-density-container {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -3538,7 +3767,7 @@ body {
     color: var(--cyan);
 }
 
-/* â”€â”€â”€ Module D: Simulation Sandbox Control Panel â”€â”€â”€ */
+/* ─── Module D: Simulation Sandbox Control Panel ─── */
 .sandbox-panel {
     background: linear-gradient(180deg, rgba(20, 34, 58, 0.9) 0%, rgba(11, 18, 32, 0.95) 100%);
     border: 1px solid rgba(59, 130, 246, 0.35);
@@ -3604,7 +3833,7 @@ body {
     cursor: pointer;
 }
 
-/* â”€â”€â”€ Module E: Virtual Digital Station Display Board â”€â”€â”€ */
+/* ─── Module E: Virtual Digital Station Display Board ─── */
 .digital-display-board {
     background: #02050A;
     border: 3px solid #1E2C44;
@@ -3670,7 +3899,7 @@ body {
     50% { opacity: 0.4; }
 }
 
-/* â”€â”€â”€ Module F: Scenario Replay & Audit Log â”€â”€â”€ */
+/* ─── Module F: Scenario Replay & Audit Log ─── */
 .scenario-replay-dock {
     display: flex;
     align-items: center;
@@ -3699,7 +3928,7 @@ body {
     font-weight: 700;
 }
 
-/* â”€â”€â”€ Commuter Portal Dedicated Styles â”€â”€â”€ */
+/* ─── Commuter Portal Dedicated Styles ─── */
 .commuter-portal-container {
     max-width: 960px;
     margin: 0 auto;
@@ -3887,6 +4116,10 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
+    contain: layout paint;
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 /* Subtle CRT scanline overlay */
@@ -4576,119 +4809,20 @@ body {
 }
 
 /* ═════════════════════════════════════════════════════════════════════════
-   STATION NETWORK HIERARCHY TREE — HIGH VISIBILITY CYBER STYLING
+   STATION NETWORK HIERARCHY & DIRECTORY RESPONSIVE GRID
    ═════════════════════════════════════════════════════════════════════════ */
-.tree-container {
-    background: #080D18;
-    border: 1px solid #1E293B;
-    border-radius: var(--radius-md);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+.stations-overview-grid {
+    display: grid;
+    grid-template-columns: minmax(380px, 1.2fr) 2fr;
+    gap: 1.5rem;
+    align-items: start;
+    width: 100%;
 }
-.tree-apex-card {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(15, 23, 42, 0.85));
-    border: 1px solid rgba(239, 68, 68, 0.35);
-    border-radius: 8px;
-    padding: 0.85rem 1rem;
-    margin-bottom: 0.75rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.tree-apex-card:hover {
-    border-color: var(--rail-red);
-    box-shadow: 0 0 16px rgba(239, 68, 68, 0.2);
-}
-.tree-zone-card {
-    background: rgba(15, 23, 42, 0.75);
-    border: 1px solid #1E293B;
-    border-radius: 8px;
-    margin-bottom: 0.6rem;
-    overflow: hidden;
-    transition: all 0.2s ease;
-}
-.tree-zone-card:hover {
-    border-color: rgba(59, 130, 246, 0.4);
-}
-.tree-zone-header {
-    padding: 0.65rem 0.9rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-    background: rgba(30, 41, 59, 0.4);
-    transition: background 0.2s ease;
-}
-.tree-zone-header:hover {
-    background: rgba(30, 41, 59, 0.8);
-}
-.tree-zone-header .zone-title {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #F1F5F9;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.tree-zone-header .zone-caret {
-    font-size: 0.75rem;
-    color: #64748B;
-    transition: transform 0.2s ease;
-}
-.tree-zone-card.collapsed .zone-caret {
-    transform: rotate(-90deg);
-}
-.tree-zone-card.collapsed .tree-zone-body {
-    display: none;
-}
-.tree-zone-body {
-    padding: 0.5rem 0.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    border-top: 1px solid #1E293B;
-}
-.tree-station-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.45rem 0.7rem;
-    background: rgba(10, 15, 26, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 6px;
-    transition: all 0.15s ease;
-}
-.tree-station-card:hover {
-    background: rgba(30, 58, 138, 0.15);
-    border-color: rgba(59, 130, 246, 0.4);
-    transform: translateX(3px);
-}
-.tree-stn-code {
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    font-weight: 800;
-    color: var(--rail-red);
-    background: rgba(239, 68, 68, 0.12);
-    border: 1px solid rgba(239, 68, 68, 0.25);
-    padding: 2px 7px;
-    border-radius: 4px;
-    margin-right: 8px;
-}
-.tree-stn-name {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #E2E8F0;
-}
-.tree-pf-chip {
-    font-size: 0.70rem;
-    font-weight: 600;
-    color: #34D399;
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.25);
-    padding: 2px 6px;
-    border-radius: 4px;
+
+@media (max-width: 1100px) {
+    .stations-overview-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* ═════════════════════════════════════════════════════════════════════════
@@ -5262,6 +5396,342 @@ body {
     .metrics-grid {
         grid-template-columns: 1fr !important;
     }
+}
+
+/* ─── Floating Mini Help & Feedback Button (Bottom-Right) ─── */
+.floating-help-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99999;
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border: 1px solid rgba(59, 130, 246, 0.6);
+    color: #F8FAFC;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: var(--font-sans);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 14px rgba(59, 130, 246, 0.3);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+}
+.floating-help-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    border-color: #60A5FA;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 20px rgba(59, 130, 246, 0.55);
+}
+.floating-help-btn .help-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10B981;
+    box-shadow: 0 0 8px #10B981;
+    animation: pulse 2s infinite;
+}
+
+/* Floating Help & Feedback Modal */
+.floating-help-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 100000;
+    animation: fadeIn 0.2s ease;
+}
+.floating-help-modal {
+    position: fixed;
+    bottom: 68px;
+    right: 20px;
+    width: 420px;
+    max-width: calc(100vw - 40px);
+    background: #0F172A;
+    border: 1px solid #263852;
+    border-radius: 12px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 24px rgba(59, 130, 246, 0.2);
+    z-index: 100001;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideUp 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.help-modal-header {
+    padding: 0.85rem 1.1rem;
+    background: #141F32;
+    border-bottom: 1px solid #22344D;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.help-modal-header h4 {
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #F8FAFC;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.help-modal-close {
+    background: transparent;
+    border: none;
+    color: #94A3B8;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+}
+.help-modal-close:hover {
+    color: #EF4444;
+    background: rgba(239, 68, 68, 0.15);
+}
+.help-modal-body {
+    padding: 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 480px;
+    overflow-y: auto;
+}
+.help-field-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+.help-input, .help-textarea, .help-select {
+    width: 100%;
+    background: #090E17;
+    border: 1px solid #20314A;
+    border-radius: 6px;
+    color: #F1F5F9;
+    font-size: 0.80rem;
+    padding: 0.5rem 0.7rem;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease;
+}
+.help-input:focus, .help-textarea:focus, .help-select:focus {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 1px #3B82F6;
+}
+.help-star-rating {
+    display: flex;
+    gap: 6px;
+    cursor: pointer;
+}
+.help-star {
+    font-size: 1.15rem;
+    color: #475569;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+.help-star.active {
+    color: #F59E0B;
+}
+.help-star:hover {
+    transform: scale(1.15);
+}
+.help-submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+    border: 1px solid #3B82F6;
+    color: #FFF;
+    padding: 0.65rem 1rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+}
+.help-submit-btn:hover {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5);
+    transform: translateY(-1px);
+}
+.help-modal-footer {
+    padding: 0.6rem 1.1rem;
+    background: #090E17;
+    border-top: 1px solid #1A283E;
+    font-size: 0.70rem;
+    color: #64748B;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   SITE MASTER FOOTER & COMPREHENSIVE PROJECT TREE CONCLUSION
+   ═════════════════════════════════════════════════════════════════════════ */
+.site-master-footer {
+    margin-top: 3rem;
+    padding: 2.5rem 1.5rem 2rem;
+    background: linear-gradient(180deg, #0A111F 0%, #060A13 100%);
+    border-top: 1px solid #1E2D44;
+    position: relative;
+    z-index: 10;
+}
+
+.site-master-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--rail-red), var(--blue), transparent);
+    opacity: 0.8;
+}
+
+.footer-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.footer-brand-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #1A273D;
+}
+
+.footer-brand-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #F8FAFC;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-brand-desc {
+    font-size: 0.80rem;
+    color: #94A3B8;
+    max-width: 680px;
+    margin-top: 0.4rem;
+    line-height: 1.5;
+}
+
+.footer-metrics-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.footer-pill {
+    background: #111A2C;
+    border: 1px solid #20314C;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    color: #CBD5E1;
+}
+
+.footer-pill strong {
+    color: var(--cyan);
+}
+
+.project-tree-conclusion-card {
+    background: #080D17;
+    border: 1px solid #1A283E;
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.project-tree-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px dashed #1E2D44;
+}
+
+.project-tree-header-title {
+    font-size: 0.86rem;
+    font-weight: 800;
+    color: #E2E8F0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.project-tree-pre {
+    margin: 0;
+    padding: 1rem;
+    background: #05080E;
+    border: 1px solid #162033;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    line-height: 1.6;
+    color: #A5B4FC;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+.project-tree-pre .tree-root {
+    color: #F43F5E;
+    font-weight: 800;
+}
+
+.project-tree-pre .tree-branch {
+    color: #38BDF8;
+    font-weight: 700;
+}
+
+.project-tree-pre .tree-leaf {
+    color: #94A3B8;
+}
+
+.project-tree-pre .tree-highlight {
+    color: #34D399;
+    font-weight: 600;
+}
+
+.footer-copyright-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #162033;
+    font-size: 0.75rem;
+    color: #64748B;
+}
+
+.footer-copyright-bar strong {
+    color: #E2E8F0;
+}
+
+.footer-author-tag {
+    color: #38BDF8;
+    font-weight: 700;
 }
 
 
