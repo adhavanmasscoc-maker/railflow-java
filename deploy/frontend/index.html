@@ -7,7 +7,7 @@
     <meta name="description" content="Logical Indian Railways Operations, Topology Graph, SQLite JDBC Data Layer, Journey Planning & Simulated Operational Telemetry.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- Aknex Telemetry & Feedback Tracker -->
@@ -116,11 +116,6 @@
                 <span class="nav-emoji">🗄️</span>
                 <span>Database Explorer</span>
                 <span class="nav-badge">JDBC</span>
-            </a>
-            <a href="/network" class="nav-item" data-page="network" id="nav-fleet-ops">
-                <span class="nav-emoji">⚡</span>
-                <span>Fleet &amp; Topology Ops</span>
-                <span class="nav-badge" style="background:var(--cyan-dim); color:var(--cyan);">KAVACH</span>
             </a>
             <a href="/feedback" class="nav-item" data-page="feedback" id="nav-feedback">
                 <span class="nav-emoji">💬</span>
@@ -601,31 +596,34 @@
             <section class="page-view" id="page-network">
                 <div class="view-header">
                     <div class="view-title-group">
-                        <div class="eyebrow"><span class="sys-num">SYSTEM 03</span> <span class="slash">//</span> FLEET &amp; TOPOLOGY OPS</div>
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 03</span> <span class="slash">//</span> RAILRADAR &amp; TOPOLOGY OPS</div>
                         <div class="view-subtitle">
-                            <span class="pulse-dot" style="background:var(--cyan);"></span>
-                            AUTONOMOUS TERMINAL DISPATCH &amp; CONGESTION ENGINE
+                            <span class="pulse-dot" style="background:var(--emerald);"></span>
+                            SATELLITE TELEMETRY &amp; INTER-HUB NETWORK
                         </div>
-                        <h1 class="view-title">Terminal Congestion &amp; Dynamic Platform Dispatch Sandbox</h1>
+                        <h1 class="view-title">Live Satellite RailRadar &amp; Network Topology</h1>
                         <p class="view-desc">
-                            Interactive real-time terminal sandbox solving metropolitan station bottlenecks, stampede hazard mitigation, and PriorityQueue heuristic train re-allocations across Indian Railways hubs.
+                            Multi-source geo-referenced satellite radar, logical Indian Railways topology graph, and autonomous platform dispatch sandbox.
                         </p>
                     </div>
                     <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
-                        <span class="badge badge-real">CORE PROBLEM SOLVER</span>
-                        <span class="badge badge-ai">PRIORITYQUEUE MAX-HEAP</span>
-                        <span class="badge" style="background:var(--cyan-dim); color:var(--cyan);">INTERACTIVE SANDBOX</span>
+                        <span class="badge badge-real">LIVE GPS RADAR</span>
+                        <span class="badge badge-derived">NETWORK TOPOLOGY</span>
+                        <span class="badge" style="background:var(--cyan-dim); color:var(--cyan);">DISPATCH SANDBOX</span>
                     </div>
                 </div>
 
-                <!-- Sub-view switcher: Dispatch Sandbox, Topology Graph, Fleet & Kavach, Directory, and Data Provenance -->
+                <!-- Sub-view switcher: RailRadar, Topology Graph, Dispatch Sandbox, Fleet & Kavach, Directory, and Data Provenance -->
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
                     <div style="display:flex; gap:0.5rem; background:var(--bg-subtle); padding:0.25rem; border-radius:var(--radius-md); border:1px solid var(--border); flex-wrap:wrap;">
-                        <button id="btnNetDispatch" class="btn btn-primary" onclick="switchNetworkView('dispatch')" style="font-size:0.78rem; padding:0.35rem 0.75rem; display:inline-flex; align-items:center; gap:6px;">
-                            <span>🎮 Autonomous Dispatch Sandbox</span>
+                        <button id="btnNetRadar" class="btn btn-primary" onclick="switchNetworkView('radar')" style="font-size:0.78rem; padding:0.35rem 0.75rem; display:inline-flex; align-items:center; gap:6px;">
+                            <span>🛰️ Live Satellite RailRadar</span>
                         </button>
                         <button id="btnNetTopology" class="btn btn-secondary" onclick="switchNetworkView('topology')" style="font-size:0.78rem; padding:0.35rem 0.75rem; display:inline-flex; align-items:center; gap:6px;">
                             <span>🌐 Inter-Hub Topology Graph</span>
+                        </button>
+                        <button id="btnNetDispatch" class="btn btn-secondary" onclick="switchNetworkView('dispatch')" style="font-size:0.78rem; padding:0.35rem 0.75rem; display:inline-flex; align-items:center; gap:6px;">
+                            <span>🎮 Dynamic Dispatch Sandbox</span>
                         </button>
                         <button id="btnNetFleetKavach" class="btn btn-secondary" onclick="switchNetworkView('fleet-kavach')" style="font-size:0.78rem; padding:0.35rem 0.75rem; display:inline-flex; align-items:center; gap:6px;">
                             <span>⚡ Fleet &amp; Kavach Specs</span>
@@ -643,8 +641,24 @@
                     </div>
                 </div>
 
-                <!-- View 1: Autonomous Terminal Dispatch & Dynamic Crowd Reallocation Sandbox (Default First View) -->
-                <div id="netDispatchView" class="panel" style="display:block; padding:1.25rem; border-radius:var(--radius-md); background:var(--bg-card); border:1px solid var(--border); margin-top:0.5rem;">
+                <!-- View 1: Live Satellite RailRadar Stream (Default Active Sub-View) -->
+                <div class="network-subview" id="netRadarView" style="display:block;">
+                    <div style="background: rgba(15, 23, 42, 0.95); border: 1px solid var(--border); border-bottom: none; border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="pulse-dot" style="background:var(--emerald);"></span>
+                            <span style="font-size:0.8rem; font-weight:700; color:var(--text-primary); text-transform:uppercase; letter-spacing:0.05em">Multi-Source Satellite &amp; Station Telemetry Active</span>
+                            <span class="badge badge-real" style="font-size:0.65rem;">LIVE SATELLITE RAILRADAR STREAM</span>
+                            <span class="badge" style="background:rgba(59,130,246,0.2); color:#60a5fa; border:1px solid rgba(59,130,246,0.3); font-size:0.65rem;">ACTIVE GPS RADAR</span>
+                        </div>
+                        <a href="https://railradar.in/railradar" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size:0.75rem; padding:0.25rem 0.6rem; text-decoration:none; display:inline-flex; align-items:center; gap:4px">
+                            <span>🛰️ Open Fullscreen Radar ↗</span>
+                        </a>
+                    </div>
+                    <iframe src="https://railradar.in/railradar" style="width: 100%; height: 680px; border: none; display: block;" title="RailRadar Live Map" loading="lazy" allow="geolocation"></iframe>
+                </div>
+
+                <!-- View 2: Autonomous Terminal Dispatch & Dynamic Crowd Reallocation Sandbox -->
+                <div id="netDispatchView" class="panel" style="display:none; padding:1.25rem; border-radius:var(--radius-md); background:var(--bg-card); border:1px solid var(--border); margin-top:0.5rem;">
                     <!-- Terminal Selector Header -->
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; padding-bottom:1rem; border-bottom:1px solid var(--border);">
                         <div>

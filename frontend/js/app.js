@@ -978,7 +978,7 @@ function switchPage(pageId, pushUrl) {
         try {
             if (pageId === 'network') {
                 if (!targetView.dataset.initialized) {
-                    switchNetworkView('dispatch');
+                    switchNetworkView('radar');
                     targetView.dataset.initialized = 'true';
                 }
             } else if (pageId === 'dashboard') {
@@ -1105,22 +1105,23 @@ function initMachinaHud() {
     updateHudTelemetry(STATE.activePage || 'dashboard');
 }
 
-// ─── SUB-VIEW SWITCHER: DISPATCH, TOPOLOGY, FLEET/KAVACH, DIRS, PROVENANCE ───
+// ─── SUB-VIEW SWITCHER: RADAR, TOPOLOGY, DISPATCH, FLEET/KAVACH, DIRS, PROVENANCE ───
 function switchNetworkView(view) {
     const views = {
-        'dispatch': { el: $('netDispatchView'), btn: $('btnNetDispatch') },
+        'radar': { el: $('netRadarView'), btn: $('btnNetRadar') },
         'topology': { el: $('netTopologyView'), btn: $('btnNetTopology') },
+        'dispatch': { el: $('netDispatchView'), btn: $('btnNetDispatch') },
         'fleet-kavach': { el: $('netFleetKavachView'), btn: $('btnNetFleetKavach') },
         'directory': { el: $('netDirectoryView'), btn: $('btnNetDirectory') },
         'provenance': { el: $('netProvenanceView'), btn: $('btnNetProvenance') }
     };
 
-    const targetKey = views[view] ? view : 'dispatch';
+    const targetKey = views[view] ? view : 'radar';
 
     Object.keys(views).forEach(k => {
         const item = views[k];
         if (item.el) {
-            item.el.style.display = (k === targetKey) ? (k === 'dispatch' || k === 'topology' ? 'block' : 'flex') : 'none';
+            item.el.style.display = (k === targetKey) ? (k === 'dispatch' || k === 'topology' || k === 'radar' ? 'block' : 'flex') : 'none';
         }
         if (item.btn) {
             item.btn.className = (k === targetKey) ? 'btn btn-primary' : 'btn btn-secondary';
@@ -2448,7 +2449,7 @@ function lookupLocalStations(query, limit = 8) {
                 state: h.state,
                 zone: h.zone,
                 platforms: h.platforms,
-                emoji: h.zone === 'SR' ? 'ðŸŒ´' : (h.tier === 'trunk' ? '⚡' : '🚆'),
+                emoji: h.zone === 'SR' ? '🌴' : (h.tier === 'trunk' ? '⚡' : '🚆'),
                 badge: h.zone,
                 aliases: [h.code.toLowerCase(), h.name.toLowerCase(), (h.city || '').toLowerCase()]
             });
@@ -4126,7 +4127,7 @@ function renderZonesTreeHtml() {
             <div class="tree-node tree-node-zone" id="node-zone-${z.code}" onclick="toggleZoneNode('${z.code}')">
                 <div style="display:flex; align-items:center;">
                     <span class="tree-toggle-icon" id="icon-zone-${z.code}">&#9658;</span>
-                    <span style="font-size:1rem; margin-right:6px;">ðŸš†</span>
+                    <span style="font-size:1rem; margin-right:6px;">🚆</span>
                     <div>
                         <div style="font-weight:600; color:var(--text-primary); font-size:0.84rem;">
                             ${z.name} <span style="font-family:var(--font-mono); color:var(--rail-red); font-weight:700;">(${z.code})</span>
@@ -4363,7 +4364,7 @@ function verifyAdminPassword() {
         $('adminLockedCard').style.display = 'none';
         $('adminUnlockedPanel').style.display = 'flex';
 
-        $('adminLockIcon').textContent = 'ðŸ”“';
+        $('adminLockIcon').textContent = '🔓';
         $('adminLockText').textContent = 'Admin Mode: ACTIVE (aknex1)';
         $('btnAdminModeToggle').style.borderColor = 'var(--emerald)';
         
@@ -4380,7 +4381,7 @@ function verifyAdminPassword() {
             terminal.innerHTML = `
                 <div class="sql-entry" style="border-left:3px solid var(--emerald);">
                     <div class="sql-entry-header">
-                        <span style="color:var(--emerald); font-weight:700;">ðŸŸ¢ AUTHENTICATION_SUCCESSFUL</span>
+                        <span style="color:var(--emerald); font-weight:700;">🟢 AUTHENTICATION_SUCCESSFUL</span>
                         <span class="badge badge-real">ADMIN KEY: aknex1</span>
                     </div>
                     <div style="color:#cbd5e1; font-size:0.75rem; line-height:1.5;">
@@ -4406,7 +4407,7 @@ function lockAdminMode() {
     $('adminLockedCard').style.display = 'flex';
     $('adminUnlockedPanel').style.display = 'none';
 
-    $('adminLockIcon').textContent = 'ðŸ”’';
+    $('adminLockIcon').textContent = '🔒';
     $('adminLockText').textContent = 'Admin Mode: Locked';
     $('btnAdminModeToggle').style.borderColor = 'var(--border)';
 
@@ -4485,7 +4486,7 @@ function logSqlExecution({ sql, plan, executionTimeMs, rowCount, rows, source })
             </div>
             <div class="sql-entry-query">${escapeHtml(sql)}</div>
             <div class="sql-entry-plan">
-                <span style="color:#e2e8f0; font-weight:600;">ðŸ”Ž SQLite Plan:</span>
+                <span style="color:#e2e8f0; font-weight:600;">🔍 SQLite Plan:</span>
                 <code>${escapeHtml(plan || 'SEARCH USING COVERING INDEX')}</code>
             </div>
             ${miniTableHtml}
@@ -5186,7 +5187,7 @@ function initSearch() {
 
         let html = '';
         if (trains && trains.length > 0) {
-            html += '<div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); padding:0.4rem 0.65rem; text-transform:uppercase; letter-spacing:0.5px;">ðŸš† Trains (Instant Match)</div>';
+            html += '<div style="font-size:0.65rem; font-weight:700; color:var(--text-muted); padding:0.4rem 0.65rem; text-transform:uppercase; letter-spacing:0.5px;">🚆 Trains (Instant Match)</div>';
             html += trains.map(t => {
                 const tNum = t.trainNumber || t.number;
                 const tName = t.trainName || t.name;
@@ -5294,7 +5295,7 @@ function initSearch() {
                             state: s.state,
                             zone: s.zone || 'IR',
                             platforms: s.platformCount || s.platforms || 4,
-                            emoji: (s.zone === 'SR' || s.code === 'TPJ' || s.code === 'ALU') ? 'ðŸŒ´' : '🚆',
+                            emoji: (s.zone === 'SR' || s.code === 'TPJ' || s.code === 'ALU') ? '🌴' : '🚆',
                             badge: s.zone || 'IR'
                         });
                     }
