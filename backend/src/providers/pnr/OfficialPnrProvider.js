@@ -7,7 +7,7 @@ const PnrProvider = require('./PnrProvider');
 class OfficialPnrProvider extends PnrProvider {
     constructor() {
         super('OfficialPnrProvider');
-        this.apiKey = process.env.RAPIDAPI_KEY || 'e0df59bc2emshe859fda1c0cd9a0p1e4ea3jsnd086f9a27969';
+        this.apiKey = process.env.RAPIDAPI_KEY || '';
         this.apiHost = process.env.RAPIDAPI_HOST || 'irctc1.p.rapidapi.com';
         this.timeout = parseInt(process.env.PNR_TIMEOUT_MS) || 8000;
         this._circuitOpen = false;
