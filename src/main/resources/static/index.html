@@ -96,6 +96,11 @@
                 <span>Commuter Portal</span>
                 <span class="nav-badge" style="background:var(--cyan-dim); color:var(--cyan);">PASSENGER</span>
             </a>
+            <a href="/commander" class="nav-item" data-page="commander" id="nav-commander">
+                <span class="nav-emoji">🎙️</span>
+                <span>Voice Commander</span>
+                <span class="nav-badge" style="background:#10B981; color:#000; font-weight:700;">AUDIO OPS</span>
+            </a>
 
             <div class="nav-section-label">Intelligence & Data Layer</div>
             <a href="#ai" class="nav-item" id="nav-ai" onclick="openAIDrawer(event); return false;" style="border-left: 2px solid #7C3AED;">
@@ -111,6 +116,11 @@
             <a href="/architecture" class="nav-item" data-page="architecture" id="nav-architecture">
                 <span class="nav-emoji">🏛️</span>
                 <span>Architecture</span>
+            </a>
+            <a href="/fleet" class="nav-item" data-page="fleet" id="nav-fleet">
+                <span class="nav-emoji">🚆</span>
+                <span>Fleet Topology</span>
+                <span class="nav-badge" style="background:var(--cyan-dim); color:var(--cyan);">16 ZONES</span>
             </a>
             <a href="/database" class="nav-item" data-page="database" id="nav-database">
                 <span class="nav-emoji">🗄️</span>
@@ -172,6 +182,9 @@
                         <input type="range" min="0" max="1" step="0.05" value="0.8" id="soundVolumeSlider" class="sound-volume-slider" aria-label="Volume">
                         <span class="volume-val" id="volumeValText">80%</span>
                     </div>
+                    <button class="btn-soundboard-launch" id="btnOpenSoundboardModal" onclick="openStationSoundboardModal()" title="Open Station Multi-Lingual PA Soundboard (Hindi, Tamil, English, Telugu, etc.)">
+                        <span>🎙️ PA Soundboard</span>
+                    </button>
                 </div>
 
                 <div class="pipeline-ticker">
@@ -535,17 +548,17 @@
                         <div class="eyebrow"><span class="sys-num">SYSTEM 02</span> <span class="slash">//</span> OPERATIONS CONSOLE</div>
                         <div class="view-subtitle">
                             <span class="pulse-dot" style="background:var(--purple);"></span>
-                            INTERACTIVE COMMAND & CONTROL TERMINAL
+                            BASH + JAVA HYBRID
                         </div>
-                        <h1 class="view-title">RailFlow Operations Console</h1>
+                        <h1 class="view-title">⚡ RailFlow Interactive Java Console</h1>
                         <p class="view-desc">
-                            Enterprise Java 21 LTS Interactive Operations Console (RailFlowConsole.java). Simulates direct JVM runtime interaction, SQLite WAL batch querying, and PriorityQueue crowd prioritization.
+                            Enterprise Java 21 LTS Interactive Operations Terminal (RailFlowConsole.java). Simulates direct JVM runtime interaction, SQLite WAL batch querying, PriorityQueue platform conflict optimization, and real-time station soundboard.
                         </p>
                     </div>
                     <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
-                        <span class="badge badge-ai">HEURISTIC ENGINE</span>
-                        <span class="badge" style="background:var(--purple-dim); color:var(--purple);">INTERACTIVE</span>
-                        <span class="badge badge-real">REAL DATA</span>
+                        <span class="badge badge-real">BASH + JAVA HYBRID</span>
+                        <span class="badge" style="background:var(--purple-dim); color:var(--purple);">16 COMMANDS</span>
+                        <button class="btn btn-secondary" onclick="clearConsoleOutput()" style="font-size:0.75rem; padding:0.35rem 0.75rem;">Clear Console</button>
                     </div>
                 </div>
 
@@ -557,11 +570,11 @@
                             <span class="console-dot console-dot-yellow"></span>
                             <span class="console-dot console-dot-green"></span>
                         </div>
-                        <span class="console-titlebar-text">railflow@ops — Railway Operations Terminal</span>
+                        <span class="console-titlebar-text">⚡ RailFlow Interactive Java Console — BASH + JAVA HYBRID</span>
                         <div class="console-titlebar-actions">
                             <span class="console-status-indicator">
                                 <span class="pulse-dot" style="background:var(--emerald); width:6px; height:6px;"></span>
-                                <span style="font-size:0.68rem; color:var(--emerald);">CONNECTED</span>
+                                <span style="font-size:0.68rem; color:var(--emerald); font-family:var(--font-mono);">JVM 21 LTS (ONLINE)</span>
                             </span>
                         </div>
                     </div>
@@ -569,24 +582,98 @@
                         <!-- Terminal output rendered by JS boot sequence -->
                     </div>
                     <div class="console-input-row">
-                        <span class="console-prompt">railflow@ops:~$</span>
-                        <input type="text" class="console-input" id="consoleInput" placeholder="Type a station code (alu, tpj, ms), train (12638), jvm, kavach, route ALU MS, or help..." autocomplete="off" spellcheck="false" disabled>
+                        <span class="console-prompt">railflow@jvm:~$</span>
+                        <input type="text" class="console-input" id="consoleInput" placeholder="Enter command (try: 1, 2, 7, help, stats, schema, routes, trains, stations, bfs, javac, mvn, gradle)..." autocomplete="off" spellcheck="false">
                     </div>
                 </div>
 
-                <!-- Quick Command Chips -->
-                <div class="console-quick-chips">
-                    <span class="console-chip-label">Quick Commands:</span>
-                    <button class="console-chip" onclick="runConsoleQuickCmd('help')">help</button>
-                    <button class="console-chip" onclick="runConsoleQuickCmd('alu')" style="border-color:var(--rail-red); color:var(--rail-red);">alu</button>
-                    <button class="console-chip" onclick="runConsoleQuickCmd('12638')">12638</button>
-                    <button class="console-chip" onclick="runConsoleQuickCmd('route ALU MS')">route ALU MS</button>
-                    <button class="console-chip" onclick="runConsoleQuickCmd('jvm')" style="border-color:var(--cyan); color:var(--cyan);">jvm</button>
-                    <button class="console-chip" onclick="runConsoleQuickCmd('kavach')">kavach</button>
-                    <button class="console-chip" onclick="runConsoleQuickCmd('dispatch')">dispatch</button>
-                    <button class="console-chip" onclick="runConsoleQuickCmd('sql SELECT * FROM stations LIMIT 5;')">sql</button>
-                    <button class="console-chip" onclick="runConsoleQuickCmd('benchmark')">benchmark</button>
-                    <button class="console-chip" onclick="runConsoleQuickCmd('status')">status</button>
+                <!-- 16 Interactive Quick Command Options Chips -->
+                <div class="console-quick-chips" style="margin-top:0.75rem; display:flex; flex-wrap:wrap; gap:0.4rem;">
+                    <button class="console-chip" onclick="runConsoleOption(1)" style="border-color:var(--emerald); color:var(--emerald);">[1] ⚡ START</button>
+                    <button class="console-chip" onclick="runConsoleOption(2)">[2] 🚆 TRAINS</button>
+                    <button class="console-chip" onclick="runConsoleOption(3)">[3] 🚉 STATIONS</button>
+                    <button class="console-chip" onclick="runConsoleOption(4)" style="border-color:var(--amber); color:var(--amber);">[4] 👥 CROWD</button>
+                    <button class="console-chip" onclick="runConsoleOption(5)" style="border-color:var(--rail-red); color:var(--rail-red);">[5] 🧠 SOLVER</button>
+                    <button class="console-chip" onclick="runConsoleOption(6)" style="border-color:var(--cyan); color:var(--cyan);">[6] 🛰️ RADAR</button>
+                    <button class="console-chip" onclick="runConsoleOption(7)" style="border-color:#A855F7; color:#C084FC;">[7] 📢 VOICE</button>
+                    <button class="console-chip" onclick="runConsoleOption(8)">[8] 🎫 PNR</button>
+                    <button class="console-chip" onclick="runConsoleOption(9)">[9] 🧭 ROUTING</button>
+                    <button class="console-chip" onclick="runConsoleOption(10)">[10] 🗄️ SCHEMA</button>
+                    <button class="console-chip" onclick="runConsoleOption(11)">[11] 🚪 METERING</button>
+                    <button class="console-chip" onclick="runConsoleOption(12)">[12] 🚆 CLONE</button>
+                    <button class="console-chip" onclick="runConsoleOption(13)">[13] 🚦 SIGNALS</button>
+                    <button class="console-chip" onclick="runConsoleOption(14)">[14] 📊 ANALYTICS</button>
+                    <button class="console-chip" onclick="runConsoleOption(15)">[15] ⚙️ SPECS</button>
+                    <button class="console-chip" onclick="runConsoleOption(16)" style="border-color:#EF4444; color:#F87171;">[16] ⏹️ STOP</button>
+                </div>
+
+                <!-- RailFlow Java Engine Architecture & Algorithms Explanatory Panel -->
+                <div class="panel" style="margin-top:1.5rem; background:rgba(15, 23, 42, 0.7); border:1px solid rgba(56, 189, 248, 0.25); border-radius:var(--radius-md); padding:1.25rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.75rem;">
+                        <div>
+                            <div style="font-size:0.70rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--cyan); font-weight:700;">JVM 21 RUNTIME ARCHITECTURE // HIGH-SPEED CLIENT DISPATCH</div>
+                            <h3 style="margin:0.25rem 0 0; font-size:1.1rem; color:var(--text-primary); display:flex; align-items:center; gap:8px;">
+                                <span>☕</span> RailFlow Java Engine Architecture &amp; Command Subsystems
+                            </h3>
+                        </div>
+                        <span class="badge badge-real" style="font-size:0.72rem;">BASH + JAVA HYBRID KERNEL</span>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1rem; font-size:0.8rem;">
+                        <div style="background:var(--bg-subtle); padding:0.9rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                            <div style="font-weight:700; color:var(--emerald); margin-bottom:0.35rem; display:flex; align-items:center; gap:6px;">
+                                <span>⚡</span> OpenJDK 21 LTS &amp; Spring Boot Core
+                            </div>
+                            <div style="color:var(--text-secondary); line-height:1.5; font-size:0.75rem;">
+                                Simulates the official OpenJDK 21 64-bit Server VM runtime with Spring Boot Web MVC controllers, HikariCP JDBC connection pool (max pool: 5), and RFC 7807 problem details error mapping.
+                            </div>
+                        </div>
+
+                        <div style="background:var(--bg-subtle); padding:0.9rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                            <div style="font-weight:700; color:var(--cyan); margin-bottom:0.35rem; display:flex; align-items:center; gap:6px;">
+                                <span>🗄️</span> SQLite 3 WAL Mode Persistence
+                            </div>
+                            <div style="color:var(--text-secondary); line-height:1.5; font-size:0.75rem;">
+                                Connects to <code>railflow.db</code> with Write-Ahead Logging (<code>PRAGMA journal_mode=WAL;</code>) and <code>PRAGMA synchronous=NORMAL;</code> for concurrency across 8,989 stations, 5,208 trains, and 416,637 halts.
+                            </div>
+                        </div>
+
+                        <div style="background:var(--bg-subtle); padding:0.9rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                            <div style="font-weight:700; color:var(--rail-red); margin-bottom:0.35rem; display:flex; align-items:center; gap:6px;">
+                                <span>🧠</span> PriorityQueue Max-Heap Platform Solver
+                            </div>
+                            <div style="color:var(--text-secondary); line-height:1.5; font-size:0.75rem;">
+                                Employs a Java <code>PriorityQueue&lt;PlatformNode&gt;</code> configured with a custom Comparator to dynamically evaluate platform dwell conflicts and reallocate incoming trains in O(log N) operations.
+                            </div>
+                        </div>
+
+                        <div style="background:var(--bg-subtle); padding:0.9rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                            <div style="font-weight:700; color:var(--amber); margin-bottom:0.35rem; display:flex; align-items:center; gap:6px;">
+                                <span>👥</span> ScheduledExecutorService Telemetry Daemon
+                            </div>
+                            <div style="color:var(--text-secondary); line-height:1.5; font-size:0.75rem;">
+                                Background daemon thread running at 4,000ms fixed intervals (<code>scheduleAtFixedRate</code>) simulating realistic concourse ingress/egress, passenger flow rates, and Foot Overbridge (FOB) crush load indices.
+                            </div>
+                        </div>
+
+                        <div style="background:var(--bg-subtle); padding:0.9rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                            <div style="font-weight:700; color:#C084FC; margin-bottom:0.35rem; display:flex; align-items:center; gap:6px;">
+                                <span>📢</span> Multi-Lingual Station PA Audio Engine
+                            </div>
+                            <div style="color:var(--text-secondary); line-height:1.5; font-size:0.75rem;">
+                                Synthesizes authentic Indian Railways 4-tone acoustic chimes (D5-F#5-A5-D6) with Web Audio API bandpass filtering (1800Hz, Q=1.2) and multi-lingual voice modulation across English, Tamil, Hindi, and regional languages.
+                            </div>
+                        </div>
+
+                        <div style="background:var(--bg-subtle); padding:0.9rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                            <div style="font-weight:700; color:var(--blue); margin-bottom:0.35rem; display:flex; align-items:center; gap:6px;">
+                                <span>🧭</span> BFS / Dijkstra Shortest-Path Routing Kernel
+                            </div>
+                            <div style="color:var(--text-secondary); line-height:1.5; font-size:0.75rem;">
+                                Direct graph traversal across 21,318 relational track edges and 6 National Trunk corridors. Computes shortest-hop corridors with interchange stations and travel times in under 1 millisecond.
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -624,9 +711,6 @@
                         </button>
                         <button id="btnNetDispatch" class="btn btn-secondary" onclick="switchNetworkView('dispatch')" style="font-size:0.78rem; padding:0.35rem 0.75rem; display:inline-flex; align-items:center; gap:6px;">
                             <span>🎮 Dynamic Dispatch Sandbox</span>
-                        </button>
-                        <button id="btnNetFleetKavach" class="btn btn-secondary" onclick="switchNetworkView('fleet-kavach')" style="font-size:0.78rem; padding:0.35rem 0.75rem; display:inline-flex; align-items:center; gap:6px;">
-                            <span>⚡ Fleet &amp; Kavach Specs</span>
                         </button>
                         <button id="btnNetDirectory" class="btn btn-secondary" onclick="switchNetworkView('directory')" style="font-size:0.78rem; padding:0.35rem 0.75rem; display:inline-flex; align-items:center; gap:6px;">
                             <span>🌲 Project Topology &amp; Dirs</span>
@@ -707,6 +791,9 @@
                             </button>
                             <button class="btn btn-secondary" onclick="sandboxPlayChime()" style="font-size:0.78rem; padding:0.4rem 0.8rem; display:inline-flex; align-items:center; gap:6px;">
                                 <span>🔊 Station Audio Chime</span>
+                            </button>
+                            <button class="btn btn-secondary" onclick="openStationSoundboardModal()" style="font-size:0.78rem; padding:0.4rem 0.8rem; display:inline-flex; align-items:center; gap:6px; border-color:var(--cyan); color:var(--cyan);" title="Open Multi-Lingual Station PA Soundboard">
+                                <span>🎙️ Multi-Lingual PA Soundboard</span>
                             </button>
                             <button class="btn btn-secondary" onclick="sandboxResetNominal()" style="font-size:0.78rem; padding:0.4rem 0.8rem; display:inline-flex; align-items:center; gap:6px;">
                                 <span>🔄 Reset to Nominal</span>
@@ -809,110 +896,6 @@
                         </div>
 
                         <svg class="graph-canvas" id="fullNetworkGraphSvg" viewBox="0 0 1000 900" style="width:100%; height:auto; min-height:600px;"></svg>
-                    </div>
-                </div>
-
-                <!-- View 3: Fleet & Kavach TCAS Specifications & Build Info -->
-                <div id="netFleetKavachView" class="net-subview-panel">
-                    <div class="panel">
-                        <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-                            <div>
-                                <span class="panel-title">RDSO Kavach TCAS System Specifications &amp; Fleet Protection</span>
-                                <span class="badge badge-real" style="margin-left:8px;">RDSO/SPN/196/2020 v4.0</span>
-                            </div>
-                            <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--emerald);">● AUTONOMOUS ATP ACTIVE</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="kavach-hero-grid">
-                                <div class="kavach-feature-card">
-                                    <span class="k-icon">🛡️</span>
-                                    <h4>Station TCAS &amp; Relay Interlocking</h4>
-                                    <p>Direct optical interface with Electronic Interlocking (EI). Constantly tracks turnout positions, track circuit clear states, and axle counter telemetry across stations.</p>
-                                </div>
-                                <div class="kavach-feature-card">
-                                    <span class="k-icon">🚅</span>
-                                    <h4>Loco TCAS &amp; Cab Signalling</h4>
-                                    <p>Vital on-board computer fitted to locomotives (WAP-7, WAG-9, Vande Bharat). Displays active signal aspects inside the driver cab, eliminating visual fog hazards.</p>
-                                </div>
-                                <div class="kavach-feature-card">
-                                    <span class="k-icon">📡</span>
-                                    <h4>Duplex UHF Radio Telemetry</h4>
-                                    <p>Dual 433 MHz duplex radio transceivers transmit loco-to-station state packets every 2,000 ms, establishing seamless handshakes across block sections.</p>
-                                </div>
-                                <div class="kavach-feature-card">
-                                    <span class="k-icon">🛑</span>
-                                    <h4>SPAD &amp; Speed Supervision</h4>
-                                    <p>Automatic emergency brake (AEB) intervention if a train attempts to overshoot a red signal or violates the dynamic Movement Authority (MA) curve.</p>
-                                </div>
-                            </div>
-
-                            <!-- Live Fleet Kavach Telemetry -->
-                            <div style="margin-top:1.5rem;">
-                                <div style="font-size:0.82rem; font-weight:700; color:var(--text-primary); margin-bottom:0.6rem; text-transform:uppercase; letter-spacing:0.04em;">
-                                    Southern Railway Chord Line Fleet Telemetry
-                                </div>
-                                <div class="table-responsive-wrapper">
-                                    <table class="data-table">
-                                        <thead>
-                                            <tr>
-                                                <th>TRAIN NO / NAME</th>
-                                                <th>LOCO TYPE</th>
-                                                <th>ROUTE CORRIDOR</th>
-                                                <th>KAVACH STATUS</th>
-                                                <th>SPEED / HEADWAY</th>
-                                                <th>BRAKE PROFILE</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><strong style="color:var(--text-primary);">12638 • Pandian Superfast</strong></td>
-                                                <td>WAP-7 (RPM Shed)</td>
-                                                <td>MDU ➔ TPJ ➔ ALU ➔ MS</td>
-                                                <td><span class="badge badge-real">LOCKED • ACTIVE</span></td>
-                                                <td>110 km/h • 8m clear</td>
-                                                <td><span style="color:var(--emerald); font-family:var(--font-mono);">Normal Braking Curve</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong style="color:var(--text-primary);">12636 • Vaigai Superfast</strong></td>
-                                                <td>WAP-7 (RPM Shed)</td>
-                                                <td>MDU ➔ DG ➔ TPJ ➔ ALU ➔ MS</td>
-                                                <td><span class="badge badge-real">LOCKED • ACTIVE</span></td>
-                                                <td>110 km/h • 12m clear</td>
-                                                <td><span style="color:var(--emerald); font-family:var(--font-mono);">Normal Braking Curve</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong style="color:var(--text-primary);">20606 • Vande Bharat Express</strong></td>
-                                                <td>Trainset 18 (ICF)</td>
-                                                <td>TEN ➔ TPJ ➔ ALU ➔ MS</td>
-                                                <td><span class="badge badge-real">LOCKED • ACTIVE</span></td>
-                                                <td>130 km/h • 15m clear</td>
-                                                <td><span style="color:var(--cyan); font-family:var(--font-mono);">Electronic Blend Curve</span></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- Platform & Build Information -->
-                            <div style="margin-top:1.5rem; background:rgba(15, 23, 42, 0.7); border:1px solid #1E2D44; border-radius:var(--radius-md); padding:1.25rem;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
-                                    <div style="font-size:0.86rem; font-weight:800; color:#F8FAFC; text-transform:uppercase; letter-spacing:0.04em;">
-                                        RailFlow Platform &amp; Build Information
-                                    </div>
-                                    <span class="badge badge-derived">ENTERPRISE RELEASE v2.0</span>
-                                </div>
-                                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:0.75rem; font-size:0.78rem;">
-                                    <div>Core Engine: <strong style="color:var(--text-primary);">Java 17+ LTS (OpenJDK 21)</strong></div>
-                                    <div>Database: <strong style="color:var(--text-primary);">SQLite 3 (WAL Mode, B-Tree)</strong></div>
-                                    <div>Ingestion Pipeline: <strong style="color:var(--text-primary);">RFC 4180 Streaming Parser</strong></div>
-                                    <div>Stations Indexed: <strong style="color:var(--emerald);">8,989 Stations</strong></div>
-                                    <div>Trains Mapped: <strong style="color:var(--emerald);">5,208 Master Trains</strong></div>
-                                    <div>Stop Halts Indexed: <strong style="color:var(--cyan);">416,637 Halts</strong></div>
-                                    <div>Graph Edges: <strong style="color:var(--cyan);">21,318 Connections</strong></div>
-                                    <div>Fabricated Routes: <strong style="color:var(--emerald);">0 (Zero Tolerance)</strong></div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -2291,6 +2274,239 @@
             </section>
 
             <!-- ═══════════════════════════════════════════════════════════
+                 PAGE 8.5: FLEET TOPOLOGY & ZONAL HIERARCHY
+                 ═══════════════════════════════════════════════════════════ -->
+            <section class="page-view" id="page-fleet">
+                <div class="view-header">
+                    <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 09</span> <span class="slash">//</span> FLEET TOPOLOGY</div>
+                        <div class="view-subtitle">
+                            <span class="pulse-dot" style="background:var(--cyan);"></span>
+                            INDIAN RAILWAYS ZONAL FLEET &amp; NETWORK HIERARCHY
+                        </div>
+                        <h1 class="view-title">Indian Railways Fleet &amp; Network Topology</h1>
+                        <p class="view-desc">
+                            Comprehensive operational structure of 16 Zonal Railways, 68 Divisions, Electric &amp; Diesel Locomotive Sheds, and interactive hierarchical station drilldown with live SQL telemetry.
+                        </p>
+                    </div>
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+                        <span class="badge badge-real">16 ZONES</span>
+                        <span class="badge badge-derived">68 DIVISIONS</span>
+                        <span class="badge badge-simulated">KAVACH TCAS</span>
+                    </div>
+                </div>
+
+                <!-- Fleet KPIs Banner -->
+                <div class="metrics-grid" style="margin-bottom:1.25rem;">
+                    <div class="metric-card">
+                        <div class="metric-label">Operational Zones</div>
+                        <div class="metric-value" style="color:var(--cyan);">16</div>
+                        <div class="metric-sub">SR, NR, WR, CR, ER, SCR, SWR, NCR...</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Mapped Divisions</div>
+                        <div class="metric-value" style="color:var(--emerald);">68</div>
+                        <div class="metric-sub">Chennai, Delhi, Mumbai, Howrah, Hubli...</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Active Locomotives</div>
+                        <div class="metric-value" style="color:var(--purple);">4,200+</div>
+                        <div class="metric-sub">WAP-7, WAP-5, WAG-9, Vande Bharat T18</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Network Stations</div>
+                        <div class="metric-value" style="color:var(--amber);">8,989</div>
+                        <div class="metric-sub">5,208 Active Master Express Schedules</div>
+                    </div>
+                </div>
+
+                <!-- Kavach Fleet TCAS Feature Cards -->
+                <div class="panel" style="margin-bottom:1.25rem;">
+                    <div class="panel-header">
+                        <span class="panel-title">🛡️ RDSO Kavach TCAS System Specifications &amp; Fleet Protection</span>
+                        <span class="badge badge-real">RDSO/SPN/196/2020 v4.0</span>
+                    </div>
+                    <div class="panel-body">
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1rem;">
+                            <div style="background:var(--bg-subtle); padding:0.9rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                                <div style="font-size:0.92rem; font-weight:700; color:var(--text-primary); margin-bottom:4px;">🛡️ Station TCAS &amp; Relay Interlocking</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.5;">Direct optical interface with Electronic Interlocking (EI). Constantly tracks turnout positions, track circuit clear states, and axle counter telemetry across stations.</div>
+                            </div>
+                            <div style="background:var(--bg-subtle); padding:0.9rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                                <div style="font-size:0.92rem; font-weight:700; color:var(--text-primary); margin-bottom:4px;">🚅 Loco TCAS &amp; Cab Signalling</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.5;">Vital on-board computer fitted to locomotives (WAP-7, WAG-9, Vande Bharat). Displays active signal aspects inside the driver cab, eliminating visual fog hazards.</div>
+                            </div>
+                            <div style="background:var(--bg-subtle); padding:0.9rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                                <div style="font-size:0.92rem; font-weight:700; color:var(--text-primary); margin-bottom:4px;">📡 Duplex UHF Radio Telemetry</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.5;">Dual 433 MHz duplex radio transceivers transmit loco-to-station state packets every 2,000 ms, establishing seamless handshakes across block sections.</div>
+                            </div>
+                            <div style="background:var(--bg-subtle); padding:0.9rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                                <div style="font-size:0.92rem; font-weight:700; color:var(--text-primary); margin-bottom:4px;">🛑 SPAD &amp; Speed Supervision</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.5;">Automatic emergency brake (AEB) intervention if a train attempts to overshoot a red signal or violates the dynamic Movement Authority (MA) curve.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Locomotive Sheds & Fleet Distribution -->
+                <div class="panel" style="margin-bottom:1.25rem;">
+                    <div class="panel-header">
+                        <span class="panel-title">⚡ Major Electric &amp; Diesel Locomotive Sheds</span>
+                        <span class="badge badge-derived">FLEET INVENTORY</span>
+                    </div>
+                    <div class="panel-body" style="padding:0;">
+                        <div class="table-responsive-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>SHED CODE</th>
+                                        <th>HOME ZONE</th>
+                                        <th>LOCATION / DIVISION</th>
+                                        <th>PRIMARY TRACTION</th>
+                                        <th>ASSIGNED PREMIER RAKES</th>
+                                        <th>STATUS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong style="color:var(--text-primary); font-family:var(--font-mono);">RPM (Royapuram)</strong></td>
+                                        <td>Southern Railway (SR)</td>
+                                        <td>Chennai Division</td>
+                                        <td>WAP-7 (6,000 HP AC 3-Phase)</td>
+                                        <td>12638 Pandian, 12636 Vaigai, 12621 TN Exp</td>
+                                        <td><span class="badge badge-real">NOMINAL • 100% DISPATCH</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong style="color:var(--text-primary); font-family:var(--font-mono);">ED (Erode)</strong></td>
+                                        <td>Southern Railway (SR)</td>
+                                        <td>Salem Division</td>
+                                        <td>WAP-4, WAP-7, WAG-9</td>
+                                        <td>12675 Kovai Exp, 12671 Nilgiri Exp</td>
+                                        <td><span class="badge badge-real">NOMINAL</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong style="color:var(--text-primary); font-family:var(--font-mono);">GOC (Golden Rock)</strong></td>
+                                        <td>Southern Railway (SR)</td>
+                                        <td>Tiruchchirappalli Division</td>
+                                        <td>WDP-4D (Dual Cab Diesel)</td>
+                                        <td>16128 Guruvayur Exp, Delta Corridors</td>
+                                        <td><span class="badge badge-real">STANDBY RELIEF READY</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong style="color:var(--text-primary); font-family:var(--font-mono);">GZB (Ghaziabad)</strong></td>
+                                        <td>Northern Railway (NR)</td>
+                                        <td>Delhi Division</td>
+                                        <td>WAP-5 (High Speed 160 km/h), WAP-7</td>
+                                        <td>12301 Rajdhani, 12002 Shatabdi</td>
+                                        <td><span class="badge badge-real">NOMINAL</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong style="color:var(--text-primary); font-family:var(--font-mono);">BND (Bandra)</strong></td>
+                                        <td>Western Railway (WR)</td>
+                                        <td>Mumbai WR Division</td>
+                                        <td>WAP-7, AC EMU Rakes</td>
+                                        <td>12951 Mumbai Rajdhani, Western Expresses</td>
+                                        <td><span class="badge badge-real">NOMINAL</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Fleet Kavach Telemetry -->
+                <div class="panel" style="margin-bottom:1.25rem;">
+                    <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <span class="panel-title">📡 Southern Railway Chord Line Fleet Telemetry</span>
+                        <span class="badge badge-real">LIVE TCAS DATA</span>
+                    </div>
+                    <div class="panel-body" style="padding:0;">
+                        <div class="table-responsive-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>TRAIN NO / NAME</th>
+                                        <th>LOCO TYPE</th>
+                                        <th>ROUTE CORRIDOR</th>
+                                        <th>KAVACH STATUS</th>
+                                        <th>SPEED / HEADWAY</th>
+                                        <th>BRAKE PROFILE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong style="color:var(--text-primary);">12638 • Pandian Superfast</strong></td>
+                                        <td>WAP-7 (RPM Shed)</td>
+                                        <td>MDU ➔ TPJ ➔ ALU ➔ MS</td>
+                                        <td><span class="badge badge-real">LOCKED • ACTIVE</span></td>
+                                        <td>110 km/h • 8m clear</td>
+                                        <td><span style="color:var(--emerald); font-family:var(--font-mono);">Normal Braking Curve</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong style="color:var(--text-primary);">12636 • Vaigai Superfast</strong></td>
+                                        <td>WAP-7 (RPM Shed)</td>
+                                        <td>MDU ➔ DG ➔ TPJ ➔ ALU ➔ MS</td>
+                                        <td><span class="badge badge-real">LOCKED • ACTIVE</span></td>
+                                        <td>110 km/h • 12m clear</td>
+                                        <td><span style="color:var(--emerald); font-family:var(--font-mono);">Normal Braking Curve</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong style="color:var(--text-primary);">20606 • Vande Bharat Express</strong></td>
+                                        <td>Trainset 18 (ICF)</td>
+                                        <td>TEN ➔ TPJ ➔ ALU ➔ MS</td>
+                                        <td><span class="badge badge-real">LOCKED • ACTIVE</span></td>
+                                        <td>130 km/h • 15m clear</td>
+                                        <td><span style="color:var(--cyan); font-family:var(--font-mono);">Electronic Blend Curve</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Platform & Build Information -->
+                <div class="panel" style="margin-bottom:1.25rem;">
+                    <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <span class="panel-title">⚙️ RailFlow Platform &amp; Build Specifications</span>
+                        <span class="badge badge-derived">ENTERPRISE RELEASE v2.0</span>
+                    </div>
+                    <div class="panel-body">
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:0.75rem; font-size:0.78rem;">
+                            <div>Core Engine: <strong style="color:var(--text-primary);">Java 17+ LTS (OpenJDK 21)</strong></div>
+                            <div>Database: <strong style="color:var(--text-primary);">SQLite 3 (WAL Mode, B-Tree)</strong></div>
+                            <div>Ingestion Pipeline: <strong style="color:var(--text-primary);">RFC 4180 Streaming Parser</strong></div>
+                            <div>Stations Indexed: <strong style="color:var(--emerald);">8,989 Stations</strong></div>
+                            <div>Trains Mapped: <strong style="color:var(--emerald);">5,208 Master Trains</strong></div>
+                            <div>Stop Halts Indexed: <strong style="color:var(--cyan);">416,637 Halts</strong></div>
+                            <div>Graph Edges: <strong style="color:var(--cyan);">21,318 Connections</strong></div>
+                            <div>Fabricated Routes: <strong style="color:var(--emerald);">0 (Zero Tolerance)</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Hierarchical Zonal Tree Drilldown -->
+                <div class="panel">
+                    <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <div>
+                            <span class="panel-title">🌳 Indian Railways Network Hierarchy Explorer</span>
+                            <span class="badge badge-real" style="margin-left:8px;">ZONES ➔ DIVISIONS ➔ STATIONS</span>
+                        </div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">
+                            Click any Zone or Division node to dynamically expand and query live timetable data.
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="tree-viewport" id="fleetTreeContainer" style="padding:0.75rem; max-height:600px; overflow-y:auto;">
+                            <!-- Populated dynamically by initStationTree('fleetTreeContainer') -->
+                            <div class="tree-loading" style="padding:2rem; text-align:center; color:var(--text-muted);">
+                                <span>Loading Indian Railways Network Hierarchy...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════════════════════
                  PAGE 9: DATABASE EXPLORER
                  ═══════════════════════════════════════════════════════════ -->
             <section class="page-view" id="page-database">
@@ -2745,6 +2961,303 @@
                 </div>
             </section>
 
+            <!-- ═══════════════════════════════════════════════════════════
+                 PAGE: VOICE COMMANDER & MULTI-LINGUAL AUDIO DISPATCHER
+                 ═══════════════════════════════════════════════════════════ -->
+            <section class="page-view" id="page-commander">
+                <div class="view-header">
+                    <div class="view-title-group">
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 02.5</span> <span class="slash">//</span> VOICE &amp; AUDIO DISPATCH COMMANDER</div>
+                        <div class="view-subtitle">
+                            <span class="pulse-dot" style="background:#10B981;"></span>
+                            MULTI-LINGUAL ACOUSTIC SYNTHESIS • STATION PA SYSTEM • EMERGENCY BROADCASTER
+                        </div>
+                        <h1 class="view-title">🎙️ RailFlow Central Voice Commander &amp; Audio Dispatcher</h1>
+                        <p class="view-desc">
+                            High-fidelity multi-lingual acoustic passenger information system (PIS) with genuine 4-tone Indian Railways chimes, strict language priority (English ➔ Tamil ➔ Hindi ➔ Regional), station location filtering, dynamic voice modulation, and live wave telemetry.
+                        </p>
+                    </div>
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+                        <span class="badge" style="background:rgba(16, 185, 129, 0.2); color:#10B981; border:1px solid rgba(16, 185, 129, 0.4); font-weight:700;">PRIORITY 1: ENGLISH</span>
+                        <span class="badge" style="background:rgba(245, 158, 11, 0.2); color:#F59E0B; border:1px solid rgba(245, 158, 11, 0.4); font-weight:700;">PRIORITY 2: TAMIL</span>
+                        <span class="badge" style="background:rgba(56, 189, 248, 0.2); color:#38BDF8; border:1px solid rgba(56, 189, 248, 0.4); font-weight:700;">PRIORITY 3: HINDI</span>
+                        <span class="badge badge-real">8+ REGIONAL LANGUAGES</span>
+                        <span class="badge badge-derived">4-TONE IR CHIME</span>
+                    </div>
+                </div>
+
+                <!-- Commander Master Control Deck -->
+                <div class="panel" style="margin-bottom:1.5rem; background:rgba(15, 23, 42, 0.8); border:1px solid rgba(16, 185, 129, 0.35); border-radius:var(--radius-md); padding:1.25rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px solid var(--border); padding-bottom:1rem; margin-bottom:1rem;">
+                        <div>
+                            <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--emerald); font-weight:700;">BROADCAST STATION LOCATION &amp; AUDIO DOCK</div>
+                            <h3 style="margin:0.2rem 0 0; font-size:1.15rem; color:#F8FAFC; display:flex; align-items:center; gap:8px;">
+                                <span>📢</span> <span id="cmdActiveStationTitle">Chennai Egmore (MS) — Southern Railway PA Network</span>
+                            </h3>
+                        </div>
+                        <!-- Location / Station Quick Selector Pills -->
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;" id="commanderStationPills">
+                            <button class="btn btn-primary" onclick="setCommanderStation('MS')" id="btnCmdStnMS" style="font-size:0.75rem; padding:0.3rem 0.65rem;">🌴 MS (Egmore)</button>
+                            <button class="btn btn-secondary" onclick="setCommanderStation('MAS')" id="btnCmdStnMAS" style="font-size:0.75rem; padding:0.3rem 0.65rem;">🏛️ MAS (Central)</button>
+                            <button class="btn btn-secondary" onclick="setCommanderStation('TPJ')" id="btnCmdStnTPJ" style="font-size:0.75rem; padding:0.3rem 0.65rem;">🌾 TPJ (Trichy)</button>
+                            <button class="btn btn-secondary" onclick="setCommanderStation('ALU')" id="btnCmdStnALU" style="font-size:0.75rem; padding:0.3rem 0.65rem;">⚡ ALU (Ariyalur)</button>
+                            <button class="btn btn-secondary" onclick="setCommanderStation('MDU')" id="btnCmdStnMDU" style="font-size:0.75rem; padding:0.3rem 0.65rem;">🌺 MDU (Madurai)</button>
+                            <button class="btn btn-secondary" onclick="setCommanderStation('CBE')" id="btnCmdStnCBE" style="font-size:0.75rem; padding:0.3rem 0.65rem;">🏭 CBE (Coimbatore)</button>
+                            <button class="btn btn-secondary" onclick="setCommanderStation('SBC')" id="btnCmdStnSBC" style="font-size:0.75rem; padding:0.3rem 0.65rem;">☕ SBC (Bengaluru)</button>
+                            <button class="btn btn-secondary" onclick="setCommanderStation('SC')" id="btnCmdStnSC" style="font-size:0.75rem; padding:0.3rem 0.65rem;">💎 SC (Secunderabad)</button>
+                            <button class="btn btn-secondary" onclick="setCommanderStation('NDLS')" id="btnCmdStnNDLS" style="font-size:0.75rem; padding:0.3rem 0.65rem;">🏰 NDLS (New Delhi)</button>
+                            <button class="btn btn-secondary" onclick="setCommanderStation('CSMT')" id="btnCmdStnCSMT" style="font-size:0.75rem; padding:0.3rem 0.65rem;">🌊 CSMT (Mumbai)</button>
+                        </div>
+                    </div>
+
+                    <!-- Audio Parameter Modulation Controls -->
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; align-items:center;">
+                        <div>
+                            <label class="form-label" style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; display:block;">Primary Language Preference</label>
+                            <select id="cmdLanguageSelect" class="form-input" style="padding:0.4rem 0.6rem; font-size:0.8rem; background:var(--bg-base); color:#F8FAFC; border:1px solid var(--border);">
+                                <option value="en-IN" selected>1️⃣ English (en-IN) — 1st Priority</option>
+                                <option value="ta-IN">2️⃣ Tamil (தமிழ் - ta-IN) — 2nd Priority</option>
+                                <option value="hi-IN">3️⃣ Hindi (हिन्दी - hi-IN) — 3rd Priority</option>
+                                <option value="te-IN">4️⃣ Telugu (తెలుగు - te-IN)</option>
+                                <option value="kn-IN">5️⃣ Kannada (ಕನ್ನಡ - kn-IN)</option>
+                                <option value="ml-IN">6️⃣ Malayalam (മലയാളം - ml-IN)</option>
+                                <option value="bn-IN">7️⃣ Bengali (বাংলা - bn-IN)</option>
+                                <option value="mr-IN">8️⃣ Marathi (मराठी - mr-IN)</option>
+                                <option value="gu-IN">9️⃣ Gujarati (ગુજરાતી - gu-IN)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="form-label" style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; display:flex; justify-content:space-between;">
+                                <span>Speech Rate / Cadence</span>
+                                <span id="cmdRateVal" style="color:var(--emerald); font-family:var(--font-mono);">0.88x (IR Standard)</span>
+                            </label>
+                            <input type="range" id="cmdRateSlider" min="0.7" max="1.3" step="0.02" value="0.88" style="width:100%; accent-color:var(--emerald);" oninput="document.getElementById('cmdRateVal').textContent = this.value + 'x'">
+                        </div>
+
+                        <div>
+                            <label class="form-label" style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; display:flex; justify-content:space-between;">
+                                <span>Vocal Pitch Modulation</span>
+                                <span id="cmdPitchVal" style="color:var(--cyan); font-family:var(--font-mono);">1.00</span>
+                            </label>
+                            <input type="range" id="cmdPitchSlider" min="0.8" max="1.3" step="0.05" value="1.00" style="width:100%; accent-color:var(--cyan);" oninput="document.getElementById('cmdPitchVal').textContent = this.value">
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <label class="form-label" style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Acoustic Filter &amp; Chime</label>
+                            <div style="display:flex; gap:0.5rem;">
+                                <button class="btn btn-secondary" onclick="playCommanderChime()" style="font-size:0.75rem; padding:0.35rem 0.65rem; flex:1;">
+                                    🔔 Chime Only
+                                </button>
+                                <button class="btn btn-secondary" onclick="stopCommanderAudio()" style="font-size:0.75rem; padding:0.35rem 0.65rem; color:#EF4444; border-color:rgba(239,68,68,0.4);">
+                                    ⏹️ Silence
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Waveform & Teleprompter Ticker -->
+                    <div style="margin-top:1.25rem; background:#0B0E14; border:1px solid rgba(56, 189, 248, 0.25); border-radius:var(--radius-sm); padding:0.75rem 1rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span class="pulse-dot" style="background:#10B981; width:7px; height:7px;"></span>
+                                <span style="font-size:0.72rem; font-weight:700; color:var(--emerald); text-transform:uppercase; letter-spacing:0.06em;">ACOUSTIC PIS FEED // LIVE BROADCAST TELEPROMPTER</span>
+                            </div>
+                            <span class="badge" id="cmdCurrentLangBadge" style="font-size:0.68rem; background:rgba(56, 189, 248, 0.2); color:#38BDF8;">en-IN (English)</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <!-- Wave Bars -->
+                            <div id="cmdWaveBars" style="display:flex; align-items:flex-end; gap:3px; height:26px; padding:0 4px;">
+                                <span style="width:3px; height:8px; background:#10B981; border-radius:1px; transition:height 0.15s ease;"></span>
+                                <span style="width:3px; height:18px; background:#38BDF8; border-radius:1px; transition:height 0.15s ease;"></span>
+                                <span style="width:3px; height:12px; background:#F59E0B; border-radius:1px; transition:height 0.15s ease;"></span>
+                                <span style="width:3px; height:24px; background:#10B981; border-radius:1px; transition:height 0.15s ease;"></span>
+                                <span style="width:3px; height:10px; background:#C084FC; border-radius:1px; transition:height 0.15s ease;"></span>
+                                <span style="width:3px; height:20px; background:#38BDF8; border-radius:1px; transition:height 0.15s ease;"></span>
+                                <span style="width:3px; height:14px; background:#10B981; border-radius:1px; transition:height 0.15s ease;"></span>
+                                <span style="width:3px; height:6px; background:#F59E0B; border-radius:1px; transition:height 0.15s ease;"></span>
+                            </div>
+                            <!-- Teleprompter Ticker Text -->
+                            <div id="cmdTeleprompterText" style="flex:1; font-family:var(--font-mono); font-size:0.80rem; color:#E2E8F0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                Ready for transmission. Select any scenario below or initiate a tri-lingual chain broadcast.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6 Pre-Configured Multi-Lingual Operational Scenarios -->
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:1.25rem; margin-bottom:1.5rem;">
+                    <!-- Scenario 1: Train Arrival -->
+                    <div class="panel" style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:1rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
+                            <div>
+                                <span style="font-size:0.70rem; color:var(--cyan); font-weight:700; text-transform:uppercase;">SCENARIO 01 &bull; EXPRESS ARRIVAL</span>
+                                <h4 style="margin:2px 0 0; font-size:0.95rem; color:#F8FAFC;">12638 Pandian SF Express Arrival</h4>
+                            </div>
+                            <span class="badge badge-real" style="font-size:0.65rem;">PLATFORM 1</span>
+                        </div>
+                        <p style="font-size:0.76rem; color:var(--text-secondary); line-height:1.45; margin-bottom:0.75rem;">
+                            <strong>EN:</strong> "Attention please. Train No. 12638 Pandian Superfast Express is arriving on Platform 1."<br>
+                            <strong>TA:</strong> "வண்டி எண் 12638 பாண்டியன் அதிவிரைவு வண்டி நடைமேடை 1-ல் வந்து கொண்டிருக்கிறது."<br>
+                            <strong>HI:</strong> "गाडी संख्या 12638 पाण्डियन सुपरफास्ट एक्सप्रेस प्लेटफार्म नंबर 1 पर आ रही है।"
+                        </p>
+                        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                            <button class="btn btn-primary" onclick="playCommanderScenario('arrival', 'single')" style="font-size:0.74rem; padding:0.3rem 0.65rem;">
+                                ▶️ Play Selected Lang
+                            </button>
+                            <button class="btn btn-secondary" onclick="playCommanderScenario('arrival', 'chain')" style="font-size:0.74rem; padding:0.3rem 0.65rem; border-color:var(--emerald); color:var(--emerald);">
+                                🔄 Chain: EN ➔ TA ➔ HI
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 2: Platform Reallocation -->
+                    <div class="panel" style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:1rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
+                            <div>
+                                <span style="font-size:0.70rem; color:var(--rail-red); font-weight:700; text-transform:uppercase;">SCENARIO 02 &bull; PLATFORM CONFLICT</span>
+                                <h4 style="margin:2px 0 0; font-size:0.95rem; color:#F8FAFC;">Dynamic Reallocation to Platform 3</h4>
+                            </div>
+                            <span class="badge" style="background:rgba(239,68,68,0.2); color:#F87171; font-size:0.65rem;">REALLOCATED</span>
+                        </div>
+                        <p style="font-size:0.76rem; color:var(--text-secondary); line-height:1.45; margin-bottom:0.75rem;">
+                            <strong>EN:</strong> "Due to heavy congestion, Train No. 12636 Vaigai Express will now arrive on Platform 3 instead of Platform 1."<br>
+                            <strong>TA:</strong> "கூட்ட நெரிசல் காரணமாக, வைகை அதிவிரைவு வண்டி நடைமேடை 3-ல் வரும்."<br>
+                            <strong>HI:</strong> "अत्यधिक भीड़ के कारण, गाडी संख्या 12636 वैगई एक्सप्रेस प्लेटफार्म नंबर 3 पर आएगी।"
+                        </p>
+                        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                            <button class="btn btn-primary" onclick="playCommanderScenario('platform', 'single')" style="font-size:0.74rem; padding:0.3rem 0.65rem;">
+                                ▶️ Play Selected Lang
+                            </button>
+                            <button class="btn btn-secondary" onclick="playCommanderScenario('platform', 'chain')" style="font-size:0.74rem; padding:0.3rem 0.65rem; border-color:var(--emerald); color:var(--emerald);">
+                                🔄 Chain: EN ➔ TA ➔ HI
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 3: Emergency Kavach Warning -->
+                    <div class="panel" style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:1rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
+                            <div>
+                                <span style="font-size:0.70rem; color:#EF4444; font-weight:700; text-transform:uppercase;">SCENARIO 03 &bull; SAFETY INTERVENTION</span>
+                                <h4 style="margin:2px 0 0; font-size:0.95rem; color:#F8FAFC;">Kavach Automatic Braking Alert</h4>
+                            </div>
+                            <span class="badge badge-real" style="font-size:0.65rem;">TCAS BRAKING</span>
+                        </div>
+                        <p style="font-size:0.76rem; color:var(--text-secondary); line-height:1.45; margin-bottom:0.75rem;">
+                            <strong>EN:</strong> "Emergency alert! Kavach automatic train protection has initiated braking supervision on Track 2. Stand behind yellow line."<br>
+                            <strong>TA:</strong> "அவசர எச்சரிக்கை! தடம் 2-ல் கவச் பிரேக்கிங் இயக்கப்பட்டுள்ளது. மஞ்சள் எல்லைக்கோட்டிற்கு பின்னால் நிற்கவும்."<br>
+                            <strong>HI:</strong> "आपातकालीन चेतावनी! ट्रैक 2 पर कवच ब्रेकिंग सक्रिय है। पीली रेखा के पीछे रहें।"
+                        </p>
+                        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                            <button class="btn btn-primary" onclick="playCommanderScenario('kavach', 'single')" style="font-size:0.74rem; padding:0.3rem 0.65rem;">
+                                ▶️ Play Selected Lang
+                            </button>
+                            <button class="btn btn-secondary" onclick="playCommanderScenario('kavach', 'chain')" style="font-size:0.74rem; padding:0.3rem 0.65rem; border-color:var(--emerald); color:var(--emerald);">
+                                🔄 Chain: EN ➔ TA ➔ HI
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 4: Concourse Gate Metering -->
+                    <div class="panel" style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:1rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
+                            <div>
+                                <span style="font-size:0.70rem; color:var(--amber); font-weight:700; text-transform:uppercase;">SCENARIO 04 &bull; CROWD MITIGATION</span>
+                                <h4 style="margin:2px 0 0; font-size:0.95rem; color:#F8FAFC;">Concourse &amp; FOB Crush Throttling</h4>
+                            </div>
+                            <span class="badge badge-simulated" style="font-size:0.65rem;">METERING ACTIVE</span>
+                        </div>
+                        <p style="font-size:0.76rem; color:var(--text-secondary); line-height:1.45; margin-bottom:0.75rem;">
+                            <strong>EN:</strong> "Advisory: Foot Overbridge 2 is experiencing heavy pedestrian density. Please utilize Ramp 1 and North gates."<br>
+                            <strong>TA:</strong> "நடைமேடை பாலம் 2-ல் அதிக கூட்ட நெரிசல் உள்ளது. பயணிகள் வடக்கு வழியைப் பயன்படுத்தவும்."<br>
+                            <strong>HI:</strong> "फुट ओवरब्रिज 2 पर अत्यधिक भीड़ है। कृपया उत्तरी निकास द्वार और रैंप 1 का उपयोग करें।"
+                        </p>
+                        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                            <button class="btn btn-primary" onclick="playCommanderScenario('metering', 'single')" style="font-size:0.74rem; padding:0.3rem 0.65rem;">
+                                ▶️ Play Selected Lang
+                            </button>
+                            <button class="btn btn-secondary" onclick="playCommanderScenario('metering', 'chain')" style="font-size:0.74rem; padding:0.3rem 0.65rem; border-color:var(--emerald); color:var(--emerald);">
+                                🔄 Chain: EN ➔ TA ➔ HI
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 5: Standby Relief Clone Rake -->
+                    <div class="panel" style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:1rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
+                            <div>
+                                <span style="font-size:0.70rem; color:#C084FC; font-weight:700; text-transform:uppercase;">SCENARIO 05 &bull; RELIEF DEPLOYMENT</span>
+                                <h4 style="margin:2px 0 0; font-size:0.95rem; color:#F8FAFC;">Special Clone Rake 02638 Dispatch</h4>
+                            </div>
+                            <span class="badge badge-real" style="font-size:0.65rem;">CLONE RAKE</span>
+                        </div>
+                        <p style="font-size:0.76rem; color:var(--text-secondary); line-height:1.45; margin-bottom:0.75rem;">
+                            <strong>EN:</strong> "Standby relief clone rake 02638 has been deployed from Golden Rock to accommodate waitlisted commuters."<br>
+                            <strong>TA:</strong> "காத்திருப்போர் பட்டியல் பயணிகளுக்காக பொன்மலையிலிருந்து சிறப்பு மாற்று வண்டி 02638 இயக்கப்படுகிறது."<br>
+                            <strong>HI:</strong> "प्रतीक्षा सूची के यात्रियों के लिए विशेष क्लोन रेक 02638 रवाना की जा रही है।"
+                        </p>
+                        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                            <button class="btn btn-primary" onclick="playCommanderScenario('clone', 'single')" style="font-size:0.74rem; padding:0.3rem 0.65rem;">
+                                ▶️ Play Selected Lang
+                            </button>
+                            <button class="btn btn-secondary" onclick="playCommanderScenario('clone', 'chain')" style="font-size:0.74rem; padding:0.3rem 0.65rem; border-color:var(--emerald); color:var(--emerald);">
+                                🔄 Chain: EN ➔ TA ➔ HI
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 6: Departure Chime & All-Aboard -->
+                    <div class="panel" style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:1rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
+                            <div>
+                                <span style="font-size:0.70rem; color:var(--emerald); font-weight:700; text-transform:uppercase;">SCENARIO 06 &bull; TRAIN DEPARTURE</span>
+                                <h4 style="margin:2px 0 0; font-size:0.95rem; color:#F8FAFC;">12606 Pallavan Express Departure</h4>
+                            </div>
+                            <span class="badge badge-real" style="font-size:0.65rem;">DEPARTURE</span>
+                        </div>
+                        <p style="font-size:0.76rem; color:var(--text-secondary); line-height:1.45; margin-bottom:0.75rem;">
+                            <strong>EN:</strong> "Train No. 12606 Pallavan Superfast Express to Chennai Egmore is ready for departure from Platform 2."<br>
+                            <strong>TA:</strong> "வண்டி எண் 12606 பல்லவன் அதிவிரைவு வண்டி நடைமேடை 2-லிருந்து புறப்பட தயாராக உள்ளது."<br>
+                            <strong>HI:</strong> "गाडी संख्या 12606 पल्लवन सुपरफास्ट एक्सप्रेस प्लेटफार्म नंबर 2 से प्रस्थान के लिए तैयार है।"
+                        </p>
+                        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                            <button class="btn btn-primary" onclick="playCommanderScenario('departure', 'single')" style="font-size:0.74rem; padding:0.3rem 0.65rem;">
+                                ▶️ Play Selected Lang
+                            </button>
+                            <button class="btn btn-secondary" onclick="playCommanderScenario('departure', 'chain')" style="font-size:0.74rem; padding:0.3rem 0.65rem; border-color:var(--emerald); color:var(--emerald);">
+                                🔄 Chain: EN ➔ TA ➔ HI
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Announcement Live Studio -->
+                <div class="panel" style="background:rgba(15, 23, 42, 0.7); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.25rem;">
+                    <div class="panel-header" style="padding:0 0 0.75rem 0; margin-bottom:0.75rem; border-bottom:1px solid var(--border);">
+                        <span class="panel-title">🎙️ Custom Station Public Address Studio</span>
+                        <span class="badge badge-real">LIVE SPEECH SYNTHESIS</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                        <textarea id="cmdCustomTextInput" class="form-input" rows="2" style="font-family:var(--font-sans); font-size:0.85rem; line-height:1.5;" placeholder="Enter custom passenger announcement text to synthesize and broadcast across station speakers..."></textarea>
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <label style="font-size:0.75rem; color:var(--text-muted);">Include 4-Tone Chime:</label>
+                                <input type="checkbox" id="cmdCustomChimeCheck" checked style="accent-color:var(--emerald);">
+                            </div>
+                            <div style="display:flex; gap:0.5rem;">
+                                <button class="btn btn-secondary" onclick="document.getElementById('cmdCustomTextInput').value='Attention please. Special holiday express from Chennai Central to Madurai will depart at 22:30 hours from Platform 5.';">
+                                    Load Sample Script
+                                </button>
+                                <button class="btn btn-primary" onclick="broadcastCommanderCustomText()">
+                                    🎙️ Broadcast Announcement
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- ─── Sleek Global Copyright Footer Bar ─── -->
             <footer class="site-copyright-bar" id="siteCopyrightBar">
                 <div class="site-copyright-inner">
@@ -2889,6 +3402,190 @@
                     <strong style="color:var(--rail-red);">07 &mdash; Keyboard Shortcuts</strong><br>
                     Press <code>Esc</code> to dismiss any drawer or modal. Use keys <code>1</code> through <code>9</code> for fast navigation between console tabs.
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── Multi-Lingual Railway Station PA Soundboard Modal ─── -->
+    <div class="soundboard-backdrop" id="stationSoundboardBackdrop" style="display:none;" onclick="closeStationSoundboardModal()"></div>
+    <div class="station-soundboard-modal" id="stationSoundboardModal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="soundboardTitle">
+        <div class="soundboard-header">
+            <div class="soundboard-title-group">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                    <span class="badge badge-real">IR PASSENGER ADDRESS</span>
+                    <span class="bp-chip"><span class="bp-ring" style="width:8px;height:8px;"></span> LIVE SYNTHESIZER</span>
+                </div>
+                <h3 id="soundboardTitle" class="soundboard-title">Station Master Multi-Lingual PA Soundboard</h3>
+                <p class="soundboard-subtitle">Authentic Public Address Synthesizer with 4-Tone Chime, Multi-Dialect Voice Personas &amp; Acoustic Horn Filtering</p>
+            </div>
+            <button class="drawer-close" onclick="closeStationSoundboardModal()" aria-label="Close Soundboard">&times;</button>
+        </div>
+
+        <div class="soundboard-body">
+            <!-- Languages Selector (8 Regional Languages + Trilingual Chain) -->
+            <div class="soundboard-section">
+                <div class="soundboard-section-label">
+                    <span>1. SELECT BROADCAST LANGUAGE</span>
+                    <span class="soundboard-section-note">8 Indian Regional Dialects + Trilingual Chain</span>
+                </div>
+                <div class="soundboard-lang-grid" id="soundboardLangGrid">
+                    <button type="button" class="soundboard-lang-btn active" data-lang="ta-IN" onclick="selectSoundboardLang('ta-IN')">
+                        <span class="soundboard-lang-flag">🌴</span>
+                        <span class="soundboard-lang-name">Tamil</span>
+                        <span class="soundboard-lang-native">தமிழ் (Southern)</span>
+                    </button>
+                    <button type="button" class="soundboard-lang-btn" data-lang="hi-IN" onclick="selectSoundboardLang('hi-IN')">
+                        <span class="soundboard-lang-flag">🏛️</span>
+                        <span class="soundboard-lang-name">Hindi</span>
+                        <span class="soundboard-lang-native">हिन्दी (Central/NR)</span>
+                    </button>
+                    <button type="button" class="soundboard-lang-btn" data-lang="en-IN" onclick="selectSoundboardLang('en-IN')">
+                        <span class="soundboard-lang-flag">🌐</span>
+                        <span class="soundboard-lang-name">Indian English</span>
+                        <span class="soundboard-lang-native">Railway PA Cadence</span>
+                    </button>
+                    <button type="button" class="soundboard-lang-btn" data-lang="te-IN" onclick="selectSoundboardLang('te-IN')">
+                        <span class="soundboard-lang-flag">🌾</span>
+                        <span class="soundboard-lang-name">Telugu</span>
+                        <span class="soundboard-lang-native">తెలుగు (SCR)</span>
+                    </button>
+                    <button type="button" class="soundboard-lang-btn" data-lang="kn-IN" onclick="selectSoundboardLang('kn-IN')">
+                        <span class="soundboard-lang-flag">🐘</span>
+                        <span class="soundboard-lang-name">Kannada</span>
+                        <span class="soundboard-lang-native">ಕನ್ನಡ (SWR)</span>
+                    </button>
+                    <button type="button" class="soundboard-lang-btn" data-lang="bn-IN" onclick="selectSoundboardLang('bn-IN')">
+                        <span class="soundboard-lang-flag">🌉</span>
+                        <span class="soundboard-lang-name">Bengali</span>
+                        <span class="soundboard-lang-native">বাংলা (ER/SER)</span>
+                    </button>
+                    <button type="button" class="soundboard-lang-btn" data-lang="mr-IN" onclick="selectSoundboardLang('mr-IN')">
+                        <span class="soundboard-lang-flag">🏰</span>
+                        <span class="soundboard-lang-name">Marathi</span>
+                        <span class="soundboard-lang-native">मराठी (CR/WR)</span>
+                    </button>
+                    <button type="button" class="soundboard-lang-btn" data-lang="ml-IN" onclick="selectSoundboardLang('ml-IN')">
+                        <span class="soundboard-lang-flag">🥥</span>
+                        <span class="soundboard-lang-name">Malayalam</span>
+                        <span class="soundboard-lang-native">മലയാളം (SR)</span>
+                    </button>
+                    <button type="button" class="soundboard-lang-btn soundboard-lang-trilingual" data-lang="trilingual" onclick="selectSoundboardLang('trilingual')">
+                        <span class="soundboard-lang-flag">🇮🇳</span>
+                        <span class="soundboard-lang-name">Tri-Lingual Protocol</span>
+                        <span class="soundboard-lang-native">Regional ➔ Hindi ➔ English</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Operational Scenario Selection -->
+            <div class="soundboard-section">
+                <div class="soundboard-section-label">
+                    <span>2. OPERATIONAL SCENARIO TEMPLATE</span>
+                    <span class="soundboard-section-note">Authentic Indian Railways Station PA Scripts</span>
+                </div>
+                <div class="soundboard-scenario-grid">
+                    <button type="button" class="soundboard-scenario-btn active" data-scenario="arrival" onclick="selectSoundboardScenario('arrival')">
+                        <span class="soundboard-scenario-icon">🚆</span>
+                        <span class="soundboard-scenario-title">Platform Arrival</span>
+                        <span class="soundboard-scenario-desc">Standard incoming express arrival announcement</span>
+                    </button>
+                    <button type="button" class="soundboard-scenario-btn" data-scenario="reallocation" onclick="selectSoundboardScenario('reallocation')">
+                        <span class="soundboard-scenario-icon">⚠️</span>
+                        <span class="soundboard-scenario-title">Platform Reallocation</span>
+                        <span class="soundboard-scenario-desc">Congestion reroute to alternative platform</span>
+                    </button>
+                    <button type="button" class="soundboard-scenario-btn" data-scenario="relief_rake" onclick="selectSoundboardScenario('relief_rake')">
+                        <span class="soundboard-scenario-icon">🛡️</span>
+                        <span class="soundboard-scenario-title">Relief Clone Rake</span>
+                        <span class="soundboard-scenario-desc">Standby clone train deployed for surge clearance</span>
+                    </button>
+                    <button type="button" class="soundboard-scenario-btn" data-scenario="metering" onclick="selectSoundboardScenario('metering')">
+                        <span class="soundboard-scenario-icon">🛑</span>
+                        <span class="soundboard-scenario-title">Concourse Metering</span>
+                        <span class="soundboard-scenario-desc">FOB crowd safety gate hold announcement</span>
+                    </button>
+                    <button type="button" class="soundboard-scenario-btn" data-scenario="chime_only" onclick="selectSoundboardScenario('chime_only')">
+                        <span class="soundboard-scenario-icon">🔔</span>
+                        <span class="soundboard-scenario-title">Station Chime Only</span>
+                        <span class="soundboard-scenario-desc">4-Tone IR D-F#-A-D PA Attention Gong</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Train & Platform Parameter Dock -->
+            <div class="soundboard-params-row">
+                <div class="soundboard-param-col">
+                    <label class="form-label" for="soundboardTrainSelect">Target Train Service</label>
+                    <select id="soundboardTrainSelect" class="form-input" onchange="updateSoundboardInputs()">
+                        <option value="12635|Vaigai Superfast Express" selected>12635 &bull; Vaigai Superfast Express (MS ➔ MDU)</option>
+                        <option value="12638|Pandian Superfast Express">12638 &bull; Pandian Superfast Express (MDU ➔ MS)</option>
+                        <option value="12622|Tamil Nadu Express">12622 &bull; Tamil Nadu Express (NDLS ➔ MAS)</option>
+                        <option value="20607|Vande Bharat Express">20607 &bull; Vande Bharat Express (MAS ➔ MYS)</option>
+                        <option value="12840|Howrah Mail">12840 &bull; Howrah Mail (MAS ➔ HWH)</option>
+                        <option value="12952|Mumbai Rajdhani Express">12952 &bull; Mumbai Rajdhani Express (NDLS ➔ MMCT)</option>
+                    </select>
+                </div>
+                <div class="soundboard-param-col">
+                    <label class="form-label" for="soundboardPlatformSelect">Platform No.</label>
+                    <select id="soundboardPlatformSelect" class="form-input" onchange="updateSoundboardInputs()">
+                        <option value="1">Platform 1</option>
+                        <option value="2" selected>Platform 2</option>
+                        <option value="3">Platform 3</option>
+                        <option value="4">Platform 4</option>
+                        <option value="5">Platform 5</option>
+                        <option value="6">Platform 6</option>
+                        <option value="7">Platform 7</option>
+                        <option value="8">Platform 8</option>
+                    </select>
+                </div>
+                <div class="soundboard-param-col soundboard-creative-box">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <label class="form-label" style="margin-bottom:0;" for="soundboardCreativeToggle">Creative Voice Modulation</label>
+                        <input type="checkbox" id="soundboardCreativeToggle" checked onchange="toggleSoundboardCreative()" style="accent-color:var(--cyan); transform:scale(1.2); cursor:pointer;">
+                    </div>
+                    <span id="soundboardCreativeStatus" class="soundboard-creative-desc">Active (Dynamic Pitch &amp; Cadence Cycling)</span>
+                </div>
+            </div>
+
+            <!-- Live PA Script Preview & Visualizer -->
+            <div class="soundboard-preview-container">
+                <div class="soundboard-preview-header">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="pulse-dot"></span>
+                        <span style="font-size:0.75rem; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:var(--text-muted);">
+                            LIVE STATION PA SCRIPT TRANSCRIPT
+                        </span>
+                    </div>
+                    <!-- Audio Waveform Visualizer -->
+                    <div class="soundboard-waveform" id="soundboardWaveform">
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                    </div>
+                </div>
+                <div class="soundboard-transcript-box" id="soundboardLiveTranscript">
+                    <!-- Updated via JS updateSoundboardPreview() -->
+                </div>
+            </div>
+        </div>
+
+        <div class="soundboard-footer">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button type="button" class="btn btn-secondary" onclick="sandboxPlayChime()" title="Play 4-Tone IR Station Chime Only">
+                    <span>🔔 Test Chime (D-F#-A-D)</span>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="stopSoundboardBroadcast()" style="border-color:var(--rail-red); color:var(--rail-red);">
+                    <span>⏹️ Stop PA</span>
+                </button>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button type="button" class="btn btn-primary" id="btnTriggerBroadcast" onclick="triggerSoundboardBroadcast()" style="background:linear-gradient(135deg, #0284c7, #06b6d4); border:none; padding:0.6rem 1.4rem; font-weight:700; box-shadow:0 0 16px rgba(6,182,212,0.35);">
+                    <span>🎙️ Broadcast Announcement Now</span>
+                </button>
             </div>
         </div>
     </div>

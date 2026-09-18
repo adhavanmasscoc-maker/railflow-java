@@ -16,6 +16,8 @@
     { "source": "/commuter", "destination": "/index" },
     { "source": "/quality", "destination": "/index" },
     { "source": "/architecture", "destination": "/index" },
+    { "source": "/fleet", "destination": "/index" },
+    { "source": "/commander", "destination": "/index" },
     { "source": "/database", "destination": "/index" },
     { "source": "/feedback", "destination": "/index" }
   ]

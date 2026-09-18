@@ -1169,7 +1169,7 @@ const server = http.createServer((req, res) => {
         }
 
         // SPA Clean URL Routing — serve index.html for all page routes
-        const SPA_ROUTES = ['/dashboard','/console','/network','/journey','/stations','/trains','/crowd','/commuter','/quality','/architecture','/database','/feedback'];
+        const SPA_ROUTES = ['/dashboard','/console','/network','/journey','/stations','/trains','/crowd','/commuter','/quality','/architecture','/fleet','/commander','/database','/feedback'];
         if (SPA_ROUTES.includes(pathname)) {
             pathname = '/index.html';
         }
