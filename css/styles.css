@@ -5574,6 +5574,114 @@ body {
     align-items: center;
 }
 
+/* ═════════════════════════════════════════════════════════════════════════
+   FLEET & TOPOLOGY OPS (KAVACH, PROJECT DIRS & DATA PROVENANCE)
+   ═════════════════════════════════════════════════════════════════════════ */
+.net-subview-panel {
+    display: none;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 0.5rem;
+}
+.net-subview-panel.active {
+    display: flex;
+}
+.kavach-hero-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
+.kavach-feature-card {
+    background: #0D1626;
+    border: 1px solid #1E2D44;
+    border-radius: var(--radius-md);
+    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.kavach-feature-card .k-icon {
+    font-size: 1.5rem;
+    margin-bottom: 2px;
+}
+.kavach-feature-card h4 {
+    font-size: 0.90rem;
+    font-weight: 700;
+    color: #F8FAFC;
+    margin: 0;
+}
+.kavach-feature-card p {
+    font-size: 0.78rem;
+    color: #94A3B8;
+    line-height: 1.5;
+    margin: 0;
+}
+.dir-tree-box {
+    background: #05080E;
+    border: 1px solid #162033;
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: #A5B4FC;
+    max-height: 480px;
+    overflow-y: auto;
+    white-space: pre;
+}
+.provenance-card {
+    background: #0C1424;
+    border: 1px solid #1E2D44;
+    border-radius: var(--radius-md);
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.reference-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid #334155;
+    color: #38BDF8;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.reference-link-btn:hover {
+    border-color: #38BDF8;
+    background: rgba(56, 189, 248, 0.15);
+    color: #FFF;
+}
 
-
-
+/* ═════════════════════════════════════════════════════════════════════════
+   SLEEK SITE COPYRIGHT BAR
+   ═════════════════════════════════════════════════════════════════════════ */
+.site-copyright-bar {
+    margin-top: 2rem;
+    padding: 0.75rem 1rem;
+    background: rgba(11, 18, 32, 0.9);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    font-size: 0.74rem;
+    color: #64748B;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+.site-copyright-bar strong {
+    color: #E2E8F0;
+}
+.site-copyright-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--cyan);
+}

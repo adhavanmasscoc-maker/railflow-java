@@ -1105,27 +1105,34 @@ function initMachinaHud() {
     updateHudTelemetry(STATE.activePage || 'dashboard');
 }
 
-// ─── SUB-VIEW SWITCHER: SVG TOPOLOGY VS. LIVE SATELLITE RAILRADAR ────────────
+// ─── SUB-VIEW SWITCHER: RADAR, TOPOLOGY, FLEET/KAVACH, DIRS, PROVENANCE ─────
 function switchNetworkView(view) {
-    const topo = $('netTopologyView');
-    const radar = $('netRadarView');
-    const btnTopo = $('btnNetTopology');
-    const btnRadar = $('btnNetRadar');
+    const views = {
+        'radar': { el: $('netRadarView'), btn: $('btnNetRadar') },
+        'topology': { el: $('netTopologyView'), btn: $('btnNetTopology') },
+        'fleet-kavach': { el: $('netFleetKavachView'), btn: $('btnNetFleetKavach') },
+        'directory': { el: $('netDirectoryView'), btn: $('btnNetDirectory') },
+        'provenance': { el: $('netProvenanceView'), btn: $('btnNetProvenance') }
+    };
 
-    if (view === 'topology') {
-        if (topo) topo.style.display = 'block';
-        if (radar) radar.style.display = 'none';
-        if (btnTopo) { btnTopo.className = 'btn btn-primary'; }
-        if (btnRadar) { btnRadar.className = 'btn btn-secondary'; }
+    const targetKey = views[view] ? view : 'radar';
+
+    Object.keys(views).forEach(k => {
+        const item = views[k];
+        if (item.el) {
+            item.el.style.display = (k === targetKey) ? (k === 'radar' || k === 'topology' ? 'block' : 'flex') : 'none';
+        }
+        if (item.btn) {
+            item.btn.className = (k === targetKey) ? 'btn btn-primary' : 'btn btn-secondary';
+        }
+    });
+
+    if (targetKey === 'topology') {
+        const topo = $('netTopologyView');
         if (topo && !topo.dataset.rendered) {
             renderNetworkGraph('fullNetworkGraphSvg', true);
             topo.dataset.rendered = 'true';
         }
-    } else {
-        if (topo) topo.style.display = 'none';
-        if (radar) radar.style.display = 'block';
-        if (btnTopo) { btnTopo.className = 'btn btn-secondary'; }
-        if (btnRadar) { btnRadar.className = 'btn btn-primary'; }
     }
 }
 window.switchNetworkView = switchNetworkView;
