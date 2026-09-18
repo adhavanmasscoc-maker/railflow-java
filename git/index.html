@@ -205,44 +205,6 @@
         <!-- Viewport Container -->
         <main class="main-viewport" id="mainViewport">
 
-            <!-- ─── Module A: Heuristic Conflict Alert Carousel (Automated Detection) ─── -->
-            <div class="alert-carousel-container" id="alertCarouselContainer" style="display:none;">
-                <div class="alert-carousel-card">
-                    <div class="alert-header">
-                        <div class="alert-pulse-badge">
-                            <span class="pulse-ring"></span>
-                            <span class="alert-icon">⚠️</span>
-                            <span class="alert-tag">SCHEDULE CONFLICT DETECTED</span>
-                        </div>
-                        <span class="alert-time-badge" id="alertCountdown">OVERLAP IN 12 MIN</span>
-                    </div>
-                    <div class="alert-body">
-                        <div class="alert-message" id="alertConflictMsg">
-                            <strong>Pandian Express (12638)</strong> delayed by 25m. Schedule overlap on <strong>Platform 2</strong> (Occupancy: 80.0% CRITICAL). Stampede hazard alert triggered.
-                        </div>
-                        <div class="alert-recommendation">
-                            <span class="rec-label">Heuristic Recommendation:</span>
-                            <span id="alertTargetPfText">Heuristic Optimization Strategy: Reallocate to <strong>Platform 3</strong> (Current Occupancy: 24.0% NORMAL | Priority Penalty: 18.2 | Polymorphic Action: <code>ChangePlatformStrategy</code>).</span>
-                        </div>
-                    </div>
-                    <div class="alert-actions">
-                        <button class="btn btn-danger btn-reallocate-action" id="btnHeuristicReallocate">
-                            <span>⚡ One-Click Heuristic Reallocate</span>
-                        </button>
-                        <button class="btn btn-secondary" id="btnDismissAlert" style="font-size:0.75rem; padding:6px 12px;">Dismiss</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ─── Emergency Strobe Gate Hold Banner (Triggered when FOB/Stairs Red > 2.5 persons/m²) ─── -->
-            <div class="strobe-gate-banner" id="strobeGateBanner" style="display:none;">
-                <div class="strobe-text">
-                    <strong>🚨 STAMPEDE HAZARD ALERT:</strong> Vertical Chokepoint (FOB 2 Staircase) exceeded 2.5 persons/m²! 
-                    <span>ACTION MANDATED: HOLD PASSENGER INFLOW AT CONCOURSE GATES (NORTH & SOUTH).</span>
-                </div>
-                <button class="btn btn-secondary" id="btnAcknowledgeStrobe" style="font-size:0.72rem; padding:4px 10px; background:rgba(0,0,0,0.4); color:#fff; border-color:#fff;">Acknowledge Hold</button>
-            </div>
-
             <!-- ═══════════════════════════════════════════════════════════
                  PAGE 1: DASHBOARD
                  ═══════════════════════════════════════════════════════════ -->
@@ -264,6 +226,44 @@
                         <span class="badge badge-derived">DERIVED GRAPH</span>
                         <span class="badge badge-simulated">SIMULATED TELEMETRY</span>
                     </div>
+                </div>
+
+                <!-- ─── Module A: Heuristic Conflict Alert Carousel (Automated Detection) ─── -->
+                <div class="alert-carousel-container" id="alertCarouselContainer" style="display:none;">
+                    <div class="alert-carousel-card">
+                        <div class="alert-header">
+                            <div class="alert-pulse-badge">
+                                <span class="pulse-ring"></span>
+                                <span class="alert-icon">⚠️</span>
+                                <span class="alert-tag">SCHEDULE CONFLICT DETECTED</span>
+                            </div>
+                            <span class="alert-time-badge" id="alertCountdown">OVERLAP IN 12 MIN</span>
+                        </div>
+                        <div class="alert-body">
+                            <div class="alert-message" id="alertConflictMsg">
+                                <strong>Pandian Express (12638)</strong> delayed by 25m. Schedule overlap on <strong>Platform 2</strong> (Occupancy: 80.0% CRITICAL). Stampede hazard alert triggered.
+                            </div>
+                            <div class="alert-recommendation">
+                                <span class="rec-label">Heuristic Recommendation:</span>
+                                <span id="alertTargetPfText">Heuristic Optimization Strategy: Reallocate to <strong>Platform 3</strong> (Current Occupancy: 24.0% NORMAL | Priority Penalty: 18.2 | Polymorphic Action: <code>ChangePlatformStrategy</code>).</span>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn-danger btn-reallocate-action" id="btnHeuristicReallocate">
+                                <span>⚡ One-Click Heuristic Reallocate</span>
+                            </button>
+                            <button class="btn btn-secondary" id="btnDismissAlert" style="font-size:0.75rem; padding:6px 12px;">Dismiss</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ─── Emergency Strobe Gate Hold Banner (Triggered when FOB/Stairs Red > 2.5 persons/m²) ─── -->
+                <div class="strobe-gate-banner" id="strobeGateBanner" style="display:none;">
+                    <div class="strobe-text">
+                        <strong>🚨 STAMPEDE HAZARD ALERT:</strong> Vertical Chokepoint (FOB 2 Staircase) exceeded 2.5 persons/m²! 
+                        <span>ACTION MANDATED: HOLD PASSENGER INFLOW AT CONCOURSE GATES (NORTH & SOUTH).</span>
+                    </div>
+                    <button class="btn btn-secondary" id="btnAcknowledgeStrobe" style="font-size:0.72rem; padding:4px 10px; background:rgba(0,0,0,0.4); color:#fff; border-color:#fff;">Acknowledge Hold</button>
                 </div>
 
                 <!-- Operational Pipeline Timeline Card -->
@@ -601,31 +601,31 @@
             <section class="page-view" id="page-network">
                 <div class="view-header">
                     <div class="view-title-group">
-                        <div class="eyebrow"><span class="sys-num">SYSTEM 03</span> <span class="slash">//</span> NETWORK TOPOLOGY</div>
-                        <div class="view-subtitle">INTER-HUB TOPOLOGY</div>
-                        <h1 class="view-title">Logical Indian Railways Network Graph</h1>
+                        <div class="eyebrow"><span class="sys-num">SYSTEM 03</span> <span class="slash">//</span> FLEET &amp; TOPOLOGY OPS</div>
+                        <div class="view-subtitle">
+                            <span class="pulse-dot" style="background:var(--cyan);"></span>
+                            AUTONOMOUS TERMINAL DISPATCH &amp; CONGESTION ENGINE
+                        </div>
+                        <h1 class="view-title">Terminal Congestion &amp; Dynamic Platform Dispatch Sandbox</h1>
                         <p class="view-desc">
-                            Click any node to inspect terminal platforms, incoming/outgoing express routes, and inter-hub connectivity in the Station Detail Drawer.
+                            Interactive real-time terminal sandbox solving metropolitan station bottlenecks, stampede hazard mitigation, and PriorityQueue heuristic train re-allocations across Indian Railways hubs.
                         </p>
                     </div>
-                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                        <button class="btn btn-secondary" id="btnResetGraph"><span>🔄 Reset View</span></button>
-                        <button class="btn btn-secondary" onclick="filterGraphZone('ALL')"><span>🇮🇳 All Zones</span></button>
-                        <button class="btn btn-secondary" onclick="filterGraphZone('NR')"><span>🏛️ Northern</span></button>
-                        <button class="btn btn-secondary" onclick="filterGraphZone('SR')"><span>🌴 Southern</span></button>
-                        <button class="btn btn-secondary" onclick="filterGraphZone('WR')"><span>🌅 Western</span></button>
-                        <button class="btn btn-secondary" onclick="filterGraphZone('CR')"><span>🌿 Central</span></button>
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+                        <span class="badge badge-real">CORE PROBLEM SOLVER</span>
+                        <span class="badge badge-ai">PRIORITYQUEUE MAX-HEAP</span>
+                        <span class="badge" style="background:var(--cyan-dim); color:var(--cyan);">INTERACTIVE SANDBOX</span>
                     </div>
                 </div>
 
-                <!-- Sub-view switcher: Live RailRadar, Topology Graph, Fleet & Kavach, Directory, and Data Provenance -->
+                <!-- Sub-view switcher: Dispatch Sandbox, Topology Graph, Fleet & Kavach, Directory, and Data Provenance -->
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
                     <div style="display:flex; gap:0.5rem; background:var(--bg-subtle); padding:0.25rem; border-radius:var(--radius-md); border:1px solid var(--border); flex-wrap:wrap;">
-                        <button id="btnNetRadar" class="btn btn-primary" onclick="switchNetworkView('radar')" style="font-size:0.78rem; padding:0.35rem 0.75rem; display:inline-flex; align-items:center; gap:6px;">
-                            <span>🛰️ Live Satellite RailRadar</span>
+                        <button id="btnNetDispatch" class="btn btn-primary" onclick="switchNetworkView('dispatch')" style="font-size:0.78rem; padding:0.35rem 0.75rem; display:inline-flex; align-items:center; gap:6px;">
+                            <span>🎮 Autonomous Dispatch Sandbox</span>
                         </button>
                         <button id="btnNetTopology" class="btn btn-secondary" onclick="switchNetworkView('topology')" style="font-size:0.78rem; padding:0.35rem 0.75rem; display:inline-flex; align-items:center; gap:6px;">
-                            <span>🌐 Topology Graph</span>
+                            <span>🌐 Inter-Hub Topology Graph</span>
                         </button>
                         <button id="btnNetFleetKavach" class="btn btn-secondary" onclick="switchNetworkView('fleet-kavach')" style="font-size:0.78rem; padding:0.35rem 0.75rem; display:inline-flex; align-items:center; gap:6px;">
                             <span>⚡ Fleet &amp; Kavach Specs</span>
@@ -639,23 +639,143 @@
                     </div>
                     <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.75rem; color:var(--text-muted);">
                         <span class="status-indicator live"></span>
-                        <span>Multi-Source Satellite &amp; Station Telemetry Active</span>
+                        <span id="sandboxActiveStationBadge">Station: Chennai Egmore (MS) &bull; All Systems Live</span>
                     </div>
                 </div>
 
-                <!-- View 1: Live RailRadar Embedded Radar Map (Default First View) -->
-                <div id="netRadarView" class="panel" style="padding:0; overflow:hidden; border-radius:var(--radius-md); display:block; margin-top:0.5rem;">
-                    <div style="background:var(--bg-subtle); padding:0.6rem 1rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border);">
-                        <div style="display:flex; align-items:center; gap:0.5rem">
-                            <span class="status-indicator live"></span>
-                            <span style="font-weight:700; font-size:0.82rem; color:var(--text-primary); letter-spacing:0.03em;">LIVE SATELLITE RAILRADAR STREAM</span>
-                            <span class="badge badge-real">ACTIVE GPS RADAR</span>
+                <!-- View 1: Autonomous Terminal Dispatch & Dynamic Crowd Reallocation Sandbox (Default First View) -->
+                <div id="netDispatchView" class="panel" style="display:block; padding:1.25rem; border-radius:var(--radius-md); background:var(--bg-card); border:1px solid var(--border); margin-top:0.5rem;">
+                    <!-- Terminal Selector Header -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; padding-bottom:1rem; border-bottom:1px solid var(--border);">
+                        <div>
+                            <div style="font-size:0.70rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--cyan); font-weight:700; margin-bottom:4px;">
+                                CENTRAL OPERATIONS CONTROL (COC) &bull; TERMINAL DISPATCHER
+                            </div>
+                            <h3 style="margin:0; font-size:1.15rem; color:var(--text-primary); display:flex; align-items:center; gap:8px;">
+                                <span>🚉</span> <span id="sandboxStationTitle">Chennai Egmore (MS) — Southern Railway Chord Line Hub</span>
+                            </h3>
                         </div>
-                        <a href="https://railradar.in/railradar" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size:0.75rem; padding:0.25rem 0.6rem; text-decoration:none; display:inline-flex; align-items:center; gap:4px">
-                            <span>🛰️ Open Fullscreen Radar ↗</span>
-                        </a>
+                        <!-- Station Quick Selector Pills -->
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;" id="sandboxStationPills">
+                            <button class="btn btn-primary" id="btnStnMS" onclick="selectSandboxStation('MS')" style="font-size:0.75rem; padding:0.3rem 0.65rem;">🌴 MS (Egmore)</button>
+                            <button class="btn btn-secondary" id="btnStnMAS" onclick="selectSandboxStation('MAS')" style="font-size:0.75rem; padding:0.3rem 0.65rem;">🏛️ MAS (Central)</button>
+                            <button class="btn btn-secondary" id="btnStnTPJ" onclick="selectSandboxStation('TPJ')" style="font-size:0.75rem; padding:0.3rem 0.65rem;">🌾 TPJ (Trichy)</button>
+                            <button class="btn btn-secondary" id="btnStnNDLS" onclick="selectSandboxStation('NDLS')" style="font-size:0.75rem; padding:0.3rem 0.65rem;">🏰 NDLS (New Delhi)</button>
+                            <button class="btn btn-secondary" id="btnStnHWH" onclick="selectSandboxStation('HWH')" style="font-size:0.75rem; padding:0.3rem 0.65rem;">🌉 HWH (Howrah)</button>
+                        </div>
                     </div>
-                    <iframe src="https://railradar.in/railradar" style="width: 100%; height: 680px; border: none; display: block;" title="RailRadar Live Map" loading="lazy" allow="geolocation"></iframe>
+
+                    <!-- Interactive Simulation Control Bar -->
+                    <div style="margin:1rem 0; padding:1rem; background:rgba(15, 23, 42, 0.6); border:1px solid var(--border); border-radius:var(--radius-md);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
+                            <span style="font-size:0.80rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">
+                                ⚡ Interactive Scenario Simulation &amp; Stress Testing
+                            </span>
+                            <span style="font-size:0.72rem; color:var(--emerald); font-family:var(--font-mono);">
+                                ● DISPATCH ENGINE ARMED &bull; 0.84ms SOLVER
+                            </span>
+                        </div>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <button class="btn btn-danger" onclick="sandboxTriggerConflict()" style="font-size:0.78rem; padding:0.4rem 0.8rem; display:inline-flex; align-items:center; gap:6px;">
+                                <span>⚠️ Simulate 25m Delay (PF 2 Conflict)</span>
+                            </button>
+                            <button class="btn btn-secondary" onclick="sandboxTriggerRushSurge()" style="font-size:0.78rem; padding:0.4rem 0.8rem; display:inline-flex; align-items:center; gap:6px; border-color:var(--amber);">
+                                <span>👥 Simulate Rush Hour Surge (+1,800)</span>
+                            </button>
+                            <button class="btn btn-primary" onclick="sandboxExecuteOptimization()" style="font-size:0.78rem; padding:0.4rem 0.8rem; display:inline-flex; align-items:center; gap:6px; background:linear-gradient(135deg, #059669, #10b981); border:none;">
+                                <span>🧠 Execute PriorityQueue Reallocation</span>
+                            </button>
+                            <button class="btn btn-secondary" id="btnSandboxGateMetering" onclick="sandboxToggleGateMetering()" style="font-size:0.78rem; padding:0.4rem 0.8rem; display:inline-flex; align-items:center; gap:6px;">
+                                <span id="btnMeteringText">🛡️ Engage Concourse Gate Metering</span>
+                            </button>
+                            <button class="btn btn-secondary" onclick="sandboxDeployReliefRake()" style="font-size:0.78rem; padding:0.4rem 0.8rem; display:inline-flex; align-items:center; gap:6px;">
+                                <span>🚆 Deploy Standby Clone Rake</span>
+                            </button>
+                            <button class="btn btn-secondary" onclick="sandboxPlayChime()" style="font-size:0.78rem; padding:0.4rem 0.8rem; display:inline-flex; align-items:center; gap:6px;">
+                                <span>🔊 Station Audio Chime</span>
+                            </button>
+                            <button class="btn btn-secondary" onclick="sandboxResetNominal()" style="font-size:0.78rem; padding:0.4rem 0.8rem; display:inline-flex; align-items:center; gap:6px;">
+                                <span>🔄 Reset to Nominal</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Telemetry Metrics KPI Strip -->
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:0.75rem; margin-bottom:1.25rem;">
+                        <div class="stat-card" style="padding:0.75rem; border-radius:var(--radius-md); background:var(--bg-subtle); border:1px solid var(--border);">
+                            <div style="font-size:0.70rem; color:var(--text-muted); text-transform:uppercase;">Overall Concourse Load</div>
+                            <div id="kpiConcourseLoad" style="font-size:1.25rem; font-weight:800; color:var(--text-primary); margin-top:2px;">48.2% <span style="font-size:0.70rem; color:var(--emerald); font-weight:600;">NORMAL</span></div>
+                            <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">Turnstile Inflow: <strong id="kpiInflowRate">120 pax/min</strong></div>
+                        </div>
+                        <div class="stat-card" style="padding:0.75rem; border-radius:var(--radius-md); background:var(--bg-subtle); border:1px solid var(--border);">
+                            <div style="font-size:0.70rem; color:var(--text-muted); text-transform:uppercase;">FOB Staircase Chokepoint</div>
+                            <div id="kpiFobLoad" style="font-size:1.25rem; font-weight:800; color:var(--emerald); margin-top:2px;">0.9 pax/m² <span style="font-size:0.70rem; font-weight:600;">SAFE</span></div>
+                            <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">Stampede Threshold: <strong>2.5 pax/m²</strong></div>
+                        </div>
+                        <div class="stat-card" style="padding:0.75rem; border-radius:var(--radius-md); background:var(--bg-subtle); border:1px solid var(--border);">
+                            <div style="font-size:0.70rem; color:var(--text-muted); text-transform:uppercase;">Active Platform Conflicts</div>
+                            <div id="kpiActiveConflicts" style="font-size:1.25rem; font-weight:800; color:var(--emerald); margin-top:2px;">0 CONFLICTS</div>
+                            <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">Headway Separation: <strong>8 min clear</strong></div>
+                        </div>
+                        <div class="stat-card" style="padding:0.75rem; border-radius:var(--radius-md); background:var(--bg-subtle); border:1px solid var(--border);">
+                            <div style="font-size:0.70rem; color:var(--text-muted); text-transform:uppercase;">PriorityQueue Reallocator</div>
+                            <div id="kpiHeuristicStatus" style="font-size:1.25rem; font-weight:800; color:var(--cyan); margin-top:2px;">READY (O(log n))</div>
+                            <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">Evaluation Heap: <strong id="kpiHeapEvaluations">6 Candidates</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Live Platforms Visual Grid -->
+                    <div style="margin-bottom:1.25rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                            <div style="font-size:0.85rem; font-weight:700; color:var(--text-primary); text-transform:uppercase; letter-spacing:0.04em;">
+                                Live Platform Track Status &amp; Real-Time Crowd Density
+                            </div>
+                            <div style="font-size:0.72rem; color:var(--text-muted); display:flex; gap:12px;">
+                                <span>🟢 &lt;50% Normal</span>
+                                <span>🟡 50-75% Moderate</span>
+                                <span>🔴 &gt;75% Stampede Hazard</span>
+                            </div>
+                        </div>
+                        <div id="sandboxPlatformsGrid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:1rem;">
+                            <!-- Populated dynamically by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Heuristic Mathematical Optimization Matrix & Live COC Dispatch Feed -->
+                    <div style="display:grid; grid-template-columns: 1fr 1.1fr; gap:1.25rem;">
+                        <!-- Left: Heuristic PriorityQueue Mathematical Scoring Matrix -->
+                        <div class="panel" style="margin:0; background:rgba(15, 23, 42, 0.7); border:1px solid var(--border);">
+                            <div class="panel-header" style="padding:0.6rem 0.9rem; display:flex; justify-content:space-between; align-items:center;">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span>🧠</span>
+                                    <span class="panel-title" style="font-size:0.82rem;">PriorityQueue Heuristic Scoring Matrix</span>
+                                </div>
+                                <span class="badge badge-real">Java PriorityQueue</span>
+                            </div>
+                            <div class="panel-body" style="padding:0.75rem; font-size:0.76rem;">
+                                <div style="font-family:var(--font-mono); color:var(--cyan); background:rgba(0,0,0,0.3); padding:0.4rem 0.6rem; border-radius:var(--radius-sm); margin-bottom:0.6rem;">
+                                    Score = (0.45 &times; Occupancy%) + (0.25 &times; DwellMin) + (0.20 &times; FOB_Distance) + (0.10 &times; Turnout)
+                                </div>
+                                <div id="sandboxMatrixContent">
+                                    <!-- Matrix comparison rows rendered dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Central Operations Control (COC) Live Dispatch Log -->
+                        <div class="panel" style="margin:0; background:rgba(15, 23, 42, 0.7); border:1px solid var(--border);">
+                            <div class="panel-header" style="padding:0.6rem 0.9rem; display:flex; justify-content:space-between; align-items:center;">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span>📡</span>
+                                    <span class="panel-title" style="font-size:0.82rem;">Central Operations Control (COC) Live Audit Log</span>
+                                </div>
+                                <span class="pulse-dot" style="background:var(--emerald);"></span>
+                            </div>
+                            <div class="panel-body" style="padding:0.5rem; max-height:220px; overflow-y:auto; font-family:var(--font-mono); font-size:0.70rem; display:flex; flex-direction:column; gap:4px;" id="sandboxDispatcherLog">
+                                <!-- Log entries streamed dynamically -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- View 2: Interactive SVG Network Graph (India Geo Format Map) -->

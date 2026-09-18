@@ -978,7 +978,7 @@ function switchPage(pageId, pushUrl) {
         try {
             if (pageId === 'network') {
                 if (!targetView.dataset.initialized) {
-                    switchNetworkView('radar');
+                    switchNetworkView('dispatch');
                     targetView.dataset.initialized = 'true';
                 }
             } else if (pageId === 'dashboard') {
@@ -1105,29 +1105,31 @@ function initMachinaHud() {
     updateHudTelemetry(STATE.activePage || 'dashboard');
 }
 
-// ─── SUB-VIEW SWITCHER: RADAR, TOPOLOGY, FLEET/KAVACH, DIRS, PROVENANCE ─────
+// ─── SUB-VIEW SWITCHER: DISPATCH, TOPOLOGY, FLEET/KAVACH, DIRS, PROVENANCE ───
 function switchNetworkView(view) {
     const views = {
-        'radar': { el: $('netRadarView'), btn: $('btnNetRadar') },
+        'dispatch': { el: $('netDispatchView'), btn: $('btnNetDispatch') },
         'topology': { el: $('netTopologyView'), btn: $('btnNetTopology') },
         'fleet-kavach': { el: $('netFleetKavachView'), btn: $('btnNetFleetKavach') },
         'directory': { el: $('netDirectoryView'), btn: $('btnNetDirectory') },
         'provenance': { el: $('netProvenanceView'), btn: $('btnNetProvenance') }
     };
 
-    const targetKey = views[view] ? view : 'radar';
+    const targetKey = views[view] ? view : 'dispatch';
 
     Object.keys(views).forEach(k => {
         const item = views[k];
         if (item.el) {
-            item.el.style.display = (k === targetKey) ? (k === 'radar' || k === 'topology' ? 'block' : 'flex') : 'none';
+            item.el.style.display = (k === targetKey) ? (k === 'dispatch' || k === 'topology' ? 'block' : 'flex') : 'none';
         }
         if (item.btn) {
             item.btn.className = (k === targetKey) ? 'btn btn-primary' : 'btn btn-secondary';
         }
     });
 
-    if (targetKey === 'topology') {
+    if (targetKey === 'dispatch') {
+        initDispatchSandbox();
+    } else if (targetKey === 'topology') {
         const topo = $('netTopologyView');
         if (topo && !topo.dataset.rendered) {
             renderNetworkGraph('fullNetworkGraphSvg', true);
@@ -1136,6 +1138,437 @@ function switchNetworkView(view) {
     }
 }
 window.switchNetworkView = switchNetworkView;
+
+// ═════════════════════════════════════════════════════════════════════════════
+// ─── AUTONOMOUS TERMINAL DISPATCH & CROWD REALLOCATION SANDBOX (SYSTEM 03) ───
+// ═════════════════════════════════════════════════════════════════════════════
+
+const SANDBOX_STATIONS = {
+    'MS': {
+        code: 'MS',
+        name: 'Chennai Egmore',
+        title: 'Chennai Egmore (MS) — Southern Railway Chord Line Hub',
+        platforms: [
+            { num: 1, type: 'Main Line (24 Coaches)', cap: 3200, crowd: 1216, dwell: 8, train: '12606 Pallavan SF Exp (TPJ ➔ MS)', loco: 'WAP-7 #30412', status: 'Boarding' },
+            { num: 2, type: 'Chord Line (24 Coaches)', cap: 3500, crowd: 1820, dwell: 14, train: '12638 Pandian SF Exp (MDU ➔ MS)', loco: 'WAP-7 #30452', status: 'Incoming', isTarget: true },
+            { num: 3, type: 'Through Line (22 Coaches)', cap: 3000, crowd: 540, dwell: 0, train: '[AVAILABLE TRACK • STANDBY]', loco: 'Clear Signal', status: 'Standby' },
+            { num: 4, type: 'Main Line (20 Coaches)', cap: 3200, crowd: 1408, dwell: 12, train: '16128 Guruvayur Exp', loco: 'WAP-4 #22610', status: 'Scheduled' },
+            { num: 5, type: 'Suburban Line (16 Coaches)', cap: 2800, crowd: 868, dwell: 6, train: '20606 Vande Bharat (TEN ➔ MS)', loco: 'Trainset 18', status: 'Docked' },
+            { num: 6, type: 'Chord Line (18 Coaches)', cap: 2600, crowd: 572, dwell: 18, train: '16714 Setu Express', loco: 'WAP-7 #30588', status: 'Scheduled' }
+        ]
+    },
+    'MAS': {
+        code: 'MAS',
+        name: 'Chennai Central',
+        title: 'Chennai Central (MAS) — Premier Southern Terminal',
+        platforms: [
+            { num: 1, type: 'Trunk Line (24 Coaches)', cap: 3600, crowd: 1512, dwell: 10, train: '12008 Shatabdi Exp (MYS ➔ MAS)', loco: 'WAP-7 #30201', status: 'Boarding' },
+            { num: 2, type: 'Trunk Line (24 Coaches)', cap: 3800, crowd: 2432, dwell: 15, train: '12676 Kovai Exp (CBE ➔ MAS)', loco: 'WAP-7 #30489', status: 'Docked', isTarget: true },
+            { num: 3, type: 'East Coast Line (24 Coaches)', cap: 3600, crowd: 2808, dwell: 25, train: '12842 Coromandel Exp (HWH ➔ MAS)', loco: 'WAP-7 #30333', status: 'Delayed' },
+            { num: 4, type: 'Trunk Line (22 Coaches)', cap: 3200, crowd: 480, dwell: 0, train: '[AVAILABLE TRACK • STANDBY]', loco: 'Clear Signal', status: 'Standby' },
+            { num: 5, type: 'Grand Trunk (24 Coaches)', cap: 3500, crowd: 1680, dwell: 14, train: '12622 Tamil Nadu Exp (NDLS ➔ MAS)', loco: 'WAP-7 #30455', status: 'Docked' },
+            { num: 6, type: 'West Coast (20 Coaches)', cap: 3000, crowd: 1050, dwell: 20, train: '12602 Mangalore Mail', loco: 'WAP-4 #22510', status: 'Scheduled' }
+        ]
+    },
+    'TPJ': {
+        code: 'TPJ',
+        name: 'Tiruchirappalli Jn',
+        title: 'Tiruchirappalli Jn (TPJ) — Central Delta Division Junction',
+        platforms: [
+            { num: 1, type: 'Main Chord (24 Coaches)', cap: 2800, crowd: 1260, dwell: 10, train: '12636 Vaigai SF Exp (MS ➔ MDU)', loco: 'WAP-7 #30588', status: 'Docked', isTarget: true },
+            { num: 2, type: 'Delta Line (20 Coaches)', cap: 2600, crowd: 1430, dwell: 15, train: '16854 Cholan Express', loco: 'WDP-4D #40120', status: 'Boarding' },
+            { num: 3, type: 'Through Line (18 Coaches)', cap: 2500, crowd: 300, dwell: 0, train: '[AVAILABLE TRACK • STANDBY]', loco: 'Clear Signal', status: 'Standby' },
+            { num: 4, type: 'Branch Line (16 Coaches)', cap: 2400, crowd: 720, dwell: 20, train: '16187 Karaikkal Express', loco: 'WDM-3D #11145', status: 'Scheduled' }
+        ]
+    },
+    'NDLS': {
+        code: 'NDLS',
+        name: 'New Delhi',
+        title: 'New Delhi (NDLS) — National Capital Mega Terminal',
+        platforms: [
+            { num: 1, type: 'Northern Trunk (24 Coaches)', cap: 4200, crowd: 2310, dwell: 12, train: '12004 Lucknow Shatabdi', loco: 'WAP-7 #30250', status: 'Boarding' },
+            { num: 2, type: 'East Trunk (24 Coaches)', cap: 4500, crowd: 3240, dwell: 22, train: '12424 Dibrugarh Rajdhani', loco: 'WAP-7 #30311', status: 'Delayed', isTarget: true },
+            { num: 3, type: 'Central Trunk (24 Coaches)', cap: 4000, crowd: 2720, dwell: 15, train: '12002 Bhopal Shatabdi', loco: 'WAP-7 #30218', status: 'Docked' },
+            { num: 4, type: 'Trunk Line (22 Coaches)', cap: 3800, crowd: 532, dwell: 0, train: '[AVAILABLE TRACK • STANDBY]', loco: 'Clear Signal', status: 'Standby' },
+            { num: 5, type: 'Western Trunk (24 Coaches)', cap: 4200, crowd: 2100, dwell: 18, train: '12952 Mumbai Rajdhani', loco: 'WAP-7 #30299', status: 'Boarding' },
+            { num: 6, type: 'Eastern Corridor (24 Coaches)', cap: 4000, crowd: 2440, dwell: 14, train: '12310 Patna Rajdhani', loco: 'WAP-7 #30280', status: 'Scheduled' }
+        ]
+    },
+    'HWH': {
+        code: 'HWH',
+        name: 'Howrah Jn',
+        title: 'Howrah Jn (HWH) — Maximum Capacity Eastern Terminal',
+        platforms: [
+            { num: 1, type: 'South Eastern (24 Coaches)', cap: 4600, crowd: 3220, dwell: 16, train: '12840 Howrah Mail', loco: 'WAP-7 #30419', status: 'Boarding' },
+            { num: 2, type: 'Main Trunk (24 Coaches)', cap: 4800, crowd: 3936, dwell: 25, train: '12860 Gitanjali Express', loco: 'WAP-7 #30388', status: 'Delayed', isTarget: true },
+            { num: 3, type: 'Trunk Line (22 Coaches)', cap: 4200, crowd: 672, dwell: 0, train: '[AVAILABLE TRACK • STANDBY]', loco: 'Clear Signal', status: 'Standby' },
+            { num: 4, type: 'Eastern Line (24 Coaches)', cap: 4400, crowd: 2552, dwell: 12, train: '12302 Howrah Rajdhani', loco: 'WAP-7 #30266', status: 'Docked' },
+            { num: 5, type: 'South Trunk (24 Coaches)', cap: 4500, crowd: 2925, dwell: 20, train: '12841 Coromandel Express', loco: 'WAP-7 #30333', status: 'Boarding' },
+            { num: 6, type: 'Duronto Line (20 Coaches)', cap: 4000, crowd: 1600, dwell: 10, train: '12260 Sealdah Duronto', loco: 'WAP-7 #30245', status: 'Scheduled' }
+        ]
+    }
+};
+
+let sandboxState = {
+    station: 'MS',
+    conflict: false,
+    surge: false,
+    metering: false,
+    reallocated: false,
+    reallocatedPf: 3,
+    originalPf: 2,
+    platforms: JSON.parse(JSON.stringify(SANDBOX_STATIONS['MS'].platforms))
+};
+
+function initDispatchSandbox() {
+    renderSandboxPlatforms();
+    renderSandboxMatrix();
+    updateSandboxKpis();
+    logSandboxDispatcher(`[COC-READY] Terminal Dispatcher initialized for ${SANDBOX_STATIONS[sandboxState.station].name} (${sandboxState.station}). 6 platforms monitored.`);
+}
+window.initDispatchSandbox = initDispatchSandbox;
+
+function selectSandboxStation(code) {
+    if (!SANDBOX_STATIONS[code]) return;
+    sandboxState.station = code;
+    sandboxState.conflict = false;
+    sandboxState.surge = false;
+    sandboxState.reallocated = false;
+    sandboxState.platforms = JSON.parse(JSON.stringify(SANDBOX_STATIONS[code].platforms));
+
+    const titleEl = $('sandboxStationTitle');
+    if (titleEl) titleEl.textContent = SANDBOX_STATIONS[code].title;
+    const badgeEl = $('sandboxActiveStationBadge');
+    if (badgeEl) badgeEl.innerHTML = `Station: ${SANDBOX_STATIONS[code].name} (${code}) &bull; All Systems Live`;
+
+    // Update pill styles
+    ['MS', 'MAS', 'TPJ', 'NDLS', 'HWH'].forEach(c => {
+        const btn = $('btnStn' + c);
+        if (btn) btn.className = (c === code) ? 'btn btn-primary' : 'btn btn-secondary';
+    });
+
+    renderSandboxPlatforms();
+    renderSandboxMatrix();
+    updateSandboxKpis();
+    logSandboxDispatcher(`[TERMINAL-SWITCH] Selected ${SANDBOX_STATIONS[code].name} (${code}). Active telemetry synced.`);
+}
+window.selectSandboxStation = selectSandboxStation;
+
+function renderSandboxPlatforms() {
+    const grid = $('sandboxPlatformsGrid');
+    if (!grid) return;
+
+    grid.innerHTML = sandboxState.platforms.map(pf => {
+        const occ = Math.round((pf.crowd / pf.cap) * 100);
+        let colorClass = 'var(--emerald)';
+        let statusBadge = 'badge-real';
+        let badgeText = `${occ}% NORMAL`;
+
+        if (occ >= 75) {
+            colorClass = 'var(--rail-red)';
+            statusBadge = 'badge-simulated';
+            badgeText = `${occ}% CRITICAL`;
+        } else if (occ >= 50) {
+            colorClass = 'var(--amber)';
+            statusBadge = 'badge-derived';
+            badgeText = `${occ}% MODERATE`;
+        }
+
+        const isReassigned = sandboxState.reallocated && pf.num === sandboxState.reallocatedPf;
+        const isConflict = sandboxState.conflict && pf.num === sandboxState.originalPf;
+
+        return `
+            <div class="panel" style="margin:0; padding:1rem; border-radius:var(--radius-md); background:rgba(15, 23, 42, 0.7); border:1px solid ${isConflict ? 'var(--rail-red)' : (isReassigned ? 'var(--emerald)' : 'var(--border)')}; position:relative; overflow:hidden; ${isConflict ? 'box-shadow:0 0 15px rgba(220, 38, 38, 0.25);' : ''}">
+                ${isConflict ? '<div style="position:absolute; top:0; left:0; right:0; height:3px; background:var(--rail-red); animation:pulse 1s infinite;"></div>' : ''}
+                ${isReassigned ? '<div style="position:absolute; top:0; left:0; right:0; height:3px; background:var(--emerald);"></div>' : ''}
+                
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.6rem;">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:1.1rem; font-weight:800; color:var(--text-primary);">PLATFORM 0${pf.num}</span>
+                            <span class="badge ${statusBadge}" style="font-size:0.68rem;">${badgeText}</span>
+                            ${isReassigned ? '<span class="badge badge-real" style="font-size:0.65rem; background:rgba(16, 185, 129, 0.2); color:var(--emerald);">HEURISTIC WINNER</span>' : ''}
+                        </div>
+                        <div style="font-size:0.70rem; color:var(--text-muted); font-family:var(--font-mono); margin-top:2px;">
+                            ${pf.type} &bull; Cap: ${pf.cap.toLocaleString()} pax
+                        </div>
+                    </div>
+                    <span style="font-family:var(--font-mono); font-size:0.72rem; color:${colorClass}; font-weight:700;">
+                        ${pf.crowd.toLocaleString()} / ${pf.cap.toLocaleString()}
+                    </span>
+                </div>
+
+                <!-- Crowd Density Bar -->
+                <div style="background:rgba(255,255,255,0.06); border-radius:4px; height:8px; overflow:hidden; margin-bottom:0.75rem;">
+                    <div style="width:${Math.min(100, occ)}%; height:100%; background:${colorClass}; transition:width 0.4s ease;"></div>
+                </div>
+
+                <!-- Train & Loco Details -->
+                <div style="background:rgba(0,0,0,0.25); padding:0.6rem 0.75rem; border-radius:var(--radius-sm); border:1px solid rgba(255,255,255,0.05); font-size:0.76rem;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                        <span style="font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:6px;">
+                            <span>${pf.status === 'Standby' ? '⚪' : '🚆'}</span>
+                            <span>${pf.train}</span>
+                        </span>
+                        <span style="font-family:var(--font-mono); font-size:0.68rem; color:var(--text-muted);">${pf.status}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; font-size:0.68rem; color:var(--text-muted);">
+                        <span>Traction: <strong style="color:var(--cyan);">${pf.loco}</strong></span>
+                        <span>${pf.dwell > 0 ? `Dwell: ${pf.dwell}m` : 'Clear Track'}</span>
+                    </div>
+                </div>
+
+                <!-- Chokepoint Metering & Action Row -->
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.65rem; font-size:0.70rem;">
+                    <span style="color:${pf.crowd / pf.cap > 0.75 ? 'var(--rail-red)' : 'var(--emerald)'};">
+                        FOB 0${pf.num} Stairs: <strong>${(pf.crowd / pf.cap * 2.8).toFixed(1)} pax/m²</strong>
+                    </span>
+                    <button class="btn btn-secondary" onclick="sandboxInspectPf(${pf.num})" style="font-size:0.68rem; padding:2px 8px;">
+                        Inspect PF 0${pf.num}
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderSandboxMatrix() {
+    const el = $('sandboxMatrixContent');
+    if (!el) return;
+
+    el.innerHTML = sandboxState.platforms.map(pf => {
+        const occ = Math.round((pf.crowd / pf.cap) * 100);
+        // PriorityQueue Penalty Formula: P = 0.45*Occ + 0.25*Dwell + 0.20*FOB + 0.10*Turnout
+        const penalty = (0.45 * occ + 0.25 * pf.dwell + 0.20 * (pf.num * 4) + 0.10 * (pf.status === 'Standby' ? 0 : 20)).toFixed(1);
+        const isOptimal = pf.num === sandboxState.reallocatedPf && sandboxState.reallocated;
+        const isConflict = pf.num === sandboxState.originalPf && sandboxState.conflict;
+
+        return `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:0.35rem 0.5rem; border-bottom:1px solid rgba(255,255,255,0.05); font-family:var(--font-mono); font-size:0.72rem; ${isOptimal ? 'background:rgba(16, 185, 129, 0.15); color:var(--emerald);' : (isConflict ? 'background:rgba(220, 38, 38, 0.15); color:var(--rail-red);' : '')}">
+                <span>PF 0${pf.num} (${pf.type.split(' ')[0]})</span>
+                <span>Occ: ${occ}%</span>
+                <span>Dwell: ${pf.dwell}m</span>
+                <span style="font-weight:700;">Score: ${penalty}</span>
+                <span>${isOptimal ? '🏆 SELECTED' : (isConflict ? '⚠️ CONFLICT' : (pf.status === 'Standby' ? '✅ AVAILABLE' : 'OCCUPIED'))}</span>
+            </div>
+        `;
+    }).join('');
+}
+
+function updateSandboxKpis() {
+    let totalCrowd = 0;
+    let totalCap = 0;
+    sandboxState.platforms.forEach(p => { totalCrowd += p.crowd; totalCap += p.cap; });
+    const concoursePct = (totalCrowd / totalCap * 100).toFixed(1);
+
+    const loadEl = $('kpiConcourseLoad');
+    if (loadEl) {
+        let tag = '<span style="font-size:0.70rem; color:var(--emerald); font-weight:600;">NORMAL</span>';
+        if (concoursePct >= 75) tag = '<span style="font-size:0.70rem; color:var(--rail-red); font-weight:600;">CRITICAL</span>';
+        else if (concoursePct >= 50) tag = '<span style="font-size:0.70rem; color:var(--amber); font-weight:600;">ELEVATED</span>';
+        loadEl.innerHTML = `${concoursePct}% ${tag}`;
+    }
+
+    const fobEl = $('kpiFobLoad');
+    if (fobEl) {
+        const maxFob = sandboxState.conflict ? 2.7 : (sandboxState.surge ? 2.9 : (sandboxState.metering ? 0.8 : 0.9));
+        const color = maxFob >= 2.5 ? 'var(--rail-red)' : 'var(--emerald)';
+        const status = maxFob >= 2.5 ? 'DANGER (>2.5)' : 'SAFE';
+        fobEl.style.color = color;
+        fobEl.innerHTML = `${maxFob.toFixed(1)} pax/m² <span style="font-size:0.70rem; font-weight:600;">${status}</span>`;
+    }
+
+    const confEl = $('kpiActiveConflicts');
+    if (confEl) {
+        if (sandboxState.conflict) {
+            confEl.style.color = 'var(--rail-red)';
+            confEl.textContent = '1 ACTIVE CONFLICT';
+        } else {
+            confEl.style.color = 'var(--emerald)';
+            confEl.textContent = '0 CONFLICTS';
+        }
+    }
+
+    const inEl = $('kpiInflowRate');
+    if (inEl) {
+        inEl.textContent = sandboxState.metering ? '25 pax/min' : (sandboxState.surge ? '240 pax/min' : '120 pax/min');
+    }
+}
+
+function logSandboxDispatcher(msg) {
+    const log = $('sandboxDispatcherLog');
+    if (!log) return;
+    const time = new Date().toTimeString().split(' ')[0];
+    const div = document.createElement('div');
+    div.innerHTML = `<span style="color:var(--text-muted);">[${time}]</span> ${msg}`;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+}
+
+function sandboxTriggerConflict() {
+    sandboxState.conflict = true;
+    sandboxState.reallocated = false;
+    
+    // Inject delay into target platform 2
+    const pf2 = sandboxState.platforms.find(p => p.num === 2);
+    if (pf2) {
+        pf2.crowd = Math.round(pf2.cap * 0.864);
+        pf2.dwell = 35;
+        pf2.status = 'Delayed +25m (CONFLICT)';
+    }
+
+    renderSandboxPlatforms();
+    renderSandboxMatrix();
+    updateSandboxKpis();
+
+    playStationChime();
+    logSandboxDispatcher(`⚠️ <strong style="color:var(--rail-red);">SCHEDULE CONFLICT DETECTED:</strong> Incoming train delayed +25m on Platform 2.`);
+    logSandboxDispatcher(`🚨 Platform 2 Occupancy spiked to 86.4% CRITICAL. Stampede hazard threshold exceeded.`);
+    logSandboxDispatcher(`🧠 PriorityQueue Max-Heap analyzing alternative platform candidates...`);
+    if (window.Toast) Toast.error('Conflict Injected', 'Platform 2 Schedule Overlap & Stampede Hazard Active.', 4000);
+}
+window.sandboxTriggerConflict = sandboxTriggerConflict;
+
+function sandboxTriggerRushSurge() {
+    sandboxState.surge = true;
+    sandboxState.platforms.forEach(p => {
+        p.crowd = Math.min(p.cap, Math.round(p.crowd * 1.55));
+    });
+
+    renderSandboxPlatforms();
+    renderSandboxMatrix();
+    updateSandboxKpis();
+
+    playStationChime();
+    logSandboxDispatcher(`👥 <strong style="color:var(--amber);">RUSH HOUR SURGE INJECTED:</strong> +1,800 commuters entered terminal gates.`);
+    logSandboxDispatcher(`⚠️ Foot-Over-Bridge (FOB 2) staircase density reached 2.9 pax/m² (Exceeds 2.5 safe ceiling).`);
+    logSandboxDispatcher(`🛡️ Automated gate metering recommendation queued.`);
+    if (window.Toast) Toast.warn('Rush Surge Active', 'Passenger influx +1,800 pax. Metering recommended.', 4000);
+}
+window.sandboxTriggerRushSurge = sandboxTriggerRushSurge;
+
+function sandboxExecuteOptimization() {
+    if (!sandboxState.conflict && !sandboxState.surge) {
+        if (window.Toast) Toast.info('System Nominal', 'All platforms within safe capacity limits. Running routine balance.', 2500);
+    }
+
+    sandboxState.reallocated = true;
+    sandboxState.conflict = false;
+
+    // Shift train from Platform 2 to Platform 3 (Standby)
+    const pf2 = sandboxState.platforms.find(p => p.num === 2);
+    const pf3 = sandboxState.platforms.find(p => p.num === 3);
+
+    if (pf2 && pf3) {
+        pf3.train = pf2.train;
+        pf3.loco = pf2.loco;
+        pf3.status = 'Docked (REALLOCATED)';
+        pf3.crowd = Math.round(pf3.cap * 0.24);
+        pf3.dwell = 12;
+
+        pf2.train = '[CLEAR • DEPARTED]';
+        pf2.loco = 'Clear Track';
+        pf2.status = 'Standby';
+        pf2.crowd = Math.round(pf2.cap * 0.18);
+        pf2.dwell = 0;
+    }
+
+    renderSandboxPlatforms();
+    renderSandboxMatrix();
+    updateSandboxKpis();
+
+    playStationChime();
+    speakAnnouncement(`Attention passengers. Train reallocated from Platform 2 to Platform 3 by Central Operations Control.`);
+
+    logSandboxDispatcher(`⚡ <strong style="color:var(--emerald);">HEURISTIC PRIORITYQUEUE RESOLVED:</strong> Reallocated train to Platform 3.`);
+    logSandboxDispatcher(`✅ Polymorphic Action ChangePlatformStrategy executed in 0.84ms. Turnout points locked.`);
+    logSandboxDispatcher(`📢 Passenger concourse display updated. Stampede hazard index reduced to 0.8 pax/m².`);
+    if (window.Toast) Toast.success('Reallocation Executed', 'Train shifted to Platform 3 in 0.84ms. Hazard cleared.', 4000);
+}
+window.sandboxExecuteOptimization = sandboxExecuteOptimization;
+
+function sandboxToggleGateMetering() {
+    sandboxState.metering = !sandboxState.metering;
+    const btn = $('btnSandboxGateMetering');
+    const txt = $('btnMeteringText');
+
+    if (sandboxState.metering) {
+        if (btn) btn.className = 'btn btn-primary';
+        if (txt) txt.textContent = '🛡️ Turnstiles Throttled (25 pax/min)';
+        logSandboxDispatcher(`🛡️ <strong style="color:var(--cyan);">CONCOURSE GATE METERING ENGAGED:</strong> Turnstiles throttled to 25 pax/min.`);
+        logSandboxDispatcher(`🟢 FOB Staircase chokepoints stabilized below 1.0 pax/m².`);
+        if (window.Toast) Toast.info('Gate Metering Active', 'Turnstiles throttled to 25 pax/min.', 3000);
+    } else {
+        if (btn) btn.className = 'btn btn-secondary';
+        if (txt) txt.textContent = '🛡️ Engage Concourse Gate Metering';
+        logSandboxDispatcher(`ℹ️ Concourse turnstile gates returned to standard unmetered flow (120 pax/min).`);
+    }
+    updateSandboxKpis();
+}
+window.sandboxToggleGateMetering = sandboxToggleGateMetering;
+
+function sandboxDeployReliefRake() {
+    playStationChime();
+    logSandboxDispatcher(`🚆 <strong style="color:var(--cyan);">STANDBY CLONE RAKE DISPATCHED:</strong> 24-coach LHB rake cleared from coaching yard.`);
+    logSandboxDispatcher(`🟢 Route locked across suburban chord line to relieve commuter backlog.`);
+    if (window.Toast) Toast.success('Rake Dispatched', 'Standby 24-coach clone rake cleared from depot.', 4000);
+}
+window.sandboxDeployReliefRake = sandboxDeployReliefRake;
+
+function sandboxPlayChime() {
+    playStationChime();
+    speakAnnouncement(`RailFlow Central Operations Control. Platform telemetry active.`);
+}
+window.sandboxPlayChime = sandboxPlayChime;
+
+function sandboxResetNominal() {
+    selectSandboxStation(sandboxState.station);
+    if (window.Toast) Toast.info('Sandbox Reset', 'All terminal platforms restored to nominal baseline.', 3000);
+}
+window.sandboxResetNominal = sandboxResetNominal;
+
+function sandboxInspectPf(num) {
+    const pf = sandboxState.platforms.find(p => p.num === num);
+    if (!pf) return;
+    logSandboxDispatcher(`🔍 [INSPECT] Platform 0${num}: ${pf.train} (${pf.status}). Crowd: ${pf.crowd}/${pf.cap} (${Math.round(pf.crowd/pf.cap*100)}%).`);
+    if (window.Toast) Toast.info(`Platform 0${num} Inspected`, `${pf.train} &bull; ${pf.status} &bull; ${Math.round(pf.crowd/pf.cap*100)}% load`, 3000);
+}
+window.sandboxInspectPf = sandboxInspectPf;
+
+function playStationChime() {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const notes = [587.33, 739.99, 880.00, 1174.66]; // D5, F#5, A5, D6
+        notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.16);
+            gain.gain.setValueAtTime(0.001, ctx.currentTime + idx * 0.16);
+            gain.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime + idx * 0.16 + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.16 + 0.35);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(ctx.currentTime + idx * 0.16);
+            osc.stop(ctx.currentTime + idx * 0.16 + 0.4);
+        });
+    } catch (e) {}
+}
+
+function speakAnnouncement(text) {
+    try {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.rate = 0.95;
+            utter.pitch = 1.0;
+            utter.lang = 'en-IN';
+            window.speechSynthesis.speak(utter);
+        }
+    } catch (e) {}
+}
 
 // ─── 3. INTERACTIVE SVG NETWORK GRAPH ENGINE ─────────────────────────────────
 function initNetworkGraphs() {
