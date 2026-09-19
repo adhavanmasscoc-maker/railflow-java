@@ -2738,43 +2738,59 @@ function renderStationHierarchyTree(filterText = '', zonePill = null) {
     }
 
     let html = `
-        <!-- Apex Organization Card -->
-        <div class="tree-apex-card">
-            <div class="tree-apex-top">
-                <div class="tree-apex-title">
-                    <span style="font-size:1.15rem;">🏛️</span>
-                    <span>Indian Railways (Apex HQ - Rail Bhavan)</span>
-                </div>
-                <div style="display:flex; gap:4px;">
-                    <button class="tree-inspect-btn" onclick="toggleAllTreeZones(true)" title="Expand all zones">Expand</button>
-                    <button class="tree-inspect-btn" onclick="toggleAllTreeZones(false)" title="Collapse all zones">Collapse</button>
-                </div>
+        <!-- Top 4-Column KPI Metric Grid -->
+        <div class="kpi-metric-grid">
+            <div class="kpi-card">
+                <span class="kpi-label">OPERATIONAL ZONES</span>
+                <span class="kpi-value mono-val">18 <span class="kpi-sub">ZONES</span></span>
             </div>
-            <div class="tree-apex-meta">
-                <span class="tree-apex-chip"><strong>18</strong> Zones</span>
-                <span class="tree-apex-chip"><strong>${totalHubs}</strong> Strategic Hubs</span>
-                <span class="tree-apex-chip"><strong>8,989</strong> Active Stations</span>
-                <span class="tree-apex-chip"><strong>68,000+</strong> km Route Network</span>
+            <div class="kpi-card">
+                <span class="kpi-label">STRATEGIC HUBS</span>
+                <span class="kpi-value mono-val">${totalHubs} <span class="kpi-sub">HUBS</span></span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">ACTIVE STATIONS</span>
+                <span class="kpi-value mono-val">8,989 <span class="kpi-sub">STATIONS</span></span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">NETWORK COVERAGE</span>
+                <span class="kpi-value mono-val">68,000+ <span class="kpi-sub">KM</span></span>
+            </div>
+        </div>
+
+        <!-- Tree Action & Filter Bar -->
+        <div class="tree-action-bar">
+            <div class="tree-action-title">
+                <span class="tree-apex-icon">🏛️</span>
+                <span class="tree-apex-text">Indian Railways Apex Hierarchy (Rail Bhavan)</span>
+            </div>
+            <div class="tree-action-controls">
+                <button class="btn-control" onclick="toggleAllTreeZones(true)" title="Expand all zones">
+                    <span>➕</span> Expand All
+                </button>
+                <button class="btn-control" onclick="toggleAllTreeZones(false)" title="Collapse all zones">
+                    <span>➖</span> Collapse All
+                </button>
             </div>
         </div>
 
         <!-- Quick Zone Filter Pills -->
         <div class="tree-pill-bar">
-            <span class="tree-pill ${currentTreeZoneFilter === 'ALL' ? 'active' : ''}" data-zone="ALL" onclick="filterStationTreeByPill('ALL')">All Zones</span>
-            <span class="tree-pill ${currentTreeZoneFilter === 'SR' ? 'active' : ''}" data-zone="SR" onclick="filterStationTreeByPill('SR')">SR (South)</span>
-            <span class="tree-pill ${currentTreeZoneFilter === 'NR' ? 'active' : ''}" data-zone="NR" onclick="filterStationTreeByPill('NR')">NR (North)</span>
-            <span class="tree-pill ${currentTreeZoneFilter === 'WR' ? 'active' : ''}" data-zone="WR" onclick="filterStationTreeByPill('WR')">WR (West)</span>
-            <span class="tree-pill ${currentTreeZoneFilter === 'CR' ? 'active' : ''}" data-zone="CR" onclick="filterStationTreeByPill('CR')">CR (Central)</span>
-            <span class="tree-pill ${currentTreeZoneFilter === 'ER' ? 'active' : ''}" data-zone="ER" onclick="filterStationTreeByPill('ER')">ER (East)</span>
-            <span class="tree-pill ${currentTreeZoneFilter === 'SCR' ? 'active' : ''}" data-zone="SCR" onclick="filterStationTreeByPill('SCR')">SCR</span>
-            <span class="tree-pill ${currentTreeZoneFilter === 'SWR' ? 'active' : ''}" data-zone="SWR" onclick="filterStationTreeByPill('SWR')">SWR</span>
+            <button class="tree-pill ${currentTreeZoneFilter === 'ALL' ? 'active' : ''}" data-zone="ALL" onclick="filterStationTreeByPill('ALL')">All Zones</button>
+            <button class="tree-pill ${currentTreeZoneFilter === 'SR' ? 'active' : ''}" data-zone="SR" onclick="filterStationTreeByPill('SR')">SR (South)</button>
+            <button class="tree-pill ${currentTreeZoneFilter === 'NR' ? 'active' : ''}" data-zone="NR" onclick="filterStationTreeByPill('NR')">NR (North)</button>
+            <button class="tree-pill ${currentTreeZoneFilter === 'WR' ? 'active' : ''}" data-zone="WR" onclick="filterStationTreeByPill('WR')">WR (West)</button>
+            <button class="tree-pill ${currentTreeZoneFilter === 'CR' ? 'active' : ''}" data-zone="CR" onclick="filterStationTreeByPill('CR')">CR (Central)</button>
+            <button class="tree-pill ${currentTreeZoneFilter === 'ER' ? 'active' : ''}" data-zone="ER" onclick="filterStationTreeByPill('ER')">ER (East)</button>
+            <button class="tree-pill ${currentTreeZoneFilter === 'SCR' ? 'active' : ''}" data-zone="SCR" onclick="filterStationTreeByPill('SCR')">SCR</button>
+            <button class="tree-pill ${currentTreeZoneFilter === 'SWR' ? 'active' : ''}" data-zone="SWR" onclick="filterStationTreeByPill('SWR')">SWR</button>
         </div>
     `;
 
     let matchedZoneCount = 0;
 
     zoneKeys.forEach(z => {
-        const meta = ZONE_METADATA[z] || { name: `${z} Zonal Railway`, hq: 'Zonal HQ', color: '#3B82F6' };
+        const meta = ZONE_METADATA[z] || { name: `${z} Zonal Railway`, hq: 'Zonal HQ', color: '#38bdf8' };
         let hubs = zones[z];
 
         // Filter hubs inside this zone if query provided
@@ -2786,44 +2802,46 @@ function renderStationHierarchyTree(filterText = '', zonePill = null) {
                 (h.city && h.city.toLowerCase().includes(q)) ||
                 (h.state && h.state.toLowerCase().includes(q))
             );
-            if (hubs.length === 0) return; // Skip non-matching zones
+            if (hubs.length === 0) return;
         }
 
         matchedZoneCount++;
-        // Auto-expand if user typed a search query
         const isCollapsed = q ? false : (z !== 'SR' && z !== 'NR');
 
         html += `
             <div class="tree-zone-card ${isCollapsed ? 'collapsed' : ''}" id="treeZoneCard_${z}">
                 <div class="tree-zone-header" onclick="this.parentElement.classList.toggle('collapsed')">
                     <div class="tree-zone-title-wrap">
-                        <span class="tree-zone-badge" style="color:${meta.color}; border-color:${meta.color}40; background:${meta.color}15;">${z}</span>
+                        <span class="tree-zone-badge" style="color:${meta.color}; border-color:${meta.color}50; background:${meta.color}18;">${z}</span>
                         <span class="tree-zone-title">${meta.name}</span>
+                        <span class="tree-zone-hq-pill">HQ: ${meta.hq.split(' ')[0]}</span>
                     </div>
                     <div class="tree-zone-meta">
-                        <span class="tree-zone-count">${hubs.length} Hubs • HQ: ${meta.hq.split(' ')[0]}</span>
+                        <span class="tree-zone-count mono-val">${hubs.length} Hubs</span>
                         <span class="tree-zone-caret">▼</span>
                     </div>
                 </div>
                 <div class="tree-zone-body">
+                    <div class="tree-stations-grid">
         `;
 
         hubs.forEach(hub => {
             html += `
                 <div class="tree-station-card" onclick="openStationDrawer('${hub.code}')">
                     <div class="tree-station-left">
-                        <span class="tree-stn-code">${hub.code}</span>
+                        <span class="station-code mono-val">${hub.code}</span>
                         <span class="tree-stn-name">${hub.name}</span>
                     </div>
                     <div class="tree-station-right">
-                        <span class="tree-pf-chip">${hub.platforms} PFs</span>
-                        <button class="tree-inspect-btn" onclick="event.stopPropagation(); openStationDrawer('${hub.code}')">Inspect</button>
+                        <span class="tree-pf-chip mono-val">${hub.platforms} PFs</span>
+                        <button class="btn-tactical-inspect" onclick="event.stopPropagation(); openStationDrawer('${hub.code}')">Inspect</button>
                     </div>
                 </div>
             `;
         });
 
         html += `
+                    </div>
                 </div>
             </div>
         `;
@@ -2831,9 +2849,9 @@ function renderStationHierarchyTree(filterText = '', zonePill = null) {
 
     if (matchedZoneCount === 0) {
         html += `
-            <div style="text-align:center; padding:2rem 1rem; color:var(--text-muted); font-size:0.85rem; background:#121C2F; border:1px dashed #20314C; border-radius:8px;">
+            <div style="text-align:center; padding:2rem 1rem; color:var(--rf-text-muted); font-size:0.85rem; background:#0d1322; border:1px dashed var(--rf-border-medium); border-radius:8px; margin-top:12px;">
                 🔍 No zonal hubs found matching "<strong>${escapeHtml(filterText)}</strong>".<br>
-                <button class="tree-inspect-btn" style="margin-top:0.75rem;" onclick="$('stationTreeFilter').value=''; filterStationTreeByPill('ALL');">Clear Search Filter</button>
+                <button class="btn-control" style="margin-top:0.75rem;" onclick="$('stationTreeFilter').value=''; filterStationTreeByPill('ALL');">Clear Search Filter</button>
             </div>
         `;
     }
@@ -2877,7 +2895,7 @@ async function renderStationsTable(filter = '') {
                 <td><span class="badge badge-real">${escapeHtml(h.zone || 'IR')}</span></td>
                 <td>${h.platforms || h.platformCount || 4} Tracks</td>
                 <td><span style="color:var(--emerald); font-weight:700;">OPERATIONAL</span></td>
-                <td><button class="btn btn-secondary" style="font-size:0.72rem; padding:0.2rem 0.5rem;" onclick="openStationDrawer('${h.code}')">Inspect</button></td>
+                <td><button class="btn-tactical-inspect" onclick="openStationDrawer('${h.code}')">Inspect</button></td>
             </tr>
         `).join('');
     } catch (e) {
@@ -5573,10 +5591,10 @@ const Toast = {
         const c = this._getContainer();
         if (!c) return;
         const icons = {
-            success: `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
-            error:   `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
-            warn:    `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
-            info:    `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`
+            success: `<svg class="toast-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+            error:   `<svg class="toast-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
+            warn:    `<svg class="toast-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+            info:    `<svg class="toast-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`
         };
         const el = document.createElement('div');
         el.className = `toast toast-${type}`;
@@ -7597,18 +7615,30 @@ function speakCommanderText(text, langCode, rate, pitch) {
         utter.rate = parseFloat(rate) || 0.88;
         utter.pitch = parseFloat(pitch) || 1.0;
 
+        // Fix Chrome garbage collection bug by keeping a global reference
+        window._currentUtterance = utter;
+
         const voices = window.speechSynthesis.getVoices() || [];
-        const match = voices.find(v => v.lang === utter.lang || v.lang.startsWith(utter.lang.slice(0, 2)));
-        if (match) utter.voice = match;
+        if (voices.length > 0) {
+            let match = voices.find(v => v.lang === utter.lang || v.lang.replace('_', '-').toLowerCase() === utter.lang.toLowerCase());
+            if (!match) {
+                const baseLang = utter.lang.slice(0, 2).toLowerCase();
+                match = voices.find(v => v.lang.toLowerCase().startsWith(baseLang));
+            }
+            if (match) utter.voice = match;
+        }
 
         startWaveBarAnimation();
 
         utter.onend = () => {
             stopWaveBarAnimation();
+            window._currentUtterance = null;
             resolve();
         };
-        utter.onerror = () => {
+        utter.onerror = (e) => {
+            console.error('SpeechSynthesis error:', e);
             stopWaveBarAnimation();
+            window._currentUtterance = null;
             resolve();
         };
 
