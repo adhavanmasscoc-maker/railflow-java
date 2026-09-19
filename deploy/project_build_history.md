@@ -465,8 +465,25 @@ The legacy UI suffered from a flat, corporate-white aesthetic that failed to con
 | **8** | Unfilled placeholders in academic PBL draft | Generic template text (`[value]`, `[summary]`, `[remarks]`) | Generated `pbl.md` and `pblv1.md` with complete real numbers, tables, and citations | Formally verified all 8 chapters and Anna University requirements |
 | **9** | `Train query failed` for train schedules on static cloud CDN | Vercel static serverless hosting lacks persistent native SQLite engine | Generated 5,208 train stoppage JSONs and built 4-tier resilient fallback in `js/app.js` | Verified instant timetable render for trains #12635, #12637, #12951 |
 | **10** | Generic white UI causing high eye strain and lacking railway identity | Corporate admin dashboard styles with white panels and low-contrast borders | Designed and implemented Vibrant Railway Network Command Center theme | Automated browser subagent recording verified 0 white leaks across 5 pages |
-| **11** | Vercel deploy rejection (`429: Too many requests - 5,000 files/day limit`) | Deploying 5,208 individual stoppage JSON files exceeded file upload quota | Packaged build directory as compressed tarball via `vercel deploy --prod --archive=tgz` | Successfully deployed to production at `https://aknex-railflow.vercel.app` |
+| **12** | Sensitive API keys and large SQLite WAL binaries exposed to version control | Unsanitized provider fallback keys and unignored `.db-wal`/`.db-shm` in git | Enforced strict `.gitignore`, sanitized provider credentials in git mirror, restored local dev key | Clean commit with 0 secrets or binary leaks |
+
+---
+
+## 17. MILESTONE 17: VOICE COMMANDER & JVM HYBRID CONSOLE 1–16 UPGRADE
+
+### Key Deliverables:
+1. **🎙️ Multi-Lingual Voice Commander (`/commander`):**
+   - Built dedicated station announcement operations hub with trilingual audio prioritization (English $\rightarrow$ Tamil $\rightarrow$ Hindi) and extended language support for Telugu, Kannada, Malayalam, Bengali, and Marathi.
+   - Integrated Web Speech API synthesizer with custom pitch, rate, volume, and audible station chime tone.
+   - Implemented real-time emergency evacuation broadcast protocol and announcement audit history.
+2. **🖥️ Interactive JVM 21 LTS Console Functions (1–16):**
+   - Expanded browser terminal with dual support for numerical inputs `1` through `16` and bash commands.
+   - Built comprehensive function matrix with sub-millisecond status, crowd heap evaluation, binary search train queries, and Neofetch system diagnostics.
+3. **🔒 Git Security & Repository Sanitization:**
+   - Isolated local development keys from public git mirrors.
+   - Hardened `.gitignore` and `.vercelignore` against SQLite WAL/SHM binaries and scratch files.
 
 ---
 
 *End of Project Build History & Engineering Chronicle.*
+

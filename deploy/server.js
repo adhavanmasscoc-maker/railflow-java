@@ -1169,13 +1169,30 @@ const server = http.createServer((req, res) => {
         }
 
         // SPA Clean URL Routing — serve index.html for all page routes
-        const SPA_ROUTES = ['/dashboard','/console','/network','/journey','/stations','/trains','/crowd','/commuter','/quality','/architecture','/database','/feedback'];
+        const SPA_ROUTES = ['/dashboard','/console','/network','/journey','/stations','/trains','/crowd','/commuter','/quality','/architecture','/fleet','/commander','/database','/feedback'];
         if (SPA_ROUTES.includes(pathname)) {
             pathname = '/index.html';
         }
 
         if (pathname === '/' || pathname === '') {
             pathname = '/index.html';
+        }
+
+        // Priority 1: Check frontend/ directory first (canonical UI source)
+        const frontendPath = path.normalize(path.join(ROOT_DIR, 'frontend', pathname));
+        if (frontendPath.startsWith(path.join(ROOT_DIR, 'frontend')) && fs.existsSync(frontendPath)) {
+            try {
+                const fStats = fs.statSync(frontendPath);
+                if (fStats.isFile()) {
+                    return serveFile(frontendPath, res);
+                }
+                if (fStats.isDirectory()) {
+                    const subIndex = path.join(frontendPath, 'index.html');
+                    if (fs.existsSync(subIndex)) {
+                        return serveFile(subIndex, res);
+                    }
+                }
+            } catch (ignored) {}
         }
 
         const safePath = path.normalize(path.join(ROOT_DIR, pathname));
@@ -1187,11 +1204,6 @@ const server = http.createServer((req, res) => {
 
         fs.stat(safePath, (err, stats) => {
             if (err) {
-                const fallbackFrontendPath = path.normalize(path.join(ROOT_DIR, 'frontend', pathname));
-                if (fs.existsSync(fallbackFrontendPath)) {
-                    return serveFile(fallbackFrontendPath, res);
-                }
-
                 res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
                 res.end(`<h2>404 Not Found</h2><p>Cannot find ${pathname}</p><p><a href="/">Go to Home</a></p>`);
                 return;

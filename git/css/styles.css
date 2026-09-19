@@ -18,25 +18,25 @@ html {
 
 :root {
     /* Primary Backgrounds */
-    --bg-base:          #0B1220; /* Deep Command Navy */
-    --bg-primary:       #0F172A; /* Slate 900 */
-    --bg-dark:          #111827; /* Near Void Dark */
+    --bg-base:          #0a0e17; /* Deep Command Navy */
+    --bg-primary:       #0f172a; /* Slate 900 */
+    --bg-dark:          #080b13; /* Near Void Dark */
 
     /* Surfaces & Panels */
-    --bg-surface:       #162033; /* Primary Surface */
-    --bg-card:          #18253A; /* High-Density Card Surface */
-    --bg-surface-alt:   #1B2940; /* Elevated Surface Alt */
-    --bg-subtle:        #142033; /* Recessed Background */
-    --bg-hover:         #1E2C44; /* Interactive Hover State */
+    --bg-surface:       #121927; /* Primary Surface */
+    --bg-card:          #161f30; /* High-Density Card Surface */
+    --bg-surface-alt:   #1a2436; /* Elevated Surface Alt */
+    --bg-subtle:        #101724; /* Recessed Background */
+    --bg-hover:         #1c283d; /* Interactive Hover State */
 
     /* Elevated Surfaces */
-    --bg-elevated:      #202F48;
-    --bg-elevated-hi:   #243550;
+    --bg-elevated:      #1e2a40;
+    --bg-elevated-hi:   #23324c;
 
     /* Borders — Subtle Illuminated Contours */
-    --border:           #2A3A55; /* Default Contour Outline */
-    --border-strong:    #344765; /* Prominent Border */
-    --border-subtle:    #1E2C44;
+    --border:           rgba(255, 255, 255, 0.08); /* Default Contour Outline */
+    --border-strong:    rgba(255, 255, 255, 0.15); /* Prominent Border */
+    --border-subtle:    rgba(255, 255, 255, 0.04);
     --border-focus:     #3B82F6; /* Electric Blue Focus */
 
     /* Primary & Secondary Typography */
