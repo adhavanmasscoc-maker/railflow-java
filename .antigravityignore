@@ -1,13 +1,14 @@
-# Antigravity IDE Indexing & Agent Context Ignore Rules
-# Exclude duplicate repository mirrors and massive data trees
-
-deploy/
-git/
+# Exclude build artifacts & bytecode
 bin/
 target/
-backend/node_modules/
+node_modules/
+*.class
+*.jar
+
+# Exclude duplicate mirrors
+deploy/
+git/
+
+# Exclude heavy data assets
 DATA/trains/
-database/railway.db
-.vercel/
-scratch/
-*.log
+database/*.db

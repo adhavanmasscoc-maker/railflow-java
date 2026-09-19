@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RailFlow — Logical Indian Railways Network Intelligence & Journey Planning Platform</title>
     <meta name="description" content="Logical Indian Railways Operations, Topology Graph, SQLite JDBC Data Layer, Journey Planning & Simulated Operational Telemetry.">
@@ -32,8 +33,79 @@
         <span id="telemetryFloatLabel">LIVE TELEMETRY — Tick #1</span>
     </div>
 
+    <!-- ─── Application Viewport ─────────────────────────────────── -->
+<div class="rf-shell">
+        <!-- Top Header -->
+        <header class="rf-topbar top-header" id="topHeader">
+            <!-- Mobile Hamburger -->
+            <button class="hamburger-btn" id="btnMobileMenu" title="Toggle Navigation Menu" aria-label="Toggle sidebar" aria-expanded="false" onclick="document.getElementById('sidebar').classList.toggle('mobile-open'); document.getElementById('sidebarOverlay').classList.toggle('active');">
+                <span></span><span></span><span></span>
+            </button>
+            <!-- Global Search -->
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" class="search-input" id="globalSearchInput" placeholder="Search trains, stations, train numbers, station codes (Press / to search)..." autocomplete="off">
+                </div>
+                <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+            </div>
+
+            <!-- Pipeline Status Ticker & Controls -->
+            <div class="header-actions">
+                <!-- Dual-View Context Switcher (Controller HUD vs Commuter Portal) -->
+                <div class="view-mode-toggle" id="viewModeToggle" role="radiogroup" aria-label="Operational View Mode">
+                    <button class="view-mode-btn active" id="btnModeController" data-mode="controller" title="Switch to Station Controller HUD (Full Telemetry & Dispatch)">
+                        <span class="mode-icon">🎛️</span>
+                        <span class="mode-text">CONTROLLER HUD</span>
+                    </button>
+                    <button class="view-mode-btn" id="btnModeCommuter" data-mode="commuter" title="Switch to Passenger Commuter Portal (Mobile-Friendly)">
+                        <span class="mode-icon">📱</span>
+                        <span class="mode-text">COMMUTER PORTAL</span>
+                    </button>
+                </div>
+
+                <!-- PA Audio & Volume Controller Dock -->
+                <div class="audio-control-dock" id="audioControlDock" title="Station Master PA Audio System">
+                    <button class="btn-sound-mute" id="soundMuteBtn" aria-label="Toggle PA Audio Mute" title="Mute/Unmute Audio Announcements">
+                        <span id="soundIcon">🔊</span>
+                    </button>
+                    <div class="sound-slider-wrapper" title="PA Announcement Volume">
+                        <input type="range" min="0" max="1" step="0.05" value="0.8" id="soundVolumeSlider" class="sound-volume-slider" aria-label="Volume">
+                        <span class="volume-val" id="volumeValText">80%</span>
+                    </div>
+                    <button class="btn-soundboard-launch" id="btnOpenSoundboardModal" onclick="openStationSoundboardModal()" title="Open Station Multi-Lingual PA Soundboard (Hindi, Tamil, English, Telugu, etc.)">
+                        <span>🎙️ PA Soundboard</span>
+                    </button>
+                </div>
+
+                <div class="pipeline-ticker">
+                    <span class="pulse-dot"></span>
+                    <span>LIVE PIPELINE</span>
+                    <strong id="pipelineClock">00:00:00</strong>
+                </div>
+
+                <!-- Feature: Quick PNR Checker Launcher -->
+                <button class="btn btn-pnr-status" id="btnOpenPnrModal" title="Check Indian Railways 10-Digit PNR Status" onclick="document.getElementById('pnrModal').classList.add('open');">
+                    <span>🎫 PNR Status</span>
+                </button>
+
+                <button class="btn btn-guide" id="btnOperationsGuide" title="Open Operations Architecture Guide" onclick="document.getElementById('guideModal').classList.add('open');">
+                    <span>📖 Operations Guide</span>
+                </button>
+
+                <button class="btn btn-ai-toggle" id="btnToggleAI" title="Open RailFlow AI Operations Terminal" style="padding:4px 8px; font-size:0.72rem; height:auto;" onclick="toggleAIDrawer(event);">
+                    <span style="font-size:0.7rem;">🤖</span>
+                    <span style="font-size:0.7rem; letter-spacing:0.04em;">AI</span>
+                    <span class="badge badge-ai-pulse" style="font-size:9px; padding:1px 4px; min-width:0;">READY</span>
+                </button>
+            </div>
+        </header>
+
+    <div class="rf-body">
     <!-- ─── Sidebar Navigation ──────────────────────────────────── -->
-    <aside class="sidebar" id="sidebar">
+    <aside class="rf-sidebar sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="#" class="logo" onclick="switchPage('dashboard'); return false;">
                 <div class="logo-mark">
@@ -54,7 +126,7 @@
             </a>
         </div>
 
-        <nav class="sidebar-nav">
+        <nav class="rf-sidebar-nav sidebar-nav" id="sidebarNav">
             <div class="nav-section-label">Operations Console</div>
             <a href="/dashboard" class="nav-item active" data-page="dashboard" id="nav-dashboard">
                 <span class="nav-emoji">📊</span>
@@ -133,85 +205,16 @@
             </a>
         </nav>
 
-        <div class="sidebar-footer">
+        <div class="rf-sidebar-footer sidebar-footer" id="sidebarFooter">
             <span>Java 17+ • SQLite JDBC</span>
             <span class="version-chip">v2.0</span>
         </div>
     </aside>
 
-    <!-- ─── Application Viewport ─────────────────────────────────── -->
-    <div class="app-container">
 
-        <!-- Top Header -->
-        <header class="top-header" id="topHeader">
-            <!-- Mobile Hamburger -->
-            <button class="hamburger-btn" id="btnMobileMenu" title="Toggle Navigation Menu" aria-label="Toggle sidebar" aria-expanded="false" onclick="document.getElementById('sidebar').classList.toggle('mobile-open'); document.getElementById('sidebarOverlay').classList.toggle('active');">
-                <span></span><span></span><span></span>
-            </button>
-            <!-- Global Search -->
-            <div class="search-container">
-                <div class="search-input-wrapper">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                    </svg>
-                    <input type="text" class="search-input" id="globalSearchInput" placeholder="Search trains, stations, train numbers, station codes (Press / to search)..." autocomplete="off">
-                </div>
-                <div class="search-results-dropdown" id="searchResultsDropdown"></div>
-            </div>
-
-            <!-- Pipeline Status Ticker & Controls -->
-            <div class="header-actions">
-                <!-- Dual-View Context Switcher (Controller HUD vs Commuter Portal) -->
-                <div class="view-mode-toggle" id="viewModeToggle" role="radiogroup" aria-label="Operational View Mode">
-                    <button class="view-mode-btn active" id="btnModeController" data-mode="controller" title="Switch to Station Controller HUD (Full Telemetry & Dispatch)">
-                        <span class="mode-icon">🎛️</span>
-                        <span class="mode-text">CONTROLLER HUD</span>
-                    </button>
-                    <button class="view-mode-btn" id="btnModeCommuter" data-mode="commuter" title="Switch to Passenger Commuter Portal (Mobile-Friendly)">
-                        <span class="mode-icon">📱</span>
-                        <span class="mode-text">COMMUTER PORTAL</span>
-                    </button>
-                </div>
-
-                <!-- PA Audio & Volume Controller Dock -->
-                <div class="audio-control-dock" id="audioControlDock" title="Station Master PA Audio System">
-                    <button class="btn-sound-mute" id="soundMuteBtn" aria-label="Toggle PA Audio Mute" title="Mute/Unmute Audio Announcements">
-                        <span id="soundIcon">🔊</span>
-                    </button>
-                    <div class="sound-slider-wrapper" title="PA Announcement Volume">
-                        <input type="range" min="0" max="1" step="0.05" value="0.8" id="soundVolumeSlider" class="sound-volume-slider" aria-label="Volume">
-                        <span class="volume-val" id="volumeValText">80%</span>
-                    </div>
-                    <button class="btn-soundboard-launch" id="btnOpenSoundboardModal" onclick="openStationSoundboardModal()" title="Open Station Multi-Lingual PA Soundboard (Hindi, Tamil, English, Telugu, etc.)">
-                        <span>🎙️ PA Soundboard</span>
-                    </button>
-                </div>
-
-                <div class="pipeline-ticker">
-                    <span class="pulse-dot"></span>
-                    <span>LIVE PIPELINE</span>
-                    <strong id="pipelineClock">00:00:00</strong>
-                </div>
-
-                <!-- Feature: Quick PNR Checker Launcher -->
-                <button class="btn btn-pnr-status" id="btnOpenPnrModal" title="Check Indian Railways 10-Digit PNR Status" onclick="document.getElementById('pnrModal').classList.add('open');">
-                    <span>🎫 PNR Status</span>
-                </button>
-
-                <button class="btn btn-guide" id="btnOperationsGuide" title="Open Operations Architecture Guide" onclick="document.getElementById('guideModal').classList.add('open');">
-                    <span>📖 Operations Guide</span>
-                </button>
-
-                <button class="btn btn-ai-toggle" id="btnToggleAI" title="Open RailFlow AI Operations Terminal" style="padding:4px 8px; font-size:0.72rem; height:auto;" onclick="toggleAIDrawer(event);">
-                    <span style="font-size:0.7rem;">🤖</span>
-                    <span style="font-size:0.7rem; letter-spacing:0.04em;">AI</span>
-                    <span class="badge badge-ai-pulse" style="font-size:9px; padding:1px 4px; min-width:0;">READY</span>
-                </button>
-            </div>
-        </header>
 
         <!-- Viewport Container -->
-        <main class="main-viewport" id="mainViewport">
+        <main class="rf-workspace main-viewport" id="mainViewport">
 
             <!-- ═══════════════════════════════════════════════════════════
                  PAGE 1: DASHBOARD
@@ -3272,6 +3275,29 @@
 
         </main>
     </div>
+
+    <!-- ZONE 3: PERSISTENT FOOTER TICKER -->
+    <footer class="rf-ticker" id="hudBarBottom">
+      <div class="ticker-left">
+        <span class="ticker-brand">RAILFLOW</span>
+        <span class="ticker-sep">//</span>
+        <span class="ticker-sub">NETWORK INTELLIGENCE</span>
+        <span class="ticker-badge">SYS NOMINAL</span>
+      </div>
+      <div class="ticker-center">
+        <span class="ticker-metric">25 HUBS ACTIVE</span>
+        <span class="ticker-sep">•</span>
+        <span class="ticker-metric">6 TRUNK CORRIDORS</span>
+        <span class="ticker-sep">•</span>
+        <span class="ticker-metric" id="tickerClockDisplay">LIVE TELEMETRY</span>
+      </div>
+      <div class="ticker-right">
+        <span>&copy; 2026 AKNEX</span>
+        <span class="ticker-sep">•</span>
+        <span>Java 17+ &bull; SQLite JDBC V2.0</span>
+      </div>
+    </footer>
+  </div>
 
     <!-- ─── Station Detail Drawer ────────────────────────────────── -->
     <aside class="station-drawer" id="stationDrawer">
