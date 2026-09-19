@@ -48,9 +48,31 @@ Thumbs.db
 database/*.db
 database/*.db-wal
 database/*.db-shm
+backend/database/*.db
+backend/database/*.db-wal
+backend/database/*.db-shm
 *.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Secrets, environments, and sensitive keys
+.env
+.env.*
+*.pem
+*.key
+*.cert
+*.pfx
+
+# Scratch and internal agent artifacts
+scratch/
+.gemini/
+deploy/
+git/
 
 # Redundant duplicate train JSON mirrors (canonical stored in DATA/trains/)
 deploy/DATA/trains/
 git/DATA/trains/
+
 

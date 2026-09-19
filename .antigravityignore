@@ -1,0 +1,13 @@
+# Antigravity IDE Indexing & Agent Context Ignore Rules
+# Exclude duplicate repository mirrors and massive data trees
+
+deploy/
+git/
+bin/
+target/
+backend/node_modules/
+DATA/trains/
+database/railway.db
+.vercel/
+scratch/
+*.log

@@ -57,6 +57,7 @@ backend/database/*.db-shm
 *.sqlite
 *.sqlite3
 
+
 # Secrets, environments, and sensitive keys
 .env
 .env.*
@@ -70,9 +71,13 @@ scratch/
 .gemini/
 deploy/
 git/
+backend/node_modules/
 
-# Redundant duplicate train JSON mirrors (canonical stored in DATA/trains/)
+# Redundant duplicate train JSON mirrors & massive route catalog
 deploy/DATA/trains/
 git/DATA/trains/
+DATA/trains/
+
+
 
 

@@ -1,4 +1,4 @@
-# Vercel Ignore - Only upload frontend and metadata
+# Vercel Ignore - Exclude backend and large binaries
 target/
 .git/
 .mvn/
@@ -9,6 +9,17 @@ bin/
 *.zip
 *.tar.gz
 *.exe
-data/
+*.csv
+*.log
+database/
+*.db
+DATA/trainroutes.json
+DATA/trains.json
+DATA/*.zip
+deploy/
+git/
 scripts/
 docs/
+python_backend/
+scratch/
+

@@ -842,6 +842,8 @@ const PAGE_ROUTES = {
     'commuter':     '/commuter',
     'quality':      '/quality',
     'architecture': '/architecture',
+    'fleet':        '/fleet',
+    'commander':    '/commander',
     'database':     '/database',
     'feedback':     '/feedback'
 };
@@ -997,6 +999,14 @@ function switchPage(pageId, pushUrl) {
             } else if (pageId === 'crowd') {
                 renderPlatformBars(STATE.selectedCrowdStation);
                 if (typeof updateChokepointsDensity === 'function') updateChokepointsDensity();
+            } else if (pageId === 'fleet') {
+                if (typeof initStationTree === 'function') {
+                    initStationTree('fleetTreeContainer');
+                }
+            } else if (pageId === 'commander') {
+                if (typeof initVoiceCommander === 'function') {
+                    initVoiceCommander();
+                }
             }
         } catch (subErr) {
             console.warn('[Navigation] Non-fatal sub-action:', subErr.message);
@@ -1018,11 +1028,13 @@ const HUD_PAGES = [
     'stations',
     'trains',
     'crowd',
+    'commuter',
     'quality',
     'architecture',
+    'fleet',
+    'commander',
     'database',
-    'feedback',
-    'commuter'
+    'feedback'
 ];
 
 function updateHudTelemetry(pageId) {
@@ -1111,7 +1123,6 @@ function switchNetworkView(view) {
         'radar': { el: $('netRadarView'), btn: $('btnNetRadar') },
         'topology': { el: $('netTopologyView'), btn: $('btnNetTopology') },
         'dispatch': { el: $('netDispatchView'), btn: $('btnNetDispatch') },
-        'fleet-kavach': { el: $('netFleetKavachView'), btn: $('btnNetFleetKavach') },
         'directory': { el: $('netDirectoryView'), btn: $('btnNetDirectory') },
         'provenance': { el: $('netProvenanceView'), btn: $('btnNetProvenance') }
     };
@@ -5779,6 +5790,252 @@ let CONSOLE_INITIALIZED = false;
 const CONSOLE_HISTORY = [];
 let CONSOLE_HISTORY_INDEX = -1;
 
+function executeConsoleOption(opt) {
+    const num = parseInt(opt, 10);
+    switch (num) {
+        case 1:
+            consoleWriteLine('railflow@jvm:~$ 1 (START)', 'console-cmd');
+            consoleWriteLine('═══════════════ INITIALIZING RAILFLOW JVM RUNTIME ENGINE ═══════════════', 'console-highlight');
+            consoleWriteLine('├── Runtime          : OpenJDK 21 LTS 64-Bit Server VM (Temurin-21.0.3+9)', 'console-info');
+            consoleWriteLine('├── HikariCP Pool    : 10 Active JDBC Connections connected to railway.db (WAL mode)', 'console-success');
+            consoleWriteLine('├── Master Stations  : 8,989 Stations Indexed │ 416,637 Halt Records Loaded', 'console-success');
+            consoleWriteLine('├── Concurrency      : ScheduledExecutorService active @4000ms fixed-rate intervals', 'console-info');
+            consoleWriteLine('├── Project Loom     : 1,024 Virtual Fiber Tasks Mounted & Ready', 'console-success');
+            consoleWriteLine('└── STATUS           : ⚡ JVM RUNTIME OPERATIONAL & DAEMON ONLINE', 'console-success');
+            if (typeof showToast === 'function') showToast('JVM Runtime Online: Telemetry daemon active @4000ms', 'success');
+            break;
+
+        case 2:
+            consoleWriteLine('railflow@jvm:~$ 2 (TRAINS)', 'console-cmd');
+            consoleWriteLine('═════════════ INDIAN RAILWAYS PREMIER EXPRESS DIRECTORY ═════════════', 'console-highlight');
+            consoleWriteLine('  12638  Pandian Superfast Express    MAS ➔ MDU   Daily   PF 5   [ON-TIME]', 'console-info');
+            consoleWriteLine('  12636  Vaigai Superfast Express     MDU ➔ MS    Daily   PF 2   [ON-TIME]', 'console-info');
+            consoleWriteLine('  12606  Pallavan Superfast Express   TPJ ➔ MS    Daily   PF 1   [+4m DELAY]', 'console-warn');
+            consoleWriteLine('  12621  Tamil Nadu Express           MAS ➔ NDLS  Daily   PF 7   [ON-TIME]', 'console-info');
+            consoleWriteLine('  12622  Tamil Nadu Express           NDLS ➔ MAS  Daily   PF 8   [+12m DELAY]', 'console-warn');
+            consoleWriteLine('  12301  Howrah Rajdhani Express      HWH ➔ NDLS  Daily   PF 9   [ON-TIME]', 'console-info');
+            consoleWriteLine('  12951  Mumbai Rajdhani Express      MMCT ➔ NDLS Daily   PF 1   [ON-TIME]', 'console-info');
+            consoleWriteLine('  20607  Vande Bharat Express         MAS ➔ MYS   6d/Wk   PF 2A  [ON-TIME]', 'console-success');
+            consoleWriteLine('  22207  Chennai Trivandrum SF        MAS ➔ TVC   Daily   PF 4   [ON-TIME]', 'console-info');
+            consoleWriteLine('  12654  Rockfort Superfast Express   TPJ ➔ MS    Daily   PF 3   [ON-TIME]', 'console-info');
+            consoleWriteLine('  Type 5-digit number (e.g., "12638") for complete timetable & halt inspection.', 'console-highlight');
+            break;
+
+        case 3:
+            consoleWriteLine('railflow@jvm:~$ 3 (STATIONS)', 'console-cmd');
+            consoleWriteLine('═════════════ STRATEGIC ZONAL TERMINAL HUBS & OCCUPANCY ═════════════', 'console-highlight');
+            consoleWriteLine('  MAS   │ Chennai Central       │ 16 PFs │ Footfall: 520k/day │ Occupancy: 80.0% [CRITICAL]', 'console-error');
+            consoleWriteLine('  NDLS  │ New Delhi             │ 16 PFs │ Footfall: 450k/day │ Occupancy: 35.0% [NORMAL]', 'console-success');
+            consoleWriteLine('  HWH   │ Howrah Junction       │ 23 PFs │ Footfall: 510k/day │ Occupancy: 62.0% [ELEVATED]', 'console-warn');
+            consoleWriteLine('  CSMT  │ Mumbai CST            │ 18 PFs │ Footfall: 480k/day │ Occupancy: 58.0% [ELEVATED]', 'console-warn');
+            consoleWriteLine('  SBC   │ Bangalore City        │ 10 PFs │ Footfall: 250k/day │ Occupancy: 55.0% [ELEVATED]', 'console-warn');
+            consoleWriteLine('  TPJ   │ Tiruchchirappalli Jn  │  6 PFs │ Footfall: 120k/day │ Occupancy: 28.0% [NORMAL]', 'console-success');
+            consoleWriteLine('  ALU   │ Ariyalur (Chord Line) │  3 PFs │ Footfall:  12k/day │ Occupancy: 18.0% [NORMAL]', 'console-success');
+            consoleWriteLine('  Type station code (e.g., "alu", "tpj", "ms", "ndls") for deep station telemetry.', 'console-highlight');
+            break;
+
+        case 4:
+            consoleWriteLine('railflow@jvm:~$ 4 (CROWD)', 'console-cmd');
+            consoleWriteLine('═════════════ REAL-TIME CONCOURSE INFLUX & HAZARD ESTIMATOR ═════════════', 'console-highlight');
+            consoleWriteLine('├── Monitored Station : Chennai Central (MAS) — Main Concourse & FOB 1/2', 'console-info');
+            consoleWriteLine('├── Passenger Influx  : 184 commuters/min (Surging during evening rush peak)', 'console-warn');
+            consoleWriteLine('├── Platform 5 Density: 2.18 persons/m² [LEVEL 3 HIGH DENSITY — Stampede Risk]', 'console-error');
+            consoleWriteLine('├── Platform 3 Density: 0.45 persons/m² [LEVEL 1 NORMAL DENSITY]', 'console-success');
+            consoleWriteLine('├── Foot Overbridge   : 1.62 persons/m² [STAIRWAY CONGESTION ELEVATED]', 'console-warn');
+            consoleWriteLine('├── Stampede Hazard   : 42.4 / 100 (Threshold 65.0 triggers Strobe Hold)', 'console-highlight');
+            consoleWriteLine('└── Flow Mitigation  : Route overflow via South Subway corridor to PF 3.', 'console-success');
+            break;
+
+        case 5:
+            consoleWriteLine('railflow@jvm:~$ 5 (SOLVER)', 'console-cmd');
+            consoleWriteLine('═══════════ PLATFORM HEURISTIC OPTIMIZER (PriorityQueue Max-Heap) ═══════════', 'console-highlight');
+            consoleWriteLine('[CONFLICT DETECTED] Train 12638 Pandian Express delayed 25m on Platform 2.', 'console-error');
+            consoleWriteLine('├── Current PF 2 Occupancy : 80.0% [CRITICAL OVERLAP DETECTED]', 'console-warn');
+            consoleWriteLine('├── Evaluated Candidates   : PF 1 (Penalty: 34.2), PF 3 (Penalty: 18.2), PF 4 (Penalty: 42.0)', 'console-info');
+            consoleWriteLine('├── Selected Strategy      : Polymorphic Action "ChangePlatformStrategy"', 'console-success');
+            consoleWriteLine('├── Heuristic Assignment   : REALLOCATE 12638 ➔ PLATFORM 3 (Current Occupancy: 24.0% NORMAL)', 'console-success');
+            consoleWriteLine('└── Resolution Latency     : Heuristic solved in 1.4 ms.', 'console-highlight');
+            if (typeof handleHeuristicReallocate === 'function') {
+                handleHeuristicReallocate();
+            }
+            break;
+
+        case 6:
+            consoleWriteLine('railflow@jvm:~$ 6 (RADAR)', 'console-cmd');
+            consoleWriteLine('═══════════ SATELLITE RAILRADAR TELEMETRY STREAM ═══════════', 'console-highlight');
+            consoleWriteLine('├── GPS Transponder  : Multi-source Indian Railways satellite telemetry linked', 'console-info');
+            consoleWriteLine('├── Track Geometry   : Broad Gauge 1,676 mm electrified inter-hub corridors', 'console-info');
+            consoleWriteLine('└── Action           : Navigating to RailRadar Network View (/network)...', 'console-success');
+            setTimeout(() => switchPage('network', true), 500);
+            break;
+
+        case 7:
+            consoleWriteLine('railflow@jvm:~$ 7 (VOICE)', 'console-cmd');
+            consoleWriteLine('═══════════ MULTI-LINGUAL STATION PA ANNOUNCEMENT SOUNDBOARD ═══════════', 'console-highlight');
+            consoleWriteLine('├── Available Languages : Tamil, Hindi, English, Telugu, Kannada, Bengali, Marathi, Malayalam', 'console-info');
+            consoleWriteLine('├── Audio Synthesizer   : 4-Tone IR Station Chime + Creative Voice Modulation', 'console-info');
+            consoleWriteLine('└── Action              : Launching Station PA Soundboard Modal...', 'console-success');
+            if (typeof openStationSoundboardModal === 'function') {
+                openStationSoundboardModal();
+            }
+            break;
+
+        case 8:
+            consoleWriteLine('railflow@jvm:~$ 8 (PNR)', 'console-cmd');
+            consoleWriteLine('═══════════ IRCTC 10-DIGIT GATEWAY PNR VERIFICATION ═══════════', 'console-highlight');
+            consoleWriteLine('├── Gateway Interface : Connected to CRIS PRS Core Database Adapter', 'console-info');
+            consoleWriteLine('└── Action            : Opening PNR Verification Modal...', 'console-success');
+            const pnrModal = document.getElementById('pnrModal');
+            if (pnrModal) pnrModal.classList.add('open');
+            break;
+
+        case 9:
+            consoleWriteLine('railflow@jvm:~$ 9 (ROUTING)', 'console-cmd');
+            consoleWriteLine('═══════════ BFS SHORTEST PATH ROUTING TRAVERSAL: MAS ➔ NDLS ═══════════', 'console-highlight');
+            consoleWriteLine('├── Source Station   : MAS (Chennai Central — Southern Railway)', 'console-info');
+            consoleWriteLine('├── Destination      : NDLS (New Delhi — Northern Railway)', 'console-info');
+            consoleWriteLine('├── Traversal Route  : MAS ➔ AJJ ➔ KPD ➔ JTJ ➔ RU ➔ GDR ➔ BZA ➔ WL ➔ NGP ➔ ET ➔ BPL ➔ JHS ➔ AGC ➔ MTJ ➔ NDLS', 'console-success');
+            consoleWriteLine('├── Corridor Details : Grand Trunk Corridor • 15 Major Strategic Hubs • ~2,186 km', 'console-info');
+            consoleWriteLine('└── Graph Traversal  : 4.2 ms execution • 342 visited nodes in memory', 'console-highlight');
+            break;
+
+        case 10:
+            consoleWriteLine('railflow@jvm:~$ 10 (SCHEMA)', 'console-cmd');
+            consoleWriteLine('═════════════ SQLITE WAL RELATIONAL SCHEMA (railway.db) ═════════════', 'console-highlight');
+            consoleWriteLine('  TABLE stations        │ 8,989 rows   │ (code TEXT PK, name, state, zone, lat, lon, platforms, footfall)', 'console-info');
+            consoleWriteLine('  TABLE trains          │ 5,208 rows   │ (number TEXT PK, name, type, source, destination, frequency)', 'console-info');
+            consoleWriteLine('  TABLE train_routes    │ 416,637 rows │ (train_number FK, station_code FK, sequence, arr, dep, km)', 'console-info');
+            consoleWriteLine('  TABLE crowd_telemetry │ 13,849 rows  │ (station_code, platform, occupancy, density, timestamp)', 'console-info');
+            consoleWriteLine('  TABLE pnr_records     │ 50,000 rows  │ (pnr TEXT PK, train_num, doj, booking_status, coach, berth)', 'console-info');
+            consoleWriteLine('  PRAGMA journal_mode   │ WAL (Write-Ahead Log) • PRAGMA synchronous = NORMAL', 'console-success');
+            consoleWriteLine('  PRAGMA cache_size     │ -8000 (8 MB) • foreign_keys = ON', 'console-success');
+            break;
+
+        case 11:
+            consoleWriteLine('railflow@jvm:~$ 11 (METERING)', 'console-cmd');
+            consoleWriteLine('═══════════ CONCOURSE TURNSTILE GATE METERING VALVE ═══════════', 'console-highlight');
+            consoleWriteLine('[FLOW CONTROLLER ENGAGED] Concourse Turnstile Inflow Metered', 'console-warn');
+            consoleWriteLine('├── Gate Throttling    : 45 passengers / minute (-55% reduction against surge)', 'console-info');
+            consoleWriteLine('├── Platform Access    : Turnstile barrier hold active on Entry Gates 3 & 4', 'console-warn');
+            consoleWriteLine('├── Hazard Mitigation  : Stampede index reduced from 42.4 ➔ 18.0 (Normal Level)', 'console-success');
+            consoleWriteLine('└── Status             : Concourse inflow throttled to prevent platform overcrowding.', 'console-success');
+            if (typeof showToast === 'function') showToast('Turnstile Metering Engaged: Inflow throttled -55%', 'info');
+            break;
+
+        case 12:
+            consoleWriteLine('railflow@jvm:~$ 12 (CLONE)', 'console-cmd');
+            consoleWriteLine('═══════════ STANDBY RELIEF CLONE RAKE DEPLOYMENT ═══════════', 'console-highlight');
+            consoleWriteLine('[DISPATCH ORDER ISSUED] Standby Relief Clone Train 02638 Commissioned', 'console-success');
+            consoleWriteLine('├── Clone Train No.   : 02638 (Pandian Express Relief Special)', 'console-info');
+            consoleWriteLine('├── Home Shed         : Golden Rock (GOC) & Basin Bridge (BBQ)', 'console-info');
+            consoleWriteLine('├── Rake Composition  : 22 LHB Coaches (2SL + 12 3E + 4 3A + 2 2A + 1 1A + EOG)', 'console-info');
+            consoleWriteLine('├── Traction          : WAP-7 #30452 (Royapuram Electric Loco Shed)', 'console-info');
+            consoleWriteLine('└── Line Clearance    : GREEN CORRIDOR authorized on Southern Main Chord Line.', 'console-success');
+            if (typeof showToast === 'function') showToast('Relief Rake 02638 Dispatched from Golden Rock', 'success');
+            break;
+
+        case 13:
+            consoleWriteLine('railflow@jvm:~$ 13 (SIGNALS)', 'console-cmd');
+            consoleWriteLine('═══════════ RDSO KAVACH TCAS SIGNALS & HEADWAY MATRIX ═══════════', 'console-highlight');
+            consoleWriteLine('├── Specification     : RDSO/SPN/196/2020 v4.0 (Autonomous ATP System)', 'console-info');
+            consoleWriteLine('├── Station TCAS      : DUAL-REDUNDANT ACTIVE (Electronic Interlocking Optical Link)', 'console-success');
+            consoleWriteLine('├── Loco Cab Signals  : 4,200+ WAP-7, WAP-5, WAG-9, Vande Bharat T18 cabs armed', 'console-success');
+            consoleWriteLine('├── Radio Link        : UHF 433 MHz Duplex Packet Telemetry (2,000 ms heartbeat)', 'console-info');
+            consoleWriteLine('├── Movement Authority: MA Curve supervision active (AEB armed for SPAD prevention)', 'console-success');
+            consoleWriteLine('└── Sector Status     : Villupuram–Ariyalur–Trichy Chord Line 100% Kavach protected.', 'console-success');
+            break;
+
+        case 14:
+            consoleWriteLine('railflow@jvm:~$ 14 (ANALYTICS)', 'console-cmd');
+            consoleWriteLine('═══════════ 40-YEAR HISTORICAL OPERATIONS & PUNCTUALITY ═══════════', 'console-highlight');
+            consoleWriteLine('├── Time Horizon      : 1986 – 2026 (40 Years Longitudinal Operation)', 'console-info');
+            consoleWriteLine('├── Route Network     : Expanded from 61,813 km ➔ 68,000+ km (95% Electrified)', 'console-info');
+            consoleWriteLine('├── Annual Passengers : Grew from 3.7 Billion ➔ 8.5 Billion passengers/year', 'console-info');
+            consoleWriteLine('├── Punctuality Avg   : Superfast Express: 88.4% │ Vande Bharat / Rajdhani: 94.8%', 'console-success');
+            consoleWriteLine('└── Safety Metric     : Zero signal overshoot collisions on Kavach-commissioned sections.', 'console-success');
+            break;
+
+        case 15:
+            consoleWriteLine('railflow@jvm:~$ 15 (SPECS)', 'console-cmd');
+            const neofetchLines = (typeof CONSOLE_COMMANDS !== 'undefined' && CONSOLE_COMMANDS['neofetch']) ? CONSOLE_COMMANDS['neofetch']() : [
+                'OS: RailFlow IR Network Intelligence v2.0',
+                'Runtime: OpenJDK 21 LTS (64-Bit Server VM)',
+                'DB: SQLite 3.50.3 WAL (railway.db)',
+                'Nodes: 8,989 stations | 5,208 trains'
+            ];
+            neofetchLines.forEach(l => consoleWriteHTML(l, 'console-info'));
+            break;
+
+        case 16:
+            consoleWriteLine('railflow@jvm:~$ 16 (STOP)', 'console-cmd');
+            consoleWriteLine('═══════════ RAILFLOW ENGINE STANDBY PROCEDURE ═══════════', 'console-highlight');
+            consoleWriteLine('├── Committing pending SQLite WAL journal transactions... [DONE]', 'console-info');
+            consoleWriteLine('├── Idle HikariCP JDBC connection pool parked... [DONE]', 'console-info');
+            consoleWriteLine('├── Telemetry ScheduledExecutorService transitioned to STANDBY... [DONE]', 'console-info');
+            consoleWriteLine('└── STATUS: RAILFLOW ENGINE IN STANDBY MODE (Enter 1 or "start" to resume)', 'console-warn');
+            if (typeof showToast === 'function') showToast('RailFlow Engine in Standby Mode', 'warning');
+            break;
+
+        default:
+            consoleWriteLine(`railflow@jvm:~$ Unknown option: ${opt}. Type 1-16 or "help".`, 'console-error');
+            break;
+    }
+}
+window.executeConsoleOption = executeConsoleOption;
+
+window.runConsoleOption = function(num) {
+    if (STATE.activePage !== 'console') {
+        switchPage('console', true);
+    }
+    const input = document.getElementById('consoleInput');
+    if (input) input.value = '';
+    executeConsoleOption(parseInt(num, 10));
+};
+
+const CONSOLE_BOOT_BANNER = `
+<div style="color:#64748B;">────────────────────────────────────────────────────────────────────────────────</div>
+<div style="color:#F59E0B; font-weight:700;">⚡ RailFlow Interactive Java Console — BASH + JAVA HYBRID</div>
+<div style="color:#10B981; font-weight:700;">JVM 21 LTS (ONLINE)</div>
+<div style="color:#94A3B8;">[BOOT] Initializing RailFlow Runtime Engine (OpenJDK 21 LTS 64-Bit)...</div>
+<div style="color:#38BDF8;">[BOOT] SQLite JDBC in WAL mode connected (railflow.db | HikariCP Pool: 5)</div>
+<div style="color:#E2E8F0;">[BOOT] Master station database indexed: 8,989 stations | 13,849 operational records</div>
+<div style="color:#10B981;">[BOOT] PriorityQueue Max-Heap initialized for Top-K Platform Optimization</div>
+<div style="color:#C084FC;">[BOOT] Southern Railway Chord Line cached: ALU &lt;-&gt; VRI &lt;-&gt; VM &lt;-&gt; CGL &lt;-&gt; TBM &lt;-&gt; MS</div>
+<div style="color:#F59E0B;">[BOOT] ScheduledExecutorService crowd daemon active @4000ms fixed-rate intervals</div>
+<div style="color:#10B981; font-weight:600;">[BOOT] All systems nominal. Type "help" for available commands.</div>
+<div style="color:#64748B;">────────────────────────────────────────────────────────────────────────────────</div>
+<div style="color:var(--emerald); font-weight:700;">railflow@jvm:~$ <span style="color:#94A3B8; font-weight:400;">Enter command (try: 1, 2, 7, help, stats, schema, routes, trains, stations, bfs, javac, mvn, gradle)...</span></div>
+<div style="margin-top:0.35rem; display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:2px; font-size:0.75rem;">
+    <div><span style="color:#10B981; font-weight:700;">[1]  ⚡ START</span>     <span style="color:#94A3B8;">: Initialize JVM &amp; HikariCP</span></div>
+    <div><span style="color:#38BDF8; font-weight:700;">[2]  🚆 TRAINS</span>    <span style="color:#94A3B8;">: Express schedules &amp; halts</span></div>
+    <div><span style="color:#38BDF8; font-weight:700;">[3]  🚉 STATIONS</span>  <span style="color:#94A3B8;">: Zonal hub occupancy</span></div>
+    <div><span style="color:#F59E0B; font-weight:700;">[4]  👥 CROWD</span>     <span style="color:#94A3B8;">: Concourse influx estimator</span></div>
+    <div><span style="color:#EF4444; font-weight:700;">[5]  🧠 SOLVER</span>    <span style="color:#94A3B8;">: PriorityQueue Max-Heap</span></div>
+    <div><span style="color:#06B6D4; font-weight:700;">[6]  🛰️ RADAR</span>     <span style="color:#94A3B8;">: Satellite GPS stream</span></div>
+    <div><span style="color:#C084FC; font-weight:700;">[7]  📢 VOICE</span>     <span style="color:#94A3B8;">: Multi-lingual station PA</span></div>
+    <div><span style="color:#38BDF8; font-weight:700;">[8]  🎫 PNR</span>       <span style="color:#94A3B8;">: 10-Digit PRS verification</span></div>
+    <div><span style="color:#F59E0B; font-weight:700;">[9]  🧭 ROUTING</span>   <span style="color:#94A3B8;">: BFS/Dijkstra shortest path</span></div>
+    <div><span style="color:#10B981; font-weight:700;">[10] 🗄️ SCHEMA</span>    <span style="color:#94A3B8;">: SQLite WAL relational DDL</span></div>
+    <div><span style="color:#38BDF8; font-weight:700;">[11] 🚪 METERING</span>  <span style="color:#94A3B8;">: Turnstile gate throttle</span></div>
+    <div><span style="color:#38BDF8; font-weight:700;">[12] 🚆 CLONE</span>     <span style="color:#94A3B8;">: Standby relief rake order</span></div>
+    <div><span style="color:#10B981; font-weight:700;">[13] 🚦 SIGNALS</span>   <span style="color:#94A3B8;">: Kavach TCAS headway matrix</span></div>
+    <div><span style="color:#F59E0B; font-weight:700;">[14] 📊 ANALYTICS</span> <span style="color:#94A3B8;">: 40-Year longitudinal ops</span></div>
+    <div><span style="color:#06B6D4; font-weight:700;">[15] ⚙️ SPECS</span>     <span style="color:#94A3B8;">: JVM Neofetch &amp; diagnostics</span></div>
+    <div><span style="color:#EF4444; font-weight:700;">[16] ⏹️ STOP</span>      <span style="color:#94A3B8;">: Standby mode &amp; park pool</span></div>
+</div>
+<div style="color:#64748B;">────────────────────────────────────────────────────────────────────────────────</div>
+<div style="color:#94A3B8; font-size:0.72rem;">Type a number (1-16) or station code (alu, tpj, ms) or click any chip below to execute.</div>
+<div>&nbsp;</div>
+`;
+
+window.clearConsoleOutput = function() {
+    const output = document.getElementById('consoleOutput');
+    if (output) {
+        output.innerHTML = CONSOLE_BOOT_BANNER;
+        output.scrollTop = 0;
+    }
+};
+
 function initConsoleTerminal() {
     if (CONSOLE_INITIALIZED) return;
     CONSOLE_INITIALIZED = true;
@@ -5787,32 +6044,8 @@ function initConsoleTerminal() {
     const input = document.getElementById('consoleInput');
     if (!output || !input) return;
 
-    // Authentic Java Console Boot Sequence
-    const bootLines = [
-        { text: '[BOOT] Initializing RailFlow Runtime Engine (OpenJDK 21 LTS 64-Bit)...', cls: 'console-info' },
-        { text: '[BOOT] SQLite JDBC in WAL mode connected (railflow.db | HikariCP Pool: 5)', cls: 'console-success' },
-        { text: '[BOOT] Master station database indexed: 8,989 stations | 13,849 operational records', cls: 'console-success' },
-        { text: '[BOOT] PriorityQueue Max-Heap initialized for Top-K Platform Optimization', cls: 'console-highlight' },
-        { text: '[BOOT] Southern Railway Chord Line cached: ALU <-> VRI <-> VM <-> CGL <-> TBM <-> MS', cls: 'console-highlight' },
-        { text: '[BOOT] ScheduledExecutorService crowd daemon active @4000ms fixed-rate intervals', cls: 'console-success' },
-        { text: '[BOOT] All systems nominal. Type "help" for available commands.', cls: 'console-info' }
-    ];
+    output.innerHTML = CONSOLE_BOOT_BANNER;
 
-    // Batch append to lightweight DocumentFragment to unblock main thread and avoid layout thrashing
-    const frag = document.createDocumentFragment();
-    bootLines.forEach(item => {
-        const line = document.createElement('div');
-        line.className = `console-line ${item.cls || ''}`;
-        line.textContent = item.text;
-        frag.appendChild(line);
-    });
-
-    const promptLine = document.createElement('div');
-    promptLine.className = 'console-line console-prompt-static';
-    promptLine.textContent = 'railflow@ops:~$ ';
-    frag.appendChild(promptLine);
-
-    output.appendChild(frag);
     input.disabled = false;
     requestAnimationFrame(() => {
         output.scrollTop = output.scrollHeight;
@@ -5827,7 +6060,6 @@ function initConsoleTerminal() {
             if (!cmd) return;
             CONSOLE_HISTORY.push(cmd);
             CONSOLE_HISTORY_INDEX = CONSOLE_HISTORY.length;
-            consoleWriteLine(`railflow@ops:~$ ${cmd}`, 'console-cmd');
             input.value = '';
             processConsoleCommand(cmd);
         } else if (e.key === 'ArrowUp') {
@@ -5850,7 +6082,7 @@ function initConsoleTerminal() {
 }
 
 function consoleWriteLine(text, cls) {
-    const output = document.getElementById('consoleOutput');
+    const output = document.getElementById('consoleOutput') || document.getElementById('archConsoleOutput');
     if (!output) return;
     const line = document.createElement('div');
     line.className = `console-line ${cls || ''}`;
@@ -5862,7 +6094,7 @@ function consoleWriteLine(text, cls) {
 }
 
 function consoleWriteHTML(html, cls) {
-    const output = document.getElementById('consoleOutput');
+    const output = document.getElementById('consoleOutput') || document.getElementById('archConsoleOutput');
     if (!output) return;
     const line = document.createElement('div');
     line.className = `console-line ${cls || ''}`;
@@ -5881,7 +6113,6 @@ function runConsoleQuickCmd(cmd) {
     const input = document.getElementById('consoleInput');
     CONSOLE_HISTORY.push(cmd);
     CONSOLE_HISTORY_INDEX = CONSOLE_HISTORY.length;
-    consoleWriteLine(`railflow@ops:~$ ${cmd}`, 'console-cmd');
     if (input) {
         input.value = '';
     }
@@ -5892,9 +6123,45 @@ window.runConsoleQuickCmd = runConsoleQuickCmd;
 async function processConsoleCommand(cmd) {
     const rawCmd = (cmd || '').trim();
     if (!rawCmd) return;
+
+    // Clean brackets and special chars: "[14]" -> "14", "#15" -> "15", "14." -> "14"
+    const cleanCmd = rawCmd.replace(/[\[\]#.]/g, '').trim();
+    const cleanLower = cleanCmd.toLowerCase();
     const parts = rawCmd.split(/\s+/);
     const command = (parts[0] || '').toLowerCase();
     const upperCmd = rawCmd.toUpperCase();
+
+    // ── Check if numeric choice 1-16 was entered (supports "15", "[14]", "14", "[1]", etc.) ──
+    const numChoice = parseInt(cleanCmd, 10);
+    if (!isNaN(numChoice) && numChoice >= 1 && numChoice <= 16 && /^\d{1,2}$/.test(cleanCmd)) {
+        executeConsoleOption(numChoice);
+        return;
+    }
+
+    // ── Command aliases mapping directly to the 16 menu options ──
+    const aliasMap = {
+        'start': 1, 'strat': 1, '1': 1,
+        'trains': 2, 'train': 2, 'train serc': 2, 'train search': 2, '2': 2,
+        'stations': 3, 'stasion': 3, 'station': 3, '3': 3,
+        'crowd': 4, 'density': 4, '4': 4,
+        'solver': 5, 'heuristic': 5, 'solve': 5, '5': 5,
+        'radar': 6, 'railradar': 6, '6': 6,
+        'voice': 7, 'soundboard': 7, 'pa': 7, 'announcement': 7, 'commander': 7, '7': 7,
+        'pnr': 8, '8': 8,
+        'routing': 9, 'route': 9, 'bfs': 9, 'dijkstra': 9, '9': 9,
+        'schema': 10, 'tables': 10, 'sqlite': 10, '10': 10,
+        'metering': 11, 'turnstile': 11, '11': 11,
+        'clone': 12, 'relief': 12, '12': 12,
+        'signals': 13, 'kavach': 13, 'tcas': 13, '13': 13,
+        'analytics': 14, 'stats': 14, 'history': 14, '14': 14,
+        'specs': 15, 'neofetch': 15, 'version': 15, 'jvm': 15, 'java': 15, '15': 15,
+        'stop': 16, 'halt': 16, 'shutdown': 16, '16': 16
+    };
+
+    if (aliasMap[cleanLower] || (parts.length === 1 && aliasMap[command])) {
+        executeConsoleOption(aliasMap[cleanLower] || aliasMap[command]);
+        return;
+    }
 
     // ── 1. AUTOMATIC STATION RESOLVER (e.g. typing "alu", "tpj", "ms", "ndls", etc.) ──
     const hubMatch = (typeof RAW_HUBS !== 'undefined' ? RAW_HUBS : []).find(h => h.code === upperCmd || (h.name && h.name.toUpperCase() === upperCmd));
@@ -7019,8 +7286,53 @@ window.runArchConsoleCmd = function(cmd) {
     cmdEcho.innerHTML = `<span style="color:var(--emerald);">railflow@jvm:~$</span> <span style="color:#E2E8F0;">${cmd}</span>`;
     output.appendChild(cmdEcho);
 
+    // Clean brackets and special characters: "[14]" -> "14", "#15" -> "15"
+    const cleanCmd = normalizedCmd.replace(/[\[\]#.]/g, '').trim();
+
+    const numChoice = parseInt(cleanCmd, 10);
+    if (!isNaN(numChoice) && numChoice >= 1 && numChoice <= 16 && /^\d{1,2}$/.test(cleanCmd)) {
+        executeConsoleOption(numChoice);
+        if (input) input.value = '';
+        return;
+    }
+
+    const aliasMap = {
+        'start': 1, 'strat': 1, '1': 1,
+        'trains': 2, 'train': 2, '2': 2,
+        'stations': 3, 'station': 3, '3': 3,
+        'crowd': 4, 'density': 4, '4': 4,
+        'solver': 5, 'heuristic': 5, 'solve': 5, '5': 5,
+        'radar': 6, 'railradar': 6, '6': 6,
+        'voice': 7, 'soundboard': 7, 'pa': 7, 'announcement': 7, 'commander': 7, '7': 7,
+        'pnr': 8, '8': 8,
+        'routing': 9, 'route': 9, 'bfs': 9, 'dijkstra': 9, '9': 9,
+        'schema': 10, 'tables': 10, 'sqlite': 10, '10': 10,
+        'metering': 11, 'turnstile': 11, '11': 11,
+        'clone': 12, 'relief': 12, '12': 12,
+        'signals': 13, 'kavach': 13, 'tcas': 13, '13': 13,
+        'analytics': 14, 'stats': 14, 'history': 14, '14': 14,
+        'specs': 15, 'neofetch': 15, 'version': 15, 'jvm': 15, 'java': 15, '15': 15,
+        'stop': 16, 'halt': 16, 'shutdown': 16, '16': 16
+    };
+
+    if (aliasMap[cleanCmd]) {
+        executeConsoleOption(aliasMap[cleanCmd]);
+        if (input) input.value = '';
+        return;
+    }
+
+    // Direct station code resolution in arch console
+    const upperCode = cleanCmd.toUpperCase();
+    const isStation = (typeof RAW_HUBS !== 'undefined' ? RAW_HUBS : []).some(h => h.code === upperCode) ||
+                      (typeof ALL_COMMON_STATIONS !== 'undefined' ? ALL_COMMON_STATIONS : []).some(s => s.code === upperCode);
+    if (isStation && cleanCmd.length <= 4) {
+        processConsoleCommand(cleanCmd);
+        if (input) input.value = '';
+        return;
+    }
+
     // Find matching command
-    let handler = CONSOLE_COMMANDS[normalizedCmd];
+    let handler = CONSOLE_COMMANDS[normalizedCmd] || CONSOLE_COMMANDS[cleanCmd];
     if (!handler) {
         // Try partial match
         const keys = Object.keys(CONSOLE_COMMANDS);
@@ -7073,6 +7385,360 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  VOICE COMMANDER — CENTRAL MULTI-LINGUAL AUDIO DISPATCHER & PIS ENGINE
+// ═══════════════════════════════════════════════════════════════════════════════
+let COMMANDER_INITIALIZED = false;
+let COMMANDER_ACTIVE_SCENARIO = null;
+let COMMANDER_WAVE_INTERVAL = null;
+
+const COMMANDER_STATIONS = {
+    'MS':   { name: 'Chennai Egmore', zone: 'SR', pf: 11, desc: 'Southern Railway Chord Line Hub' },
+    'MAS':  { name: 'Chennai Central', zone: 'SR', pf: 17, desc: 'Grand Trunk Terminal' },
+    'TPJ':  { name: 'Tiruchchirappalli Jn', zone: 'SR', pf: 6, desc: 'Delta & Golden Rock Hub' },
+    'ALU':  { name: 'Ariyalur', zone: 'SR', pf: 3, desc: 'Main Chord Line Junction' },
+    'MDU':  { name: 'Madurai Jn', zone: 'SR', pf: 8, desc: 'Pandian Corridor South Hub' },
+    'CBE':  { name: 'Coimbatore Jn', zone: 'SR', pf: 6, desc: 'Western Tamil Nadu Hub' },
+    'SBC':  { name: 'KSR Bengaluru', zone: 'SWR', pf: 10, desc: 'South Western Railway Hub' },
+    'SC':   { name: 'Secunderabad Jn', zone: 'SCR', pf: 10, desc: 'South Central Headquarters' },
+    'NDLS': { name: 'New Delhi', zone: 'NR', pf: 16, desc: 'Northern Trunk Apex Terminal' },
+    'CSMT': { name: 'Mumbai CST', zone: 'CR', pf: 18, desc: 'Central Railway UNESCO Terminal' }
+};
+
+const COMMANDER_SCENARIOS = {
+    'arrival': {
+        title: '12638 Pandian SF Express Arrival',
+        train: '12638 Pandian Superfast Express',
+        platform: 1,
+        scripts: {
+            'en-IN': 'Attention please. Train Number 1 2 6 3 8, Pandian Superfast Express arriving from Madurai, is arriving shortly on Platform Number 1. Passengers are requested to stay behind the yellow safety line.',
+            'ta-IN': 'பயணிகள் கவனத்திற்கு. வண்டி எண் 1 2 6 3 8, மதுரையிலிருந்து வரும் பாண்டியன் அதிவிரைவு வண்டி, சற்று நேரத்தில் நடைமேடை எண் 1-ல் வந்து கொண்டிருக்கிறது.',
+            'hi-IN': 'यात्रीगण कृपया ध्यान दें। गाडी संख्या 1 2 6 3 8, मदुरै से आने वाली पाण्डियन सुपरफास्ट एक्सप्रेस, कुछ ही समय में प्लेटफार्म नंबर 1 पर आ रही है।',
+            'te-IN': 'ప్రయాణికుల శ్రద్ధ వహించండి. రైలు నంబర్ 1 2 6 3 8, పాండియన్ సూపర్ ఫాస్ట్ ఎక్స్‌ప్రెస్ ప్లాట్‌ఫారమ్ నంబర్ 1 పై చేరుకుంటుంది.',
+            'kn-IN': 'ಪ್ರಯಾಣಿಕರ ಗಮನಕ್ಕೆ. ರೈಲು ಸಂಖ್ಯೆ 1 2 6 3 8, ಪಾಂಡಿಯನ್ ಸೂಪರ್‌ಫಾಸ್ಟ್ ಎಕ್ಸ್‌ಪ್ರೆಸ್ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ಸಂಖ್ಯೆ 1 ಕ್ಕೆ ಆಗಮಿಸುತ್ತಿದೆ.',
+            'ml-IN': 'ശ്രദ്ധിക്കുക. ട്രെയിൻ നമ്പർ 1 2 6 3 8, പാണ്ഡ്യൻ സൂപ്പർഫാസ്റ്റ് എക്സ്പ്രസ് പ്ലാറ്റ്ഫോം നമ്പർ 1-ൽ എത്തിച്ചേരുന്നു.',
+            'bn-IN': 'যাত্রী সাধারণের দৃষ্টি আকর্ষণ করা হচ্ছে। ট্রেন নম্বর 1 2 6 3 8, পান্ডিয়ান সুপারফাস্ট এক্সপ্রেস ১ নম্বর প্ল্যাটফর্মে আসছে।',
+            'mr-IN': 'प्रवाशांनी कृपया लक्ष द्या. गाडी क्रमांक 1 2 6 3 8, पांडियन सुपरफास्ट एक्सप्रेस प्लॅटफॉर्म क्रमांक 1 वर येत आहे.',
+            'gu-IN': 'યાત્રીઓ ધ્યાન આપો. ટ્રેન નંબર 1 2 6 3 8, પાંડિયન સુપરફાસ્ટ એક્સપ્રેસ પ્લેટફોર્મ નંબર 1 પર આવી રહી છે.'
+        }
+    },
+    'platform': {
+        title: 'Dynamic Platform Reallocation to PF 3',
+        train: '12636 Vaigai Superfast Express',
+        platform: 3,
+        scripts: {
+            'en-IN': 'Attention please. Due to heavy congestion, Train Number 1 2 6 3 6, Vaigai Superfast Express, has been reallocated and will now arrive on Platform Number 3 instead of Platform Number 1. Inconvenience caused is regretted.',
+            'ta-IN': 'பயணிகள் கவனத்திற்கு. கூட்ட நெரிசல் காரணமாக, வண்டி எண் 1 2 6 3 6, வைகை அதிவிரைவு வண்டி, நடைமேடை 1-க்கு பதிலாக நடைமேடை 3-ல் வரும் என அறிவிக்கப்படுகிறது.',
+            'hi-IN': 'यात्रीगण कृपया ध्यान दें। भीड़भाड़ के कारण, गाडी संख्या 1 2 6 3 6, वैगई सुपरफास्ट एक्सप्रेस, प्लेटफार्म नंबर 1 के बजाय प्लेटफार्म नंबर 3 पर आएगी।',
+            'te-IN': 'ప్రయాణికుల శ్రద్ధ వహించండి. రైలు నంబర్ 1 2 6 3 6, వైగై ఎక్స్‌ప్రెస్ ప్లాట్‌ఫారమ్ 1 కి బదులుగా ప్లాట్‌ఫారమ్ 3 లోకి వస్తుంది.',
+            'kn-IN': 'ಪ್ರಯಾಣಿಕರ ಗಮನಕ್ಕೆ. ರೈಲು ಸಂಖ್ಯೆ 1 2 6 3 6, ವೈಗೈ ಎಕ್ಸ್‌ಪ್ರೆಸ್ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ 1 ರ ಬದಲಿಗೆ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ 3 ಕ್ಕೆ ಆಗಮಿಸಲಿದೆ.',
+            'ml-IN': 'ശ്രദ്ധിക്കുക. ട്രെയിൻ നമ്പർ 1 2 6 3 6, വൈഗൈ എക്സ്പ്രസ് പ്ലാറ്റ്ഫോം 1-ന് പകരം പ്ലാറ്റ്ഫോം 3-ൽ എത്തും.',
+            'bn-IN': 'যাত্রীদের দৃষ্টি আকর্ষণ করা হচ্ছে। ট্রেন নম্বর 1 2 6 3 6, বৈগাই এক্সপ্রেস ১ নম্বরের পরিবর্তে ৩ নম্বর প্ল্যাটফর্মে আসবে।',
+            'mr-IN': 'प्रवाशांनी लक्ष द्या. गाडी क्रमांक 1 2 6 3 6, वैगई एक्सप्रेस प्लॅटफॉर्म 1 ऐवजी प्लॅटफॉर्म 3 वर येईल.',
+            'gu-IN': 'યાત્રીઓ ધ્યાન આપો. ટ્રેન નંબર 1 2 6 3 6, વૈગઈ એક્સપ્રેસ પ્લેટફોર્મ 1 ના બદલે પ્લેટફોર્મ 3 પર આવશે.'
+        }
+    },
+    'kavach': {
+        title: 'Emergency Kavach TCAS Safety Alert',
+        train: 'Kavach Section Supervisor',
+        platform: 2,
+        scripts: {
+            'en-IN': 'Emergency safety alert! Kavach automatic train collision avoidance system has engaged safety braking on Track Number 2. All commuters and staff must clear the platform track boundary immediately.',
+            'ta-IN': 'அவசர எச்சரிக்கை! கவச் தானியங்கி ரயில் மோதல் தடுப்பு அமைப்பு தடம் 2-ல் பிரேக்கிங் மேற்பார்வையை இயக்கியுள்ளது. அனைவரும் எல்லைக்கோட்டிற்கு பின்னால் நிற்கவும்.',
+            'hi-IN': 'आपातकालीन चेतावनी! कवच स्वचालित रेल सुरक्षा प्रणाली ने ट्रैक नंबर 2 पर आपातकालीन ब्रेकिंग सक्रिय की है। सभी यात्री ट्रैक से दूर रहें।',
+            'te-IN': 'అత్యవసర హెచ్చరిక! కవచ్ ఆటోమేటిక్ రైలు రక్షణ వ్యవస్థ ట్రాక్ 2 పై బ్రేకింగ్ ప్రారంభించింది.',
+            'kn-IN': 'ತುರ್ತು ಎಚ್ಚರಿಕೆ! ಕವಚ ಸ್ವಯಂಚಾಲಿತ ರೈಲು ರಕ್ಷಣಾ ವ್ಯವಸ್ಥೆಯು ಟ್ರ್ಯಾಕ್ 2 ರಲ್ಲಿ ಬ್ರೇಕಿಂಗ್ ಅನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿದೆ.',
+            'ml-IN': 'സുരക്ഷാ മുന്നറിയിപ്പ്! കവച് ഓട്ടോമാറ്റിക് ബ്രേക്കിംഗ് ട്രാക്ക് 2-ൽ പ്രവർത്തിപ്പിച്ചു.',
+            'bn-IN': 'জরুরি সতর্কতা! কবচ স্বয়ংক্রিয় ট্রেন সুরক্ষা ব্যবস্থা ট্র্যাক ২-এ ব্রেকিং শুরু করেছে।',
+            'mr-IN': 'आणीबाणीची सूचना! कवच स्वयंचलित ट्रेन संरक्षण यंत्रणेने ट्रॅक 2 वर ब्रेकिंग सुरू केली आहे.',
+            'gu-IN': 'કટોકટી ચેતવણી! કવચ સિસ્ટમે ટ્રેક 2 પર ઇમરજન્સી બ્રેકિંગ સક્રિય કર્યું છે.'
+        }
+    },
+    'metering': {
+        title: 'Concourse & FOB Gate Metering Advisory',
+        train: 'Station Operations Control',
+        platform: 'All Platforms',
+        scripts: {
+            'en-IN': 'Passenger crowd advisory. Foot Overbridge 2 and Main Concourse are experiencing heavy commuter influx. Turnstile metering valve is engaged. Please utilize North Ramp and Subway for platform access.',
+            'ta-IN': 'பயணிகள் கவனத்திற்கு. நடைமேடை பாலம் 2 மற்றும் மைய கூடத்தில் அதிக கூட்ட நெரிசல் நிலவுகிறது. பயணிகள் வடக்கு நடைபாதை மற்றும் சுரங்கப்பாதையைப் பயன்படுத்தவும்.',
+            'hi-IN': 'यात्री सूचना। फुट ओवरब्रिज 2 और मुख्य कॉनकोर्स पर अत्यधिक भीड़ है। प्रवेश नियंत्रित किया गया है। कृपया उत्तरी रैंप और सबवे का उपयोग करें।',
+            'te-IN': 'ప్రయాణికుల సమాచారం. ఫుట్ ఓవర్‌బ్రిడ్జ్ 2 వద్ద రద్దీ ఎక్కువగా ఉంది. దయచేసి ఉత్తర మార్గాన్ని ఉపయోగించండి.',
+            'kn-IN': 'ಪ್ರಯಾಣಿಕರ ಮಾಹಿತಿ. ಕಾಲ್ನಡಿಗೆ ಸೇತುವೆ 2 ರಲ್ಲಿ ದಟ್ಟಣೆ ಹೆಚ್ಚಾಗಿದೆ. ದಯವಿಟ್ಟು ಉತ್ತರ ರ‍್ಯಾಂಪ್ ಬಳಸಿ.',
+            'ml-IN': 'യാത്രക്കാരുടെ ശ്രദ്ധയ്ക്ക്. ഫുട്ഓവർബ്രിഡ്ജ് 2-ൽ കനത്ത തിരക്കുണ്ട്. ദയവായി വടക്കൻ റാംപ് ഉപയോഗിക്കുക.',
+            'bn-IN': 'যাত্রীদের অনুরোধ করা হচ্ছে। ফুট ওভারব্রিজে ভারী ভিড়। অনুগ্রহ করে উত্তর র‍্যাম্প ব্যবহার করুন।',
+            'mr-IN': 'प्रवाशांसाठी सूचना. फूट ओव्हरब्रिज 2 वर गर्दी आहे. कृपया उत्तर रॅम्पचा वापर करावा.',
+            'gu-IN': 'યાત્રીઓ માટે સલાહ. ફૂટ ઓવરબ્રિજ 2 પર ભારે ભીડ છે. કૃપા કરીને ઉત્તર રેમ્પનો ઉપયોગ કરો.'
+        }
+    },
+    'relief': {
+        title: 'Relief Clone Rake Dispatch Announcement',
+        train: '02638X Clone Special Express',
+        platform: 4,
+        scripts: {
+            'en-IN': 'Special announcement. Standby relief clone special train 0 2 6 3 8 has been dispatched from Golden Rock to clear passenger overflow. Boarding commenced on Platform Number 4.',
+            'ta-IN': 'சிறப்பு அறிவிப்பு. கூட்ட நெரிசலைத் தவிர்க்க, பொன்மலையிலிருந்து சிறப்பு நிவாரண வண்டி எண் 0 2 6 3 8 நடைமேடை எண் 4-ல் பயணிகளை ஏற்ற தயாராக உள்ளது.',
+            'hi-IN': 'विशेष घोषणा। अतिरिक्त भीड़ को संभालने के लिए गोल्डन रॉक से राहत क्लोन विशेष गाडी 0 2 6 3 8 प्लेटफार्म नंबर 4 पर उपलब्ध कराई गई है।',
+            'te-IN': 'ప్రత్యేక ప్రకటన. అదనపు రద్దీ నివారణకు ప్రత్యేక క్లోన్ రైలు 0 2 6 3 8 ప్లాట్‌ఫారమ్ 4 లో ప్రవేశపెట్టబడింది.',
+            'kn-IN': 'ವಿಶೇಷ ಪ್ರಕಟಣೆ. ಹೆಚ್ಚುವರಿ ದಟ್ಟಣೆಗಾಗಿ ಪರಿಹಾರ ಕ್ಲೋನ್ ರೈಲು 0 2 6 3 8 ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ 4 ರಲ್ಲಿ ಸಿದ್ಧವಾಗಿದೆ.',
+            'ml-IN': 'പ്രത്യേക അറിയിപ്പ്. അധിക യാത്രക്കാർക്കായി റിലീഫ് ക്ലോൺ ട്രെയിൻ 0 2 6 3 8 പ്ലാറ്റ്ഫോം 4-ൽ ഒരുക്കിയിരിക്കുന്നു.',
+            'bn-IN': 'বিশেষ ঘোষণা। অতিরিক্ত ভিড় সামলাতে ত্রাণের স্পেশাল ট্রেন ০ ২৬ ৩৮ ৪ নম্বর প্ল্যাটফর্মে প্রস্তুত রয়েছে।',
+            'mr-IN': 'विशेष घोषणा. गर्दी नियंत्रणासाठी रिलीफ स्पेशल ट्रेन 0 2 6 3 8 प्लॅटफॉर्म क्रमांक 4 वर उपलब्ध आहे.',
+            'gu-IN': 'વિશેષ જાહેરાત. વધારાની ભીડ માટે રાહત ક્લોન ટ્રેન 0 2 6 3 8 પ્લેટફોર્મ નંબર 4 પર ઉપલબ્ધ છે.'
+        }
+    },
+    'departure': {
+        title: 'Departure Chime & Boarding Call',
+        train: '12606 Pallavan Superfast Express',
+        platform: 2,
+        scripts: {
+            'en-IN': 'Your attention please. Train Number 1 2 6 0 6, Pallavan Superfast Express for Chennai Egmore, is ready for departure on Platform Number 2. Passengers are requested to board immediately.',
+            'ta-IN': 'பயணிகள் கவனத்திற்கு. சென்னை எழும்பூர் செல்லும் வண்டி எண் 1 2 6 0 6 பல்லவன் அதிவிரைவு வண்டி நடைமேடை 2-ல் புறப்படத் தயாராக உள்ளது.',
+            'hi-IN': 'यात्रीगण कृपया ध्यान दें। चेन्नई एग्मोर जाने वाली गाडी संख्या 1 2 6 0 6 पल्लवन सुपरफास्ट एक्सप्रेस प्लेटफार्म नंबर 2 से प्रस्थान के लिए तैयार है।',
+            'te-IN': 'ప్రయాణికుల శ్రద్ధ వహించండి. చెన్నై ఎగ్మోర్ వెళ్లే పల్లవన్ ఎక్స్‌ప్రెస్ ప్లాట్‌ఫారమ్ 2 నుండి బయలుదేరడానికి సిద్ధంగా ఉంది.',
+            'kn-IN': 'ಪ್ರಯಾಣಿಕರ ಗಮನಕ್ಕೆ. ಚೆನ್ನೈ ಎಗ್ಮೋರ್ ಕಡೆಗೆ ಹೋಗುವ ಪಲ್ಲವನ್ ಎಕ್ಸ್‌ಪ್ರೆಸ್ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ 2 ರಿಂದ ಹೊರಡಲು ಸಿದ್ಧವಾಗಿದೆ.',
+            'ml-IN': 'ശ്രദ്ധിക്കുക. ചെന്നൈ എഗ്മോറിലേക്കുള്ള പല്ലവൻ എക്സ്പ്രസ് പ്ലാറ്റ്ഫോം 2-ൽ നിന്ന് പുറപ്പെടാൻ തയ്യാറായിരിക്കുന്നു.',
+            'bn-IN': 'যাত্রীদের দৃষ্টি আকর্ষণ করা হচ্ছে। চেন্নাই এগমোরগামী পল্লবন এক্সপ্রেস ২ নম্বর প্ল্যাটফর্ম থেকে ছাড়তে প্রস্তুত।',
+            'mr-IN': 'प्रवाशांनी लक्ष द्या. चेन्नई एग्मोरकडे जाणारी पल्लवन एक्सप्रेस प्लॅटफॉर्म 2 वरून सुटण्यास तयार आहे.',
+            'gu-IN': 'યાત્રીઓ ધ્યાન આપો. ચેન્નાઈ એગ્મોર જતી પલ્લવન એક્સપ્રેસ પ્લેટફોર્મ 2 પરથી રવાના થવા માટે તૈયાર છે.'
+        }
+    }
+};
+
+function startWaveBarAnimation(durationMs) {
+    stopWaveBarAnimation();
+    const barsContainer = document.getElementById('cmdWaveBars');
+    if (!barsContainer) return;
+    const spans = barsContainer.querySelectorAll('span');
+    if (!spans.length) return;
+
+    COMMANDER_WAVE_INTERVAL = setInterval(() => {
+        spans.forEach(s => {
+            const h = Math.floor(Math.random() * 20) + 4;
+            s.style.height = `${h}px`;
+        });
+    }, 120);
+
+    if (durationMs) {
+        setTimeout(stopWaveBarAnimation, durationMs);
+    }
+}
+
+function stopWaveBarAnimation() {
+    if (COMMANDER_WAVE_INTERVAL) {
+        clearInterval(COMMANDER_WAVE_INTERVAL);
+        COMMANDER_WAVE_INTERVAL = null;
+    }
+    const barsContainer = document.getElementById('cmdWaveBars');
+    if (barsContainer) {
+        const spans = barsContainer.querySelectorAll('span');
+        const heights = [8, 18, 12, 24, 10, 20, 14, 6];
+        spans.forEach((s, idx) => {
+            s.style.height = `${heights[idx % heights.length]}px`;
+        });
+    }
+}
+
+function playCommanderChime() {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return Promise.resolve();
+        const ctx = new AudioCtx();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        // 4-Tone Indian Railways Chime: D5, F#5, A5, D6
+        const notes = [587.33, 739.99, 880.00, 1174.66];
+        const step = 0.16;
+        const now = ctx.currentTime;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 1800;
+        filter.Q.value = 1.2;
+
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(0.35, now);
+        filter.connect(masterGain);
+        masterGain.connect(ctx.destination);
+
+        notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i * step);
+
+            gain.gain.setValueAtTime(0.001, now + i * step);
+            gain.gain.exponentialRampToValueAtTime(0.45, now + i * step + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * step + step * 1.5);
+
+            osc.connect(gain);
+            gain.connect(filter);
+            osc.start(now + i * step);
+            osc.stop(now + i * step + step * 1.6);
+        });
+
+        startWaveBarAnimation(850);
+        return new Promise(res => setTimeout(res, 850));
+    } catch (e) {
+        return Promise.resolve();
+    }
+}
+window.playCommanderChime = playCommanderChime;
+
+function speakCommanderText(text, langCode, rate, pitch) {
+    return new Promise((resolve) => {
+        if (!('speechSynthesis' in window)) {
+            resolve();
+            return;
+        }
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = langCode || 'en-IN';
+        utter.rate = parseFloat(rate) || 0.88;
+        utter.pitch = parseFloat(pitch) || 1.0;
+
+        const voices = window.speechSynthesis.getVoices() || [];
+        const match = voices.find(v => v.lang === utter.lang || v.lang.startsWith(utter.lang.slice(0, 2)));
+        if (match) utter.voice = match;
+
+        startWaveBarAnimation();
+
+        utter.onend = () => {
+            stopWaveBarAnimation();
+            resolve();
+        };
+        utter.onerror = () => {
+            stopWaveBarAnimation();
+            resolve();
+        };
+
+        window.speechSynthesis.speak(utter);
+    });
+}
+
+function stopCommanderAudio() {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+    }
+    stopWaveBarAnimation();
+    const tele = document.getElementById('cmdTeleprompterText');
+    if (tele) tele.textContent = 'Audio transmission stopped. Station PA standing by.';
+    const badge = document.getElementById('cmdCurrentLangBadge');
+    if (badge) badge.textContent = 'Standby';
+}
+window.stopCommanderAudio = stopCommanderAudio;
+
+async function playCommanderScenario(key, mode) {
+    const sc = COMMANDER_SCENARIOS[key];
+    if (!sc) return;
+
+    if (mode === 'chain') {
+        // Strict Priority: 1st English -> 2nd Tamil -> 3rd Hindi
+        const chain = [
+            { lang: 'en-IN', label: '1️⃣ English (en-IN)' },
+            { lang: 'ta-IN', label: '2️⃣ Tamil (ta-IN)' },
+            { lang: 'hi-IN', label: '3️⃣ Hindi (hi-IN)' }
+        ];
+
+        const tele = document.getElementById('cmdTeleprompterText');
+        const badge = document.getElementById('cmdCurrentLangBadge');
+        const rate = document.getElementById('cmdRateSlider')?.value || 0.88;
+        const pitch = document.getElementById('cmdPitchSlider')?.value || 1.0;
+
+        for (let i = 0; i < chain.length; i++) {
+            const item = chain[i];
+            const script = sc.scripts[item.lang];
+            if (!script) continue;
+
+            if (badge) badge.textContent = item.label;
+            if (tele) tele.textContent = `[${i + 1}/3] ${script}`;
+
+            await playCommanderChime();
+            await new Promise(r => setTimeout(r, 200));
+            await speakCommanderText(script, item.lang, rate, pitch);
+            await new Promise(r => setTimeout(r, 450));
+        }
+
+        if (tele) tele.textContent = `Completed tri-lingual announcement for ${sc.title}. All tracks nominal.`;
+        if (badge) badge.textContent = 'Standby (Tri-Lingual)';
+    } else {
+        // Single language based on dropdown selector
+        const langSelect = document.getElementById('cmdLanguageSelect');
+        const langCode = langSelect ? langSelect.value : 'en-IN';
+        const langName = langSelect ? langSelect.options[langSelect.selectedIndex].text : 'English';
+        const script = sc.scripts[langCode] || sc.scripts['en-IN'];
+
+        const tele = document.getElementById('cmdTeleprompterText');
+        const badge = document.getElementById('cmdCurrentLangBadge');
+        const rate = document.getElementById('cmdRateSlider')?.value || 0.88;
+        const pitch = document.getElementById('cmdPitchSlider')?.value || 1.0;
+
+        if (badge) badge.textContent = langName;
+        if (tele) tele.textContent = script;
+
+        await playCommanderChime();
+        await new Promise(r => setTimeout(r, 200));
+        await speakCommanderText(script, langCode, rate, pitch);
+    }
+}
+window.playCommanderScenario = playCommanderScenario;
+
+function setCommanderStation(code) {
+    STATE.commanderStation = code;
+    const stn = COMMANDER_STATIONS[code] || { name: code, zone: 'IR', pf: 4, desc: 'Operational Hub' };
+    const title = document.getElementById('cmdActiveStationTitle');
+    if (title) {
+        title.innerHTML = `<span>${stn.name} (${code})</span> &bull; <span style="font-size:0.85rem; font-weight:400; color:var(--text-muted);">${stn.zone} Zone &bull; ${stn.pf} Platforms &bull; ${stn.desc}</span>`;
+    }
+
+    const container = document.getElementById('commanderStationPills');
+    if (container) {
+        const btns = container.querySelectorAll('button');
+        btns.forEach(b => {
+            if (b.id === `btnCmdStn${code}`) {
+                b.className = 'btn btn-primary';
+            } else {
+                b.className = 'btn btn-secondary';
+            }
+        });
+    }
+
+    if (typeof showToast === 'function') {
+        showToast(`Voice Commander linked to ${stn.name} (${code})`, 'info');
+    }
+}
+window.setCommanderStation = setCommanderStation;
+
+async function broadcastCommanderCustomText() {
+    const input = document.getElementById('cmdCustomTextInput');
+    const text = input ? input.value.trim() : '';
+    if (!text) {
+        if (typeof showToast === 'function') showToast('Please enter an announcement script', 'warning');
+        return;
+    }
+    const langSelect = document.getElementById('cmdLanguageSelect');
+    const langCode = langSelect ? langSelect.value : 'en-IN';
+    const langName = langSelect ? langSelect.options[langSelect.selectedIndex].text : 'English';
+    const rate = document.getElementById('cmdRateSlider')?.value || 0.88;
+    const pitch = document.getElementById('cmdPitchSlider')?.value || 1.0;
+
+    const tele = document.getElementById('cmdTeleprompterText');
+    const badge = document.getElementById('cmdCurrentLangBadge');
+    if (badge) badge.textContent = `Custom: ${langName}`;
+    if (tele) tele.textContent = text;
+
+    await playCommanderChime();
+    await new Promise(r => setTimeout(r, 200));
+    await speakCommanderText(text, langCode, rate, pitch);
+}
+window.broadcastCommanderCustomText = broadcastCommanderCustomText;
+
+function initVoiceCommander() {
+    if (COMMANDER_INITIALIZED) return;
+    COMMANDER_INITIALIZED = true;
+    setCommanderStation('MS');
+}
+window.initVoiceCommander = initVoiceCommander;
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAllRailFlowApp);
