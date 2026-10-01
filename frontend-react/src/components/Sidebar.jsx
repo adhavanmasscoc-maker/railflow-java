@@ -35,7 +35,7 @@ const navGroups = [
   }
 ];
 
-export default function Sidebar({ isOpen, toggleSidebar }) {
+export default function Sidebar({ isOpen, toggleSidebar, onOpenAi }) {
   const location = useLocation();
 
   return (
@@ -75,7 +75,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
                 // AI drawer is a special case that doesn't navigate
                 if (item.path.startsWith('#')) {
                   return (
-                    <a key={item.id} href={item.path} className={`nav-item nav-ai-item`} onClick={(e) => e.preventDefault()}>
+                    <a key={item.id} href={item.path} className={`nav-item nav-ai-item`} onClick={(e) => { e.preventDefault(); onOpenAi?.(); }}>
                       <span className="nav-emoji">{item.emoji}</span>
                       <span className="nav-label">{item.label}</span>
                       <span className={`nav-badge ${item.badgeColor}`}>{item.badge}</span>
