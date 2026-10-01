@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PageHeader from '../components/PageHeader';
 
 export default function CommuterPage() {
   const [pnr, setPnr] = useState('');
@@ -27,20 +28,14 @@ export default function CommuterPage() {
 
   return (
     <section className="page-view active" id="page-commuter">
-      <div className="view-header">
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 08</span> <span className="slash">//</span> COMMUTER PORTAL</div>
-          <div className="view-subtitle">
-            <span className="pulse-dot"></span>
-            LIVE PASSENGER INQUIRY
-          </div>
-          <h1 className="view-title">Real-Time Commuter Portal</h1>
-          <p className="view-desc">
-            Direct integration with PNR inquiry, seat availability matrices, and fare calculators via multi-provider fallback.
-          </p>
-        </div>
-        <span className="badge badge-real">API GATEWAY</span>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 08 // COMMUTER PORTAL"
+        title="Real-Time Commuter Portal"
+        subtitle="Live Passenger Inquiry — API Gateway"
+        description="Direct integration with PNR inquiry, seat availability matrices, and fare calculators via multi-provider fallback."
+        badge="API GATEWAY"
+        badgeColor="cyan"
+      />
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px', alignItems: 'flex-start' }}>
         <div className="panel" style={{ background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border-subtle)' }}>

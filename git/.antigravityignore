@@ -1,0 +1,14 @@
+# Exclude build artifacts & bytecode
+bin/
+target/
+node_modules/
+*.class
+*.jar
+
+# Exclude duplicate mirrors
+deploy/
+git/
+
+# Exclude heavy data assets
+DATA/trains/
+database/*.db

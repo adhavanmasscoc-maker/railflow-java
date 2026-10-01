@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PageHeader from '../components/PageHeader';
 
 const ZONES = [
   { code: 'NR', name: 'Northern Railway', hq: 'New Delhi', divisions: ['Delhi', 'Ambala', 'Firozpur', 'Lucknow', 'Moradabad'], trains: 892, stations: 764, locos: ['WAP-7', 'WAP-5', 'WAG-12B'], color: '#ef4444' },
@@ -35,14 +36,14 @@ export default function FleetPage() {
 
   return (
     <section className="page-view active" id="page-fleet">
-      <div className="view-header" style={{ marginBottom: '24px' }}>
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 10</span> <span className="slash">//</span> FLEET TOPOLOGY</div>
-          <h1 className="view-title">Rolling Stock &amp; Zonal Fleet Registry</h1>
-          <p className="view-desc">16 railway zones, locomotive classification tables, Vande Bharat trainsets, and LHB vs ICF rake inventories with maintenance health.</p>
-        </div>
-        <span className="badge badge-real">16 ZONES</span>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 10 // FLEET TOPOLOGY"
+        title="Rolling Stock & Zonal Fleet Registry"
+        subtitle="16 Railway Zones — Loco Classification & Rake Inventory"
+        description="16 railway zones, locomotive classification tables, Vande Bharat trainsets, and LHB vs ICF rake inventories with maintenance health."
+        badge="16 ZONES"
+        badgeColor="emerald"
+      />
 
       {/* Zone Selector Grid */}
       <div style={{ marginBottom: '24px' }}>

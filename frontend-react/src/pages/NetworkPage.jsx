@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PageHeader from '../components/PageHeader';
 
 export default function NetworkPage() {
   const [activeSubView, setActiveSubView] = useState('radar');
@@ -6,24 +7,20 @@ export default function NetworkPage() {
 
   return (
     <section className="page-view active" id="page-network">
-      <div className="view-header">
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 03</span> <span className="slash">//</span> RAILRADAR &amp; TOPOLOGY OPS</div>
-          <div className="view-subtitle">
-            <span className="pulse-dot"></span>
-            SATELLITE TELEMETRY &amp; INTER-HUB NETWORK
-          </div>
-          <h1 className="view-title">Live Satellite RailRadar &amp; Network Topology</h1>
-          <p className="view-desc">
-            Multi-source geo-referenced satellite radar, logical Indian Railways topology graph, and autonomous platform dispatch sandbox.
-          </p>
-        </div>
-        <div>
-          <span className="badge badge-real">LIVE GPS RADAR</span>
-          <span className="badge badge-derived" style={{ margin: '0 8px' }}>NETWORK TOPOLOGY</span>
-          <span className="badge">DISPATCH SANDBOX</span>
-        </div>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 03 // RAILRADAR & TOPOLOGY OPS"
+        title="Live Satellite RailRadar & Network Topology"
+        subtitle="Satellite Telemetry & Inter-Hub Network"
+        description="Multi-source geo-referenced satellite radar, logical Indian Railways topology graph, and autonomous platform dispatch sandbox."
+        badge="LIVE GPS RADAR"
+        badgeColor="emerald"
+        extra={
+          <>
+            <span className="badge badge-derived">NETWORK TOPOLOGY</span>
+            <span className="badge">DISPATCH SANDBOX</span>
+          </>
+        }
+      />
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px' }}>

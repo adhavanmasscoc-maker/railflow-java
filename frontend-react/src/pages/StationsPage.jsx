@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { WESTERN_TRUNK_STATIONS, CHORD_LINE_STATIONS, SOUTHERN_TRUNK_STATIONS } from '../data/masterRailwayData';
+import PageHeader from '../components/PageHeader';
 
 export default function StationsPage() {
   const [filter, setFilter] = useState('');
@@ -23,17 +24,14 @@ export default function StationsPage() {
 
   return (
     <section className="page-view active" id="page-stations">
-      <div className="view-header">
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 05</span> <span className="slash">//</span> STATION DIRECTORY</div>
-          <div className="view-subtitle">STATION HIERARCHY &amp; DIRECTORY</div>
-          <h1 className="view-title">Indian Railways Station Network Overview</h1>
-          <p className="view-desc">
-            Structured hierarchy from Indian Railways apex to Zonal Hubs, Stations, and individual Platform tracks with live capacity.
-          </p>
-        </div>
-        <span className="badge badge-real">SQLITE REGISTRY</span>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 05 // STATION DIRECTORY"
+        title="Station Hierarchy & Network Registry"
+        subtitle="Indian Railways Station Network Overview"
+        description="Structured operational hierarchy spanning IR apex, Zonal Hubs, Divisional Nodes, and individual Platform tracks with live capacity metrics."
+        badge="SQLITE REGISTRY"
+        badgeColor="emerald"
+      />
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px', alignItems: 'flex-start' }}>
         {/* Interactive Tree Mock */}

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { VERIFIED_TRAINS } from '../data/masterRailwayData';
+import PageHeader from '../components/PageHeader';
 
 export default function TrainsPage() {
   const [filter, setFilter] = useState('');
@@ -13,17 +14,14 @@ export default function TrainsPage() {
 
   return (
     <section className="page-view active" id="page-trains">
-      <div className="view-header">
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 06</span> <span className="slash">//</span> TRAIN EXPLORER</div>
-          <div className="view-subtitle">EXPRESS TIMETABLE REGISTRY</div>
-          <h1 className="view-title">Indian Railways Train Explorer</h1>
-          <p className="view-desc">
-            Search express trains by number, name, source, or destination, and view complete sequence stop timetable schedules.
-          </p>
-        </div>
-        <span className="badge badge-real">REAL DATA</span>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 06 // TRAIN EXPLORER"
+        title="Indian Railways Train Explorer"
+        subtitle="Express Timetable Registry — Real Data"
+        description="Search express trains by number, name, source, or destination, and view complete sequence stop timetable schedules."
+        badge="REAL DATA"
+        badgeColor="emerald"
+      />
 
       <div className="planner-form" style={{ background: 'var(--color-surface)', padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border-subtle)', marginBottom: '24px', display: 'flex', gap: '16px', alignItems: 'flex-end' }}>
         <div className="form-group" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>

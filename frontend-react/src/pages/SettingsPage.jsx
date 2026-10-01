@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import audioEngine from '../services/audioEngine';
+import PageHeader from '../components/PageHeader';
 
 export default function SettingsPage() {
   const [audioEnabled, setAudioEnabled] = useState(!audioEngine.muted);
@@ -14,12 +15,14 @@ export default function SettingsPage() {
 
   return (
     <section className="page-view active" id="page-settings">
-      <div className="view-header">
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 13</span> <span className="slash">//</span> SETTINGS &amp; CONFIGURATION</div>
-          <h1 className="view-title">System Preferences</h1>
-        </div>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 16 // SETTINGS & CONFIGURATION"
+        title="System Preferences"
+        subtitle="Audio, Polling, and Operational Mode Configuration"
+        description="Configure global audio FX, telemetry polling intervals, and simulation vs live data mode."
+        badge="CONFIG"
+        badgeColor="indigo"
+      />
       
       <div className="panel" style={{ padding: '24px', background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>

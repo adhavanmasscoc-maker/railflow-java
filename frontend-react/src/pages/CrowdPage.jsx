@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PageHeader from '../components/PageHeader';
 
 export default function CrowdPage() {
   const [inflowSurge, setInflowSurge] = useState(1.0);
@@ -7,34 +8,30 @@ export default function CrowdPage() {
 
   return (
     <section className="page-view active" id="page-crowd">
-      <div className="view-header">
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 07</span> <span className="slash">//</span> CROWD FOOTPRINT &amp; SANDBOX</div>
-          <div className="view-subtitle">
-            <span className="pulse-dot"></span>
-            SIMULATED MODEL
-          </div>
-          <h1 className="view-title">Platform Crowd Footprint Monitoring</h1>
-          <p className="view-desc">
-            Multi-platform density comparison, bottleneck detection, and simulated operational concurrency telemetry generated on a 3,000 ms background scheduler.
-          </p>
-        </div>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <select 
-            value={station}
-            onChange={e => setStation(e.target.value)}
-            style={{ padding: '8px 12px', background: 'rgba(14,20,36,0.8)', border: '1px solid var(--color-border-subtle)', borderRadius: 'var(--radius-sm)', color: '#fff', fontSize: '13px' }}
-          >
-            <option value="MAS">Chennai Central (MAS)</option>
-            <option value="NDLS">New Delhi (NDLS)</option>
-            <option value="CSMT">Mumbai CSMT</option>
-            <option value="HWH">Howrah Jn (HWH)</option>
-          </select>
-          <button className="btn btn-secondary">Interval: 3,000 ms</button>
-          <button className="btn btn-secondary">Audio: ON</button>
-          <span className="badge badge-real">Tick #1</span>
-        </div>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 07 // CROWD FOOTPRINT & SANDBOX"
+        title="Platform Crowd Footprint Monitoring"
+        subtitle="Simulated CrowdSim Engine — 3,000ms Tick"
+        description="Multi-platform density comparison, bottleneck detection, and simulated operational concurrency telemetry generated on a 3,000 ms background scheduler."
+        badge="SIMULATED MODEL"
+        badgeColor="amber"
+        extra={
+          <>
+            <select
+              value={station}
+              onChange={e => setStation(e.target.value)}
+              style={{ padding: '8px 12px', background: 'rgba(14,20,36,0.8)', border: '1px solid var(--color-border-subtle)', borderRadius: 'var(--radius-sm)', color: '#fff', fontSize: '13px' }}
+            >
+              <option value="MAS">Chennai Central (MAS)</option>
+              <option value="NDLS">New Delhi (NDLS)</option>
+              <option value="CSMT">Mumbai CSMT</option>
+              <option value="HWH">Howrah Jn (HWH)</option>
+            </select>
+            <button className="btn btn-secondary">Interval: 3,000 ms</button>
+            <span className="badge badge-real">Tick #1</span>
+          </>
+        }
+      />
 
       <div className="provenance-card provenance-banner" style={{ background: 'var(--color-surface)', padding: '16px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border-subtle)', borderLeft: '4px solid var(--color-cyan-400)', display: 'flex', gap: '16px', alignItems: 'flex-start', marginBottom: '24px' }}>
         <svg className="provenance-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-cyan-400)" strokeWidth="2">

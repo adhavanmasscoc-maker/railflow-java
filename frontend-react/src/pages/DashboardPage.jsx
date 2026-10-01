@@ -1,24 +1,23 @@
+import PageHeader from '../components/PageHeader';
+
 export default function DashboardPage() {
   return (
     <section className="page-view active" id="page-dashboard">
-      <div className="view-header">
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 01</span> <span className="slash">//</span> DASHBOARD</div>
-          <div className="view-subtitle">
-            <span className="pulse-dot"></span>
-            REAL-TIME MONITORING &amp; DATA PROCESSING
-          </div>
-          <h1 className="view-title">Logical Indian Railways Network Graph</h1>
-          <p className="view-desc">
-            Inter-hub topology connecting Northern, Western, Central, Eastern and Southern railway networks backed by Core Java 21+, JDBC and SQLite.
-          </p>
-        </div>
-        <div>
-          <span className="badge badge-real">REAL DATA: SQLITE</span>
-          <span className="badge badge-derived">DERIVED GRAPH</span>
-          <span className="badge badge-simulated">SIMULATED TELEMETRY</span>
-        </div>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 01 // DASHBOARD"
+        title="Logical Indian Railways Network Graph"
+        subtitle="Real-Time Monitoring & Data Processing"
+        description="Inter-hub topology connecting Northern, Western, Central, Eastern and Southern railway networks backed by Core Java 21+, JDBC and SQLite."
+        badge="SQLITE · LIVE"
+        badgeColor="emerald"
+        extra={
+          <>
+            <span className="badge badge-real">REAL DATA: SQLITE</span>
+            <span className="badge badge-derived">DERIVED GRAPH</span>
+            <span className="badge badge-simulated">SIMULATED TELEMETRY</span>
+          </>
+        }
+      />
 
       {/* ─── Operational Pipeline Timeline Card ─── */}
       <div className="pipeline-card" style={{ marginBottom: '24px', padding: '16px', background: 'var(--color-surface)', border: '1px solid var(--color-border-subtle)', borderRadius: 'var(--radius-lg)' }}>

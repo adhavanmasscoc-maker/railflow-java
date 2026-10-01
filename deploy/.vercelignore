@@ -1,0 +1,25 @@
+# Vercel Ignore - Exclude backend and large binaries
+target/
+.git/
+.mvn/
+bin/
+*.jar
+*.class
+*.pdf
+*.zip
+*.tar.gz
+*.exe
+*.csv
+*.log
+database/
+*.db
+DATA/trainroutes.json
+DATA/trains.json
+DATA/*.zip
+deploy/
+git/
+scripts/
+docs/
+python_backend/
+scratch/
+

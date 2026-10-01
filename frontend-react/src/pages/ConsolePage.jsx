@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import PageHeader from '../components/PageHeader';
 
 export default function ConsolePage() {
   const [output, setOutput] = useState([
@@ -44,24 +45,21 @@ export default function ConsolePage() {
 
   return (
     <section className="page-view active" id="page-console">
-      <div className="view-header">
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 02</span> <span className="slash">//</span> OPERATIONS CONSOLE</div>
-          <div className="view-subtitle">
-            <span className="pulse-dot"></span>
-            BASH + JAVA HYBRID
-          </div>
-          <h1 className="view-title">⚡ RailFlow Interactive Java Console</h1>
-          <p className="view-desc">
-            Enterprise Java 21 LTS Interactive Operations Terminal (RailFlowConsole.java). Simulates direct JVM runtime interaction, SQLite WAL batch querying, PriorityQueue platform conflict optimization, and real-time station soundboard.
-          </p>
-        </div>
-        <div>
-          <span className="badge badge-real">BASH + JAVA HYBRID</span>
-          <span className="badge" style={{ margin: '0 8px' }}>16 COMMANDS</span>
-          <button className="btn btn-secondary" onClick={clearConsole}>Clear Console</button>
-        </div>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 02 // OPERATIONS CONSOLE"
+        title="RailFlow Interactive Java Console"
+        subtitle="Bash + Java Hybrid — JVM 21 LTS"
+        description="Enterprise Java 21 LTS Interactive Operations Terminal (RailFlowConsole.java). Simulates direct JVM runtime interaction, SQLite WAL batch querying, PriorityQueue platform conflict optimization, and real-time station soundboard."
+        badge="JVM ONLINE"
+        badgeColor="emerald"
+        extra={
+          <>
+            <span className="badge badge-real">BASH + JAVA HYBRID</span>
+            <span className="badge">16 COMMANDS</span>
+            <button className="btn btn-secondary" onClick={clearConsole}>Clear Console</button>
+          </>
+        }
+      />
 
       <div className="console-terminal-window" id="consoleTerminalWindow" style={{ background: '#0a0e18', border: '1px solid var(--color-border-subtle)', borderRadius: 'var(--radius-lg)', marginTop: '24px' }}>
         <div className="console-titlebar" style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid var(--color-border-subtle)', background: 'var(--color-surface)' }}>

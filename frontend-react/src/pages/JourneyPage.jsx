@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { getDirectCorridorRoute, VERIFIED_TRAINS } from '../data/masterRailwayData';
+import PageHeader from '../components/PageHeader';
 
 export default function JourneyPage() {
   const [fromStation, setFromStation] = useState('NDLS');
@@ -30,17 +31,14 @@ export default function JourneyPage() {
 
   return (
     <section className="page-view active" id="page-journey">
-      <div className="view-header">
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 04</span> <span className="slash">//</span> JOURNEY ROUTER</div>
-          <div className="view-subtitle">CORRIDOR GRAPH ROUTER</div>
-          <h1 className="view-title">Railway Journey Planner</h1>
-          <p className="view-desc">
-            Direct schedule &amp; express frequency between real Indian railway station codes loaded from master dataset.
-          </p>
-        </div>
-        <span className="badge badge-real">JDBC ROUTING ENGINE</span>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 04 // JOURNEY ROUTER"
+        title="Railway Journey Planner"
+        subtitle="Corridor Graph Router — JDBC Routing Engine"
+        description="Direct schedule & express frequency between real Indian railway station codes loaded from master dataset."
+        badge="JDBC ROUTING ENGINE"
+        badgeColor="cyan"
+      />
 
       <div className="planner-form" style={{ background: 'var(--color-surface)', padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border-subtle)', display: 'flex', gap: '16px', alignItems: 'flex-end', marginBottom: '24px' }}>
         <div className="form-group" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>

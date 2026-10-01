@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PageHeader from '../components/PageHeader';
 
 const CATEGORIES = ['Bug Report', 'Feature Request', 'UI/UX Improvement', 'Performance Issue', 'Data Accuracy', 'Other'];
 
@@ -25,14 +26,14 @@ export default function FeedbackPage() {
 
   return (
     <section className="page-view active" id="page-feedback">
-      <div className="view-header" style={{ marginBottom: '24px' }}>
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 14</span> <span className="slash">//</span> USER FEEDBACK</div>
-          <h1 className="view-title">Feedback &amp; Issue Tracker</h1>
-          <p className="view-desc">Submit bug reports, feature requests, and data accuracy concerns. All submissions are logged and tracked.</p>
-        </div>
-        <span className="badge nb-pink">ACTIVE</span>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 14 // USER FEEDBACK"
+        title="Feedback & Issue Tracker"
+        subtitle="Bug Reports, Feature Requests, and Data Accuracy"
+        description="Submit bug reports, feature requests, and data accuracy concerns. All submissions are logged and tracked."
+        badge="ACTIVE"
+        badgeColor="emerald"
+      />
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
         {/* Submission Form */}

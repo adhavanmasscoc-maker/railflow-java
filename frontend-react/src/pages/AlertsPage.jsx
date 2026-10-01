@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PageHeader from '../components/PageHeader';
 
 const INITIAL_ALERTS = [
   { id: 1, type: 'CRITICAL', time: '14:23:45', title: 'Signal Failure at Platform 3 (MAS)', detail: 'Expect 15m delay for Coromandel Express (12842). Maintenance crew dispatched. ETA restore: 14:40 IST.', source: 'Signal Controller NX-3' },
@@ -44,14 +45,14 @@ export default function AlertsPage() {
 
   return (
     <section className="page-view active" id="page-alerts">
-      <div className="view-header" style={{ marginBottom: '24px' }}>
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 15</span> <span className="slash">//</span> SYSTEM ALERTS</div>
-          <h1 className="view-title">Real-Time Event Stream</h1>
-          <p className="view-desc">Live operational alerts, signal notifications, platform conflicts, and system health events.</p>
-        </div>
-        <span className="badge nb-red">REAL-TIME</span>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 15 // SYSTEM ALERTS"
+        title="Real-Time Event Stream"
+        subtitle="Live Operational Alerts — Signal & Platform Events"
+        description="Live operational alerts, signal notifications, platform conflicts, and system health events."
+        badge="REAL-TIME"
+        badgeColor="crimson"
+      />
 
       {/* Filter Tabs */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PageHeader from '../components/PageHeader';
 
 const TABLES = [
   { name: 'stations', rows: 8989, cols: 'code, name, city, zone, lat, lon, division, platforms', icon: '🚉' },
@@ -39,14 +40,14 @@ export default function DatabasePage() {
 
   return (
     <section className="page-view active" id="page-database">
-      <div className="view-header" style={{ marginBottom: '24px' }}>
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 12</span> <span className="slash">//</span> DATABASE EXPLORER</div>
-          <h1 className="view-title">SQLite WAL Database Inspector</h1>
-          <p className="view-desc">Direct schema browser, table statistics, and query interface for the railway.db (JDBC + PreparedStatements).</p>
-        </div>
-        <span className="badge badge-real">JDBC SQLite</span>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 12 // DATABASE EXPLORER"
+        title="SQLite WAL Database Inspector"
+        subtitle="JDBC PreparedStatements — railway.db Schema Browser"
+        description="Direct schema browser, table statistics, and query interface for the railway.db (JDBC + PreparedStatements)."
+        badge="JDBC SQLite"
+        badgeColor="emerald"
+      />
 
       {/* Schema Overview */}
       <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '12px' }}>Schema Overview — {TABLES.length} Tables</div>

@@ -72,8 +72,6 @@ backend/database/*.db-shm
 # Scratch and internal agent artifacts
 scratch/
 .gemini/
-deploy/
-git/
 backend/node_modules/
 
 # Redundant duplicate train JSON mirrors & massive route catalog

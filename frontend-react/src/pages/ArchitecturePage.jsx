@@ -1,14 +1,16 @@
+import PageHeader from '../components/PageHeader';
+
 export default function ArchitecturePage() {
   return (
     <section className="page-view active" id="page-architecture">
-      <div className="view-header" style={{ marginBottom: '24px' }}>
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 09</span> <span className="slash">//</span> SYSTEM ARCHITECTURE</div>
-          <h1 className="view-title">Full-Stack Dataflow &amp; Engineering Blueprint</h1>
-          <p className="view-desc">Complete architecture from CSV/JSON/PDF ingestion through JDBC PreparedStatements, SQLite WAL, Java Services, Node.js Proxy, to React SPA.</p>
-        </div>
-        <span className="badge badge-real">JAVA 21+ JDBC</span>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 09 // SYSTEM ARCHITECTURE"
+        title="Full-Stack Dataflow & Engineering Blueprint"
+        subtitle="Java 21+ JDBC — CSV/JSON/PDF to React SPA"
+        description="Complete architecture from CSV/JSON/PDF ingestion through JDBC PreparedStatements, SQLite WAL, Java Services, Node.js Proxy, to React SPA."
+        badge="JAVA 21+ JDBC"
+        badgeColor="emerald"
+      />
 
       {/* Data Flow Pipeline */}
       <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '12px' }}>End-to-End Dataflow Pipeline</div>

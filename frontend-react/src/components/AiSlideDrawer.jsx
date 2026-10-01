@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { api } from '../services/api';
+import { askRailFlowAi } from '../services/api';
 import audioEngine from '../services/audioEngine';
 
 const PROMPT_CHIPS = [
@@ -47,34 +47,26 @@ export default function AiSlideDrawer({ isOpen, onClose }) {
 
   const sendMessage = async (text) => {
     if (!text.trim() || loading) return;
-    audioEngine.init();
-    audioEngine.playBeep();
+    audioEngine.init?.();
+    audioEngine.playBeep?.();
 
     const userMsg = { sender: 'user', text: text.trim(), timestamp: new Date().toISOString() };
+
+    // 1. Render user message IMMEDIATELY — no waiting for AI
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
     setLoading(true);
 
     try {
-      const data = await api.askAi(text.trim());
-      audioEngine.playChime();
+      // 2. askRailFlowAi already handles timeout + fallback — it NEVER throws
+      const reply = await askRailFlowAi(text.trim());
+      audioEngine.playChime?.();
       setMessages((prev) => [
         ...prev,
-        { sender: 'ai', text: data.response || data.answer || JSON.stringify(data), timestamp: new Date().toISOString() },
+        { sender: 'ai', text: reply, timestamp: new Date().toISOString() },
       ]);
-    } catch {
-      // Offline mock fallback
-      const mockResponses = {
-        'check delayed trains': '🚆 Currently tracking 5,208 scheduled services. 12 trains showing delays > 15 min on the Northern corridor (NDLS-CNB segment). Top delayed: Rajdhani Express (12302) — 23 min late at Kanpur Central.',
-        'platform conflict analysis': '⚠️ Platform 3 at MAS has a scheduling overlap between Train 12622 (Tamil Nadu Express, ETA 07:15) and Train 12634 (Vaigai Express, ETD 07:10). Recommend reassigning 12634 to Platform 5.',
-        'optimize corridor': '📊 Golden Quadrilateral trunk analysis: NDLS-MAS corridor operating at 87% capacity. Bottleneck detected at Vijayawada Jn (BZA) — 4 trains queued. Suggest staggering departures by 12 min intervals.',
-        'draft passenger alert': '📢 Draft Alert: "Attention passengers on Platform 4. Train 12622 Tamil Nadu Express to New Delhi is arriving shortly. Please stand behind the yellow line. This train will depart at 22:30 hrs from Platform 4."',
-      };
-      const key = text.trim().toLowerCase();
-      const fallback = mockResponses[key] || `🤖 [Offline Mode] I received your query: "${text}". The live AI endpoint is currently unreachable. In production, this connects to the Gemini API via /api/ask-railflow-ai. The system maintains 8,989 stations and 5,208 trains in the local SQLite database for offline queries.`;
-      audioEngine.playChime();
-      setMessages((prev) => [...prev, { sender: 'ai', text: fallback, timestamp: new Date().toISOString() }]);
     } finally {
+      // 3. Guaranteed state reset — loading always clears
       setLoading(false);
     }
   };
@@ -130,7 +122,7 @@ export default function AiSlideDrawer({ isOpen, onClose }) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '11px', color: 'var(--color-success, #10B981)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <span className="pulse-dot"></span> Online
+              <span className="pulse-dot"></span> {loading ? 'Thinking…' : 'Online'}
             </span>
             <button onClick={onClose} className="drawer-close" style={{
               background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '20px', cursor: 'pointer',
@@ -164,9 +156,13 @@ export default function AiSlideDrawer({ isOpen, onClose }) {
               </div>
             </div>
           ))}
+
+          {/* Typing indicator — max shown during AI call */}
           {loading && (
-            <div style={{ alignSelf: 'flex-start', padding: '10px 14px', background: 'var(--bg-app)', borderRadius: '8px', border: '1px solid var(--border-subtle)', fontSize: '13px', color: 'var(--text-muted)' }}>
-              <span style={{ animation: 'pulse-glow 1s ease-in-out infinite' }}>Thinking...</span>
+            <div style={{ alignSelf: 'flex-start', padding: '10px 14px', background: 'var(--bg-app)', borderRadius: '8px', border: '1px solid var(--border-subtle)', fontSize: '13px', color: 'var(--text-muted)', display: 'flex', gap: '4px', alignItems: 'center' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', animation: 'pulse-glow 0.8s ease-in-out infinite' }} />
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', animation: 'pulse-glow 0.8s ease-in-out 0.2s infinite' }} />
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', animation: 'pulse-glow 0.8s ease-in-out 0.4s infinite' }} />
             </div>
           )}
           <div ref={bottomRef} />
@@ -175,11 +171,18 @@ export default function AiSlideDrawer({ isOpen, onClose }) {
         {/* Quick prompt chips */}
         <div style={{ padding: '8px 16px', display: 'flex', flexWrap: 'wrap', gap: '6px', borderTop: '1px solid var(--border-subtle)' }}>
           {PROMPT_CHIPS.map((chip) => (
-            <button key={chip} onClick={() => sendMessage(chip)} className="ai-chip" style={{
-              fontSize: '11px', background: 'var(--bg-app)', border: '1px solid var(--border-subtle)',
-              padding: '4px 10px', borderRadius: '4px', cursor: 'pointer', color: 'var(--text-secondary)',
-              transition: 'all 0.15s ease',
-            }}>
+            <button
+              key={chip}
+              onClick={() => sendMessage(chip)}
+              disabled={loading}
+              className="ai-chip"
+              style={{
+                fontSize: '11px', background: 'var(--bg-app)', border: '1px solid var(--border-subtle)',
+                padding: '4px 10px', borderRadius: '4px', cursor: loading ? 'not-allowed' : 'pointer',
+                color: 'var(--text-secondary)', transition: 'all 0.15s ease',
+                opacity: loading ? 0.5 : 1,
+              }}
+            >
               {chip}
             </button>
           ))}
@@ -195,7 +198,7 @@ export default function AiSlideDrawer({ isOpen, onClose }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask RailFlow AI anything..."
+            placeholder="Ask RailFlow AI anything…"
             style={{
               flex: 1, background: 'var(--bg-app)', border: '1px solid var(--border-subtle)',
               padding: '10px 14px', borderRadius: '4px', color: 'var(--text-primary)',
@@ -212,7 +215,7 @@ export default function AiSlideDrawer({ isOpen, onClose }) {
               opacity: loading || !input.trim() ? 0.5 : 1,
             }}
           >
-            Send
+            {loading ? '…' : 'Send'}
           </button>
         </div>
       </aside>

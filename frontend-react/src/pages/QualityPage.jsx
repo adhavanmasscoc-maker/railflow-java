@@ -20,22 +20,24 @@ const AUDIT_CHECKS = [
   { check: 'PDF Extraction Accuracy', status: 'PASS', detail: '228/228 special trains extracted with valid structure' },
 ];
 
+import PageHeader from '../components/PageHeader';
+
 export default function QualityPage() {
   const overallScore = (QUALITY_METRICS.reduce((s, m) => s + m.score, 0) / QUALITY_METRICS.length).toFixed(2);
 
   return (
     <section className="page-view active" id="page-quality">
-      <div className="view-header" style={{ marginBottom: '24px' }}>
-        <div className="view-title-group">
-          <div className="eyebrow"><span className="sys-num">SYSTEM 13</span> <span className="slash">//</span> DATA QUALITY</div>
-          <h1 className="view-title">Automated Data Quality Audit</h1>
-          <p className="view-desc">Comprehensive integrity scoring across all ingested data sources, referential checks, and anomaly detection.</p>
-        </div>
-        <div>
-          <span className="badge badge-real">DERIVED</span>
-          <span className="badge nb-green" style={{ marginLeft: '8px' }}>SCORE: {overallScore}%</span>
-        </div>
-      </div>
+      <PageHeader
+        systemCode="SYSTEM 13 // DATA QUALITY"
+        title="Automated Data Quality Audit"
+        subtitle="Integrity Scoring — 8 Table Sources"
+        description="Comprehensive integrity scoring across all ingested data sources, referential checks, and anomaly detection."
+        badge="DERIVED"
+        badgeColor="amber"
+        extra={
+          <span className="badge badge-simulated" style={{ fontSize: '20px', fontFamily: 'var(--font-mono)', fontWeight: 800 }}>{overallScore}%</span>
+        }
+      />
 
       {/* Overall Score */}
       <div style={{ marginBottom: '24px', padding: '20px', background: 'var(--bg-panel)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
