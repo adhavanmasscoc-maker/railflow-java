@@ -40,6 +40,9 @@ Thumbs.db
 *.log
 *.tmp
 *.bak
+__pycache__/
+*.pyc
+*.pyo
 
 .vercel
 .env*

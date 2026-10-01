@@ -2,7 +2,8 @@
 
 > **Root Path**: `D:\CS-ML-JAVA\JAVA\RailwaySystem`  
 > **Project**: RailFlow — Modern Railway Management, Crowd Optimization & Simulation Platform  
-> **Generated**: September 18, 2026  
+> **Updated & Verified**: October 2026  
+> **Build Status**: 49/49 Automated Tests Passing (35 Java JUnit 5 + 14 Node.js Suites)
 
 ---
 
@@ -28,10 +29,11 @@
 | Metric | Details |
 | :--- | :--- |
 | **Root Location** | `D:\CS-ML-JAVA\JAVA\RailwaySystem` |
-| **Primary Technology** | Java 17+ (Spring Boot / Standalone Architecture) |
+| **Primary Technology** | Java 21 LTS (Spring Boot / Standalone Architecture) |
 | **Secondary Technology** | Node.js (Express), Python (Graph & Optimization), Vanilla JS / CSS |
-| **Database Engines** | SQLite (`railway.db`), JSON Master Catalogs, In-Memory Graph Model |
-| **Primary Top-Level Folders** | 22 directories |
+| **Database Engines** | SQLite 3 (`railway.db`, 102.69 MB WAL), JSON Catalogs, In-Memory Graph |
+| **Automated Test Coverage** | 49 Passing Automated Tests (35 Java JUnit 5 + 14 Node.js Tests) |
+| **Primary Top-Level Folders** | 22 directories (Root, `deploy/` production package, `git/` upstream mirror) |
 
 ---
 
@@ -439,10 +441,11 @@ Edge-ready serverless function handlers:
 - **`api/ask-railflow-ai.js`**: AI railway assistant serverless proxy.
 - **`api/atlas-proxy.js`**: Geospatial and remote database proxy.
 
-### 8. Deployment & Version Control
-- **`deploy/`**: Clean production-ready mirror optimized for single-command Vercel / serverless deployments.
-- **`git/`**: Synced repository directory with isolated module mirrors.
-- `.vercel/` & `.git/`: Platform deployment state and revision control stores.
+### 8. Deployment & Version Control (`deploy/`, `git/`, `.vercel/`, `.git/`)
+RailFlow employs an enterprise multi-target synchronization architecture:
+- **`deploy/`**: Clean production-ready package specifically configured for single-command Vercel / serverless deployments. Includes production-ready HTML entrypoints (`index.html`, `landing.html`, `templatemo-622-clearwave.html`), high-contrast CSS sheets (`css/`, `frontend/css/`), reactive client engines (`js/`, `frontend/js/`), serverless handlers (`api/`), image assets (`images/`), static dataset catalogs (`DATA/`), and deployment documentation.
+- **`git/`**: Synchronized project mirror matching the upstream GitHub repository (`adhavanmasscoc-maker/railflow-java`). Contains complete codebase mirrors (`src/`, `backend/`, `scripts/`, `docs/`, `css/`, `js/`, `frontend/`, `api/`) ensuring bidirectional fidelity between local workspace and remote tracking branches.
+- **`.vercel/` & `.git/`**: Platform deployment state and revision control stores maintaining continuous deployment integration.
 
 ### 9. IDE & Build Outputs
 - **`target/`**: Maven compilation output directory containing compiled `.class` files, generated sources, and surefire test reports.
@@ -450,4 +453,4 @@ Edge-ready serverless function handlers:
 - **`.vscode/` & `.gemini/`**: Project settings and IDE runtime environment definitions.
 
 ---
-*File created automatically for **RailFlow System**.*
+*File updated & synchronized for **RailFlow System**.*

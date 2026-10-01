@@ -34,9 +34,9 @@ public class DatabaseExplorerController {
         // Query real row counts for all system tables
         List<Map<String, Object>> tables = new ArrayList<>();
         String[] tableNames = {
-            "stations", "trains", "train_routes", "corridors",
-            "station_connections", "search_aliases", "platforms",
-            "crowd_telemetry", "feedback", "pnr_records", "railway_records"
+            "stations", "trains", "train_stops", "train_running_days",
+            "rail_edges", "station_aliases", "special_trains", "data_sources",
+            "import_runs", "feedback", "pnr_records"
         };
 
         long totalRows = 0;
@@ -52,7 +52,7 @@ public class DatabaseExplorerController {
                         "status", "ONLINE"
                 ));
             } catch (Exception e) {
-                tables.add(Map.of("name", tbl, "rows", 0, "type", "TABLE", "status", "ERROR"));
+                tables.add(Map.of("name", tbl, "rows", 0, "type", "TABLE", "status", "OFFLINE"));
             }
         }
 
@@ -61,7 +61,10 @@ public class DatabaseExplorerController {
             SELECT name, tbl_name FROM sqlite_master WHERE type = 'index' AND name NOT LIKE 'sqlite_%'
         """);
 
-        File dbFile = new File("data/database/railflow.db");
+        File dbFile = new File("database/railway.db");
+        if (!dbFile.exists()) {
+            dbFile = new File("data/database/railflow.db");
+        }
         long dbSizeBytes = dbFile.exists() ? dbFile.length() : 0L;
 
         response.put("databaseEngine", "SQLite 3 via Xerial JDBC");

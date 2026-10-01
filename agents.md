@@ -5,6 +5,11 @@
 - Never edit backend Java files (`src/main/java`) when tasked with frontend UI changes.
 - Always use standard system fonts and pure Tailwind/CSS variables. Do not generate arbitrary hex inline styles.
 
-## UI Design Standards
-- Radius: Always use 6px (`rounded-md`) for buttons/inputs, 10px (`rounded-xl`) for panels. Avoid `rounded-full`.
-- Theme: Command-center dark mode (`#070a12` canvas, `#0e1424` cards, `#38bdf8` light blue accents).
+## Multi-Target Synchronization Directives
+- **Mirror Consistency**: Any updates to root `css/`, `js/`, `frontend/`, `index.html`, or `api/` must be synchronized into `deploy/` and `git/` to preserve deployment fidelity.
+- **Asset Completeness**: Ensure `deploy/` contains all runtime dependencies (`images/`, `landing.html`, `.vercelignore`, and documentation).
+- **Clean Git Mirrors**: Do not commit Python bytecode (`__pycache__/`, `*.pyc`), SQLite journals (`*.db-wal`), or recursive mirror clones (`git/git/`).
+
+## Quality Assurance & Verification
+- **Code Zero-Defect Rule**: Before declaring work complete, verify all tests pass (`./mvnw.cmd test` for Java 35/35, `node --test tests/*.test.js` for Node.js 14/14). If `code == error`, return and fix before proceeding.
+- **Documentation Currency**: Ensure all `.md` files (`README.md`, `dir.md`, `project_build_history.md`, `pbl.md`, `spec.md`) accurately reflect verified metrics and active architecture.

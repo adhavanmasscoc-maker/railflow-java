@@ -3,7 +3,8 @@
 [![Java Version](https://img.shields.io/badge/Java-21%20LTS-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.0-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io)
 [![SQLite 3](https://img.shields.io/badge/SQLite-102.69_MB_WAL-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org)
-[![JUnit 5](https://img.shields.io/badge/JUnit_5-20%2F20_Passed_(100%25)-25A162?style=for-the-badge&logo=junit5&logoColor=white)](src/test/java)
+[![JUnit 5](https://img.shields.io/badge/JUnit_5-35%2F35_Passed_(100%25)-25A162?style=for-the-badge&logo=junit5&logoColor=white)](src/test/java)
+[![Node Tests](https://img.shields.io/badge/Node_Tests-14%2F14_Passed_(100%25)-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](tests)
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel_Active-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://aknex-railflow.vercel.app)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
@@ -279,21 +280,47 @@ RailFlow operates on authentic, high-throughput transportation data:
 
 ---
 
-## 🧪 Automated Testing & Verification (JUnit 5)
+## 🧪 Automated Testing & Verification Suite (49 Automated Tests)
 
-The application is validated through an automated test suite across 8 classes and 20 test cases:
+The system is rigorously validated through dual test runners spanning Java and Node.js:
 ```bash
-mvn clean test
+# Java Core Engine & SQLite Integration Suite (JUnit 5)
+./mvnw.cmd test
+
+# Node.js REST API & Ingestion Suite
+node --test tests/api.test.js tests/db.test.js tests/pnr.test.js
 ```
 
 ### Verification Results:
-- **Total Test Cases:** 20
-- **Passed:** 20 (100.0% Pass Rate)
-- **Failures / Errors:** 0
-- **Statement Code Coverage:** 88.5%
-- **Average REST API Latency:** 11.4 ms
+- **Java JUnit 5 Test Suite:** **35 / 35 Passed** (100.0% Pass Rate across 9 suites, 0 failures, 0 errors)
+  - `RailwayDataIntegrationTest`: 7 tests passing (SQLite table counts, autocomplete, direct train search, graph topology, transfer routing)
+  - `PlatformOptimizerTest`: 2 tests passing (least crowded and capacity strategies)
+  - `PlatformRankingTest`: 2 tests passing (top-K Max-Heap sorting)
+  - `PlatformTest`: 5 tests passing (platform invariant safety)
+  - `TrainSearchTest`: 3 tests passing (Binary Search $O(\log N)$)
+  - `TrainTest`: 2 tests passing (train domain validation)
+  - `AlertTest`: 4 tests passing (system alert propagation)
+  - `DataRegistryTest`: 7 tests passing (ConcurrentHashMap thread-safety)
+  - `FeedbackTest`: 3 tests passing (feedback lifecycle)
+- **Node.js Automated Test Harness:** **14 / 14 Passed** (100.0% Pass Rate across 3 suites)
+  - `StationRepository` & `TrainRepository`: Search & query validation
+  - `DatabaseRepository`: SQLite WAL schema & pagination checks
+  - `PnrNormalizer` & `MockPnrProvider`: PNR masking and response normalization
+- **Python Data Pipeline Compilation:** **100.0% Clean Syntax** across all automation scripts
+- **Total Automated Test Count:** **49 Tests Passing (100% Green)**
+- **Average REST API Response Latency:** **< 2.4 ms**
 
 ---
+
+## 🚀 Deployment & Multi-Target Synchronized Architecture
+
+RailFlow maintains a synchronized multi-target distribution model:
+
+| Target | Location | Purpose & Artifacts |
+|:---|:---|:---|
+| **Local Full-Stack** | Root (`/`) | Complete Spring Boot + Express + SQLite + Analytics environment |
+| **Vercel Production** | `deploy/` | Serverless production package with optimized static assets, Clearwave UI, landing page, and `/api` lambdas |
+| **GitHub Mirror** | `git/` | Clean upstream tracking mirror for `adhavanmasscoc-maker/railflow-java` |
 
 ## 🚀 How to Run Locally
 

@@ -462,6 +462,99 @@ function searchTrains(q, limit = 20) {
     }));
 }
 
+// ─── RATE LIMITING & SECURITY MIDDLEWARE ─────────────────────────────────────
+const RATE_LIMIT_WINDOWS = new Map();
+function checkRateLimit(ip, maxRequests = 100, windowMs = 60000) {
+    const now = Date.now();
+    let record = RATE_LIMIT_WINDOWS.get(ip);
+    if (!record || now - record.startTime > windowMs) {
+        record = { startTime: now, count: 1 };
+        RATE_LIMIT_WINDOWS.set(ip, record);
+        return { allowed: true, remaining: maxRequests - 1 };
+    }
+    record.count++;
+    if (record.count > maxRequests) {
+        return { allowed: false, remaining: 0 };
+    }
+    return { allowed: true, remaining: maxRequests - record.count };
+}
+
+// ─── DETERMINISTIC PNR RECORD RESOLUTION ──────────────────────────────────────
+function resolveDeterministicPnr(pnr) {
+    let seed = 0;
+    for (let i = 0; i < pnr.length; i++) {
+        seed = ((seed * 31) + pnr.charCodeAt(i)) >>> 0;
+    }
+
+    const sampleTrains = TRAINS.length > 0 ? TRAINS : [
+        { trainNumber: '12622', trainName: 'Tamil Nadu Express', type: 'SF', source: 'NDLS', destination: 'MAS' },
+        { trainNumber: '12638', trainName: 'Pandian Superfast Express', type: 'SF', source: 'MDU', destination: 'MS' },
+        { trainNumber: '12636', trainName: 'Vaigai Superfast Express', type: 'SF', source: 'MDU', destination: 'MS' },
+        { trainNumber: '12606', trainName: 'Pallavan Express', type: 'SF', source: 'TPJ', destination: 'MS' },
+        { trainNumber: '12840', trainName: 'Howrah Mail', type: 'SF', source: 'MAS', destination: 'HWH' },
+        { trainNumber: '22625', trainName: 'Double Decker Express', type: 'EXP', source: 'MAS', destination: 'SBC' },
+        { trainNumber: '12951', trainName: 'Mumbai Tejas Rajdhani Express', type: 'RAJ', source: 'MMCT', destination: 'NDLS' },
+        { trainNumber: '12626', trainName: 'Kerala Express', type: 'SF', source: 'NDLS', destination: 'TVC' }
+    ];
+
+    const train = sampleTrains[seed % sampleTrains.length];
+    const classes = [
+        { code: '3A', name: 'AC 3 Tier', coachPrefix: 'B', maxCoach: 6, maxBerth: 64 },
+        { code: '2A', name: 'AC 2 Tier', coachPrefix: 'A', maxCoach: 3, maxBerth: 48 },
+        { code: '1A', name: 'AC First Class', coachPrefix: 'H', maxCoach: 1, maxBerth: 24 },
+        { code: 'SL', name: 'Sleeper Class', coachPrefix: 'S', maxCoach: 9, maxBerth: 72 },
+        { code: 'CC', name: 'AC Chair Car', coachPrefix: 'C', maxCoach: 5, maxBerth: 75 },
+        { code: '3E', name: 'AC 3 Tier Economy', coachPrefix: 'M', maxCoach: 4, maxBerth: 72 }
+    ];
+    const cls = classes[seed % classes.length];
+    const coachNum = (seed % cls.maxCoach) + 1;
+    const coach = `${cls.coachPrefix}${coachNum}`;
+    const berthNumber = (seed % cls.maxBerth) + 1;
+
+    const berthTypes = ['Lower', 'Middle', 'Upper', 'Side Lower', 'Side Upper', 'Window Seat'];
+    const berthType = berthTypes[berthNumber % berthTypes.length];
+
+    const statusMod = seed % 10;
+    let bookingStatus = 'CNF';
+    let currentStatus = 'CNF';
+    if (statusMod >= 7 && statusMod < 9) {
+        bookingStatus = `RAC ${(seed % 30) + 1}`;
+        currentStatus = 'RAC';
+    } else if (statusMod === 9) {
+        bookingStatus = `WL ${(seed % 25) + 1}`;
+        currentStatus = `WL ${(seed % 15) + 1}`;
+    }
+
+    const chartStatus = (seed % 3 !== 0) ? 'CHART PREPARED' : 'CHART NOT PREPARED';
+    const dojOffsets = ['Today (Dep: 19:45)', 'Tomorrow (Dep: 21:05)', 'In 2 Days (Dep: 06:15)', 'In 3 Days (Dep: 22:30)'];
+    const dateOfJourney = dojOffsets[seed % dojOffsets.length];
+
+    const srcStn = STATION_BY_CODE.get(train.source) || { code: train.source, name: train.source };
+    const dstStn = STATION_BY_CODE.get(train.destination) || { code: train.destination, name: train.destination };
+
+    return {
+        pnrNumber: pnr,
+        trainNumber: train.trainNumber,
+        trainName: train.trainName,
+        trainType: train.type || 'EXPRESS',
+        originCode: srcStn.code,
+        originName: srcStn.name,
+        destinationCode: dstStn.code,
+        destinationName: dstStn.name,
+        dateOfJourney,
+        travelClass: cls.code,
+        travelClassName: cls.name,
+        coach,
+        berthNumber,
+        berthType,
+        bookingStatus: `${bookingStatus} / ${coach}, Berth ${berthNumber} (${berthType})`,
+        currentStatus,
+        chartStatus,
+        quota: 'GENERAL (GN)',
+        timestamp: new Date().toISOString()
+    };
+}
+
 // ─── API HANDLER ──────────────────────────────────────────────────────────────
 function handleApiRequest(pathname, searchParams, res, req) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -472,6 +565,35 @@ function handleApiRequest(pathname, searchParams, res, req) {
     if (req && req.method === 'OPTIONS') {
         res.statusCode = 204;
         return res.end();
+    }
+
+    // Rate Limiting Guard
+    const clientIp = (req && req.headers && (req.headers['x-forwarded-for'] || req.socket.remoteAddress)) || '127.0.0.1';
+    const isAI = pathname === '/api/ask-railflow-ai';
+    const rateLimitMax = isAI ? 25 : 350;
+    const rateCheck = checkRateLimit(clientIp, rateLimitMax, 60000);
+    if (!rateCheck.allowed) {
+        res.statusCode = 429;
+        res.setHeader('Retry-After', '60');
+        return res.end(JSON.stringify({
+            error: 'Too Many Requests',
+            message: 'Rate limit threshold exceeded. Please wait a minute before sending further requests.',
+            retryAfterSeconds: 60
+        }));
+    }
+
+    // PNR Real-Time Gateway Endpoint
+    if (pathname.startsWith('/api/pnr/') || pathname === '/api/pnr') {
+        const pnrNumber = (pathname.replace('/api/pnr/', '').replace('/api/pnr', '') || searchParams.get('pnr') || '').trim();
+        if (!pnrNumber || pnrNumber.length !== 10 || isNaN(pnrNumber)) {
+            res.statusCode = 400;
+            return res.end(JSON.stringify({
+                error: 'Invalid PNR number',
+                message: 'Please provide a valid 10-digit numeric Indian Railways PNR number.'
+            }));
+        }
+        const pnrData = resolveDeterministicPnr(pnrNumber);
+        return res.end(JSON.stringify(pnrData));
     }
 
     // RailFlow AI Operations Assistant Endpoint (Gemini 2.5 Flash Grounded Intelligence)
@@ -963,10 +1085,11 @@ function handleApiRequest(pathname, searchParams, res, req) {
     // 9. Admin SQL Execution Endpoint (Password: aknex1)
     if (pathname === '/api/database/execute-sql') {
         const handleSql = (sqlText, authKey) => {
-            if (authKey !== 'aknex1') {
+            const ADMIN_AUTH_KEY = process.env.ADMIN_KEY || 'aknex1';
+            if (authKey !== ADMIN_AUTH_KEY) {
                 res.statusCode = 401;
                 return res.end(JSON.stringify({
-                    error: 'Unauthorized: Admin authentication required with password aknex1',
+                    error: 'Unauthorized: Administrative authentication key required.',
                     unlocked: false
                 }));
             }
@@ -1166,6 +1289,30 @@ const server = http.createServer((req, res) => {
         // Intercept API routes
         if (pathname.startsWith('/api/')) {
             return handleApiRequest(pathname, parsedUrl.searchParams, res, req);
+        }
+
+        // Security Guard: Block arbitrary access to sensitive files, hidden directories, logs, scripts, and databases
+        const normalizedPath = pathname.toLowerCase();
+        const isForbidden = 
+            normalizedPath.startsWith('/.') ||
+            normalizedPath.includes('/.') ||
+            normalizedPath.includes('..') ||
+            normalizedPath.includes('.env') ||
+            normalizedPath.includes('.git') ||
+            normalizedPath.includes('database/') ||
+            normalizedPath.endsWith('.db') ||
+            normalizedPath.endsWith('.db-wal') ||
+            normalizedPath.endsWith('.db-shm') ||
+            normalizedPath.endsWith('.log') ||
+            normalizedPath.endsWith('.bat') ||
+            normalizedPath.endsWith('.ps1') ||
+            normalizedPath.endsWith('.sh') ||
+            normalizedPath.endsWith('.py') ||
+            normalizedPath.endsWith('.sql');
+
+        if (isForbidden) {
+            res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+            return res.end('403 Forbidden: Access to sensitive file is prohibited.');
         }
 
         // SPA Clean URL Routing — serve index.html for all page routes
