@@ -157,11 +157,17 @@ const TIER_COLORS = {
 export default function NetworkTopologyGraph() {
   const [selectedZone, setSelectedZone] = useState('ALL');
   const [selectedStation, setSelectedStation] = useState(null);
-  // Start at 1.0x so the full SVG viewBox fits neatly in the container
+  // Zoom 1.0 = full India map visible
   const [zoom, setZoom] = useState(1.0);
+  // Pan offset in viewBox-space pixels
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const dragStart = useRef({ x: 0, y: 0 });
+
+  // SVG viewBox centre – used as zoom pivot
+  const SVG_W = 1100, SVG_H = 980;
+  const CX = SVG_W / 2; // 550
+  const CY = SVG_H / 2; // 490
 
   // Map stations to projected SVG coordinates
   const hubsWithCoords = useMemo(() => {
@@ -181,7 +187,7 @@ export default function NetworkTopologyGraph() {
     return hubsWithCoords.filter(h => h.zone === selectedZone || h.tier === 'trunk');
   }, [hubsWithCoords, selectedZone]);
 
-  // Mouse pan handlers
+  // Mouse pan handlers (pan in screen-pixels, converted to viewBox space)
   const handleMouseDown = (e) => {
     setIsDragging(true);
     dragStart.current = { x: e.clientX - pan.x, y: e.clientY - pan.y };
@@ -195,23 +201,28 @@ export default function NetworkTopologyGraph() {
     });
   };
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
+  const handleMouseUp = () => setIsDragging(false);
 
+  // Zoom centered on SVG mid-point so map never disappears off-screen
   const handleWheel = (e) => {
     e.preventDefault();
-    const factor = e.deltaY < 0 ? 1.15 : 0.85;
-    setZoom(prev => Math.min(Math.max(prev * factor, 0.5), 3.0));
+    const factor = e.deltaY < 0 ? 1.15 : 0.87;
+    setZoom(prev => Math.min(Math.max(prev * factor, 0.4), 4.0));
   };
 
-  const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.2, 3.0));
-  const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.2, 0.4));
-  const handleReset = () => {
-    setZoom(1.0);
-    setPan({ x: 0, y: 0 });
-    setSelectedStation(null);
-  };
+  const handleZoomIn  = () => setZoom(prev => Math.min(parseFloat((prev + 0.2).toFixed(1)), 4.0));
+  const handleZoomOut = () => setZoom(prev => Math.max(parseFloat((prev - 0.2).toFixed(1)), 0.4));
+  const handleReset   = () => { setZoom(1.0); setPan({ x: 0, y: 0 }); setSelectedStation(null); };
+
+  /*
+   * Transform applied to the <g> group:
+   *   translate(-CX*(zoom-1) + pan.x,  -CY*(zoom-1) + pan.y)  scale(zoom)
+   *
+   * At zoom=1: translate(0,0) scale(1)  → full map visible
+   * At zoom=2: translate(-550,-490) scale(2) → zooms into centre of India
+   * Pan offset shifts the visible window after scaling.
+   */
+  const gTransform = `translate(${-CX * (zoom - 1) + pan.x},${-CY * (zoom - 1) + pan.y}) scale(${zoom})`;
 
   return (
     <div style={{ position: 'relative', width: '100%', minHeight: '640px', height: 'calc(100vh - 220px)', background: '#070C18', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border-subtle)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
@@ -284,7 +295,7 @@ export default function NetworkTopologyGraph() {
             </filter>
           </defs>
 
-          <g transform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
+          <g transform={gTransform}>
             {/* 1. India Silhouette Outline */}
             <path
               d="M 300 65 L 365 80 L 429 127 L 429 189 L 478 220 L 735 312 L 1009 297 L 977 359 L 896 405 L 864 451 L 767 482 L 687 498 L 590 606 L 468 683 L 471 760 L 455 853 L 436 878 L 383 913 L 362 900 L 323 807 L 262 683 L 230 575 L 220 513 L 139 529 L 107 473 L 101 420 L 172 328 L 236 235 L 294 173 L 268 96 L 300 65 Z"

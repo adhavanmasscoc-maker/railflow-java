@@ -290,34 +290,30 @@ export default function JourneyPage() {
         <div className="space-y-6">
           {/* Live Executed SQL Query Inspector */}
           {routeResult.sqlTelemetry && (
-            <div className="rf-card p-5 border-emerald-500/30 bg-slate-950/80 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-24 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3 border-b border-slate-800 pb-3">
+            <div className="rf-card border-emerald-500/20 bg-slate-950/90 overflow-hidden">
+              {/* Header bar */}
+              <div className="flex flex-wrap justify-between items-center gap-3 px-5 py-3 border-b border-slate-800/80 bg-slate-900/60">
                 <div className="flex items-center gap-2.5">
-                  <span className="px-2.5 py-1 rounded text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    SQLITE 3.50.3 WAL QUERY EXECUTION
-                  </span>
-                  <span className="text-xs text-slate-400 font-mono hidden md:inline">
-                    Corridor Relational Join Query Mapped to National Rail System
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
+                    SQLite 3.50.3 WAL · Executed Query
                   </span>
                 </div>
-                <div className="flex items-center gap-3 text-xs font-mono text-slate-400">
-                  <span>Latency: <strong className="text-cyan-400 font-bold">{routeResult.sqlTelemetry.durationMs || '4.03ms'}</strong></span>
-                  <span className="text-slate-600">•</span>
-                  <span>Matched Trains: <strong className="text-emerald-400 font-bold">{routeResult.directTrains?.length || 0}</strong></span>
-                  <span className="text-slate-600">•</span>
-                  <span className="text-slate-300">railway.db (416,637 Halts)</span>
+                <div className="flex items-center gap-4 text-xs font-mono text-slate-400">
+                  <span>Latency: <strong className="text-cyan-400">{routeResult.sqlTelemetry.durationMs || '4.03ms'}</strong></span>
+                  <span>Rows: <strong className="text-emerald-400">{routeResult.directTrains?.length || 0}</strong></span>
+                  <span className="text-slate-500 hidden md:inline">railway.db (416,637 Halts)</span>
                 </div>
               </div>
-              <div className="bg-black/70 border border-slate-800/80 rounded-lg p-3.5 font-mono text-xs overflow-x-auto scrollbar-thin">
-                <div className="text-[11px] text-slate-500 font-bold uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                  <span>EXECUTED SQL QUERY ON train_stops & trains:</span>
-                  <span className="text-emerald-500/80 font-normal text-[10px]">Zero Client JS Mock • Real DB Join</span>
+              {/* SQL code */}
+              <div className="px-5 py-4">
+                <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2 flex justify-between">
+                  <span>Executed on train_stops JOIN trains</span>
+                  <span className="text-emerald-500/70">Zero Client JS Mock · Real DB Join</span>
                 </div>
-                <code className="text-cyan-300 whitespace-pre font-mono leading-relaxed block selection:bg-cyan-500/30">
-                  {routeResult.sqlTelemetry.query}
-                </code>
+                <pre className="bg-black/60 border border-slate-800 rounded-lg p-4 text-xs font-mono text-cyan-300 leading-relaxed overflow-x-auto whitespace-pre-wrap break-words">
+                  <code>{routeResult.sqlTelemetry.query}</code>
+                </pre>
               </div>
             </div>
           )}
