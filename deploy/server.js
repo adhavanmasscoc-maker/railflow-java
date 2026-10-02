@@ -772,6 +772,56 @@ function handleApiRequest(pathname, searchParams, res, req) {
         return res.end(JSON.stringify(pnrData));
     }
 
+    // High-Fidelity TTS Audio Proxy (Tamil, Hindi, English, Regional Indian PA)
+    if (pathname === '/api/tts') {
+        (async () => {
+            try {
+                const text = (searchParams.get('q') || searchParams.get('text') || '').trim();
+                let lang = (searchParams.get('tl') || searchParams.get('lang') || 'ta').trim().toLowerCase();
+                if (!text) {
+                    res.statusCode = 400;
+                    return res.end(JSON.stringify({ error: 'Missing text or q query parameter' }));
+                }
+                const langMap = {
+                    'ta-in': 'ta', 'ta': 'ta',
+                    'hi-in': 'hi', 'hi': 'hi',
+                    'en-in': 'en-IN', 'en': 'en',
+                    'te-in': 'te', 'te': 'te',
+                    'kn-in': 'kn', 'kn': 'kn',
+                    'ml-in': 'ml', 'ml': 'ml',
+                    'bn-in': 'bn', 'bn': 'bn',
+                    'mr-in': 'mr', 'mr': 'mr',
+                    'gu-in': 'gu', 'gu': 'gu'
+                };
+                const targetLang = langMap[lang] || lang.slice(0, 2);
+                const encodedQuery = encodeURIComponent(text.slice(0, 200));
+                const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${targetLang}&client=tw-ob&q=${encodedQuery}`;
+                const upstream = await fetch(ttsUrl, {
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                    }
+                });
+                if (!upstream.ok) {
+                    res.statusCode = upstream.status;
+                    return res.end(JSON.stringify({ error: `Upstream TTS error: ${upstream.status}` }));
+                }
+                const arrayBuffer = await upstream.arrayBuffer();
+                const buffer = Buffer.from(arrayBuffer);
+                res.writeHead(200, {
+                    'Content-Type': 'audio/mpeg',
+                    'Content-Length': buffer.length,
+                    'Access-Control-Allow-Origin': '*',
+                    'Cache-Control': 'public, max-age=86400'
+                });
+                return res.end(buffer);
+            } catch (err) {
+                res.statusCode = 500;
+                return res.end(JSON.stringify({ error: 'TTS Proxy error: ' + err.message }));
+            }
+        })();
+        return;
+    }
+
     // RailFlow AI Operations Assistant Endpoint (Gemini 2.5 Flash Grounded Intelligence)
     if (pathname === '/api/ask-railflow-ai') {
         if (req && req.method === 'POST') {
