@@ -28,7 +28,7 @@ const LANGUAGES = [
   { code: 'gu-IN', label: '9️⃣ Gujarati (ગુજરાતી - gu-IN)', short: 'Gujarati' },
 ];
 
-// 6 Pre-Configured Multi-Lingual Operational Scenarios
+// 6 Pre-Configured Multi-Lingual Operational Scenarios with Authentic Tamil Phonetics
 const SCENARIOS = [
   {
     id: 'arrival',
@@ -38,6 +38,7 @@ const SCENARIOS = [
     scripts: {
       en: 'Attention please. Train No. 12638 Pandian Superfast Express is arriving on Platform 1.',
       ta: 'வண்டி எண் 12638 பாண்டியன் அதிவிரைவு வண்டி நடைமேடை 1-ல் வந்து கொண்டிருக்கிறது.',
+      ta_phonetic: 'Vandi enn 12638 Pandiyan athiviraivu vandi, nadaimedai 1-il vandhu kondirukkiradhu.',
       hi: 'गाडी संख्या 12638 पाण्डियन सुपरफास्ट एक्सप्रेस प्लेटफार्म नंबर 1 पर आ रही है।'
     },
     translations: {
@@ -60,6 +61,7 @@ const SCENARIOS = [
     scripts: {
       en: 'Due to heavy congestion, Train No. 12636 Vaigai Express will now arrive on Platform 3 instead of Platform 1.',
       ta: 'கூட்ட நெரிசல் காரணமாக, வைகை அதிவிரைவு வண்டி நடைமேடை 3-ல் வரும்.',
+      ta_phonetic: 'Kootta nerisal kaaranamaaga, Vaigai athiviraivu vandi nadaimedai 3-il varum.',
       hi: 'अत्यधिक भीड़ के कारण, गाडी संख्या 12636 वैगई एक्सप्रेस प्लेटफार्म नंबर 3 पर आएगी।'
     },
     translations: {
@@ -82,6 +84,7 @@ const SCENARIOS = [
     scripts: {
       en: 'Emergency alert! Kavach automatic train protection has initiated braking supervision on Track 2. Stand behind yellow line.',
       ta: 'அவசர எச்சரிக்கை! தடம் 2-ல் கவச் பிரேக்கிங் இயக்கப்பட்டுள்ளது. மஞ்சள் எல்லைக்கோட்டிற்கு பின்னால் நிற்கவும்.',
+      ta_phonetic: 'Avasara echarikkai! Thadam 2-il Kavach braking iyakkappattulladhu. Manjal ellaikkottirku pinnaal nirkkavum.',
       hi: 'आपातकालीन चेतावनी! ट्रैक 2 पर कवच ब्रेकिंग सक्रिय है। पीली रेखा के पीछे रहें।'
     },
     translations: {
@@ -104,6 +107,7 @@ const SCENARIOS = [
     scripts: {
       en: 'Advisory: Foot Overbridge 2 is experiencing heavy pedestrian density. Please utilize Ramp 1 and North gates.',
       ta: 'நடைமேடை பாலம் 2-ல் அதிக கூட்ட நெரிசல் உள்ளது. பயணிகள் வடக்கு வழியைப் பயன்படுத்தவும்.',
+      ta_phonetic: 'Nadaimedai paalam 2-il adhiga kootta nerisal ulladhu. Payanigal vadakku vazhiyai payanpaduthavum.',
       hi: 'फुट ओवरब्रिज 2 पर अत्यधिक भीड़ है। कृपया उत्तरी निकास द्वार और रैंप 1 का उपयोग करें।'
     },
     translations: {
@@ -126,6 +130,7 @@ const SCENARIOS = [
     scripts: {
       en: 'Standby relief clone rake 02638 has been deployed from Golden Rock to accommodate waitlisted commuters.',
       ta: 'காத்திருப்போர் பட்டியல் பயணிகளுக்காக பொன்மலையிலிருந்து சிறப்பு மாற்று வண்டி 02638 இயக்கப்படுகிறது.',
+      ta_phonetic: 'Kaathiruppor pattiyal payanigalukkaaga Ponmalaiyilirundhu sirappu maatru vandi 02638 iyakkappadugiradhu.',
       hi: 'प्रतीक्षा सूची के यात्रियों के लिए विशेष क्लोन रेक 02638 रवाना की जा रही है।'
     },
     translations: {
@@ -134,7 +139,7 @@ const SCENARIOS = [
       'hi-IN': 'प्रतीक्षा सूची के यात्रियों के लिए विशेष क्लोन रेक 02638 रवाना की जा रही है।',
       'te-IN': 'ప్రత్యేక క్లోన్ రైలు 02638 ప్రయాణికుల కోసం సిద్ధంగా ఉంది.',
       'kn-IN': 'ಹೆಚ್ಚುವರಿ ದಟ್ಟಣೆಗಾಗಿ ಪರಿಹಾರ ಕ್ಲೋನ್ ರೈಲು 02638 ಸಿದ್ಧವಾಗಿದೆ.',
-      'ml-IN': 'അധിക യാത്രക്കാർക്കായി റിലീഫ് ക്ലോൺ ട്രെയിൻ 02638 ഒരുക്കിയിരിക്കുന്നു.',
+      'ml-IN': 'അധിക യാത്രക്കാർക്കായി റിലീഫ് ക്ಲೋൺ ട്രെയിൻ 02638 ഒരുക്കിയിരിക്കുന്നു.',
       'bn-IN': 'অতিরিক্ত ভিড় সামলাতে ত্রাণের স্পেশাল ক্লোন ট্রেন ০২৬৩৮ প্রস্তুত রয়েছে।',
       'mr-IN': 'गर्दी नियंत्रणासाठी रिलीफ स्पेशल ट्रेन 02638 उपलब्ध आहे.',
       'gu-IN': 'વધારાની ભીડ માટે રાહત ક્લોન ટ્રેન 02638 ઉપલબ્ધ છે.'
@@ -148,6 +153,7 @@ const SCENARIOS = [
     scripts: {
       en: 'Train No. 12606 Pallavan Superfast Express to Chennai Egmore is ready for departure from Platform 2.',
       ta: 'வண்டி எண் 12606 பல்லவன் அதிவிரைவு வண்டி நடைமேடை 2-லிருந்து புறப்பட தயாராக உள்ளது.',
+      ta_phonetic: 'Vandi enn 12606 Pallavan athiviraivu vandi nadaimedai 2-ilirundhu purappada thayaaraaga ulladhu.',
       hi: 'गाडी संख्या 12606 पल्लवन सुपरफास्ट एक्सप्रेस प्लेटफार्म नंबर 2 से प्रस्थान के लिए तैयार है।'
     },
     translations: {
@@ -172,8 +178,15 @@ export default function VoiceCommandPage() {
   const [selectedLang, setSelectedLang] = useState('en-IN');
   const [speechRate, setSpeechRate] = useState(0.88);
   const [speechPitch, setSpeechPitch] = useState(1.00);
-  // Voice gender: 'female' | 'male' | 'any'
+  
+  // Voice Persona & Engine Selection
+  // 'female' | 'male' | 'any'
   const [voiceGender, setVoiceGender] = useState('female');
+  // 'cloud_hd' (default for natural Tamil & Indic) | 'browser_tts'
+  const [audioMode, setAudioMode] = useState('cloud_hd');
+  // Installed local voices
+  const [availableVoices, setAvailableVoices] = useState([]);
+  const [selectedVoiceName, setSelectedVoiceName] = useState('');
 
   // Audio state
   const [isPlaying, setIsPlaying] = useState(false);
@@ -189,6 +202,33 @@ export default function VoiceCommandPage() {
   const [includeChime, setIncludeChime] = useState(true);
 
   const waveIntervalRef = useRef(null);
+
+  // Initialize and load system voices
+  useEffect(() => {
+    audioEngine.init();
+    audioEngine.audioMode = audioMode;
+
+    const refreshVoiceList = () => {
+      const v = audioEngine.getAvailableVoices();
+      setAvailableVoices(v || []);
+    };
+
+    refreshVoiceList();
+
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.addEventListener('voiceschanged', refreshVoiceList);
+      // Fallback check after 500ms
+      setTimeout(refreshVoiceList, 500);
+      return () => {
+        window.speechSynthesis.removeEventListener('voiceschanged', refreshVoiceList);
+      };
+    }
+  }, []);
+
+  // Sync audio engine mode whenever state changes
+  useEffect(() => {
+    audioEngine.audioMode = audioMode;
+  }, [audioMode]);
 
   // Wave bar animation loop during playback
   const startWaveAnimation = () => {
@@ -239,6 +279,47 @@ export default function VoiceCommandPage() {
     setTeleprompterText('Audio transmission stopped. Station PA standing by.');
   };
 
+  // Quick Voice Preview / Test Voice
+  const handleTestVoice = async () => {
+    audioEngine.init();
+    setIsPlaying(true);
+    startWaveAnimation();
+    setActiveBadge('Voice Sample Test');
+
+    const isTa = selectedLang.startsWith('ta');
+    const isHi = selectedLang.startsWith('hi');
+    const sampleText = isTa
+      ? 'பயணிகள் கவனத்திற்கு, இது தெற்கு இரயில்வே பயணிகள் தகவல் அறிவிப்பு.'
+      : isHi
+      ? 'यात्रीगण कृपया ध्यान दें, यह भारतीय रेल यात्री सूचना प्रणाली है।'
+      : 'Attention please, this is the RailFlow high-fidelity passenger announcement system.';
+    const samplePhonetic = isTa
+      ? 'Payanigal kavanathirku, idhu Therkku Railway payanigal thagaval arivippu.'
+      : null;
+
+    setTeleprompterText(`[Testing ${voiceGender === 'female' ? 'Female PIS' : 'Male PA'} Voice]: "${sampleText}"`);
+
+    await audioEngine.playIRChime();
+    await new Promise(r => setTimeout(r, 200));
+
+    await audioEngine.speakAnnouncement(
+      sampleText,
+      selectedLang,
+      speechRate,
+      speechPitch,
+      null,
+      null,
+      voiceGender,
+      selectedVoiceName,
+      samplePhonetic
+    );
+
+    stopWaveAnimation();
+    setIsPlaying(false);
+    setActiveBadge('Standby');
+    setTeleprompterText('Voice sample test complete. Vocal engine nominal.');
+  };
+
   // Play Single Language Scenario
   const handlePlaySingle = async (scenario) => {
     audioEngine.init();
@@ -247,6 +328,9 @@ export default function VoiceCommandPage() {
     
     const langObj = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
     const script = scenario.translations[selectedLang] || scenario.translations['en-IN'];
+    const phoneticFallback = (selectedLang.startsWith('ta') && scenario.scripts.ta_phonetic)
+      ? scenario.scripts.ta_phonetic
+      : null;
     
     setActiveBadge(langObj.label.split('—')[0].trim());
     setTeleprompterText(script);
@@ -256,8 +340,18 @@ export default function VoiceCommandPage() {
     await audioEngine.playIRChime();
     await new Promise(r => setTimeout(r, 200));
 
-    // 2. Speak announcement in selected language with gender preference
-    await audioEngine.speakAnnouncement(script, selectedLang, speechRate, speechPitch, null, null, voiceGender);
+    // 2. Speak announcement with priority female voice & Tamil support
+    await audioEngine.speakAnnouncement(
+      script,
+      selectedLang,
+      speechRate,
+      speechPitch,
+      null,
+      null,
+      voiceGender,
+      selectedVoiceName,
+      phoneticFallback
+    );
 
     stopWaveAnimation();
     setIsPlaying(false);
@@ -273,9 +367,24 @@ export default function VoiceCommandPage() {
     setActiveScenarioId(scenario.id);
 
     const chain = [
-      { lang: 'en-IN', label: '1️⃣ English (en-IN)', text: scenario.translations['en-IN'] },
-      { lang: 'ta-IN', label: '2️⃣ Tamil (ta-IN)', text: scenario.translations['ta-IN'] },
-      { lang: 'hi-IN', label: '3️⃣ Hindi (hi-IN)', text: scenario.translations['hi-IN'] }
+      {
+        lang: 'en-IN',
+        label: '1️⃣ English (en-IN)',
+        text: scenario.translations['en-IN'],
+        phonetic: null
+      },
+      {
+        lang: 'ta-IN',
+        label: '2️⃣ Tamil (தமிழ் - ta-IN)',
+        text: scenario.translations['ta-IN'],
+        phonetic: scenario.scripts.ta_phonetic
+      },
+      {
+        lang: 'hi-IN',
+        label: '3️⃣ Hindi (हिन्दी - hi-IN)',
+        text: scenario.translations['hi-IN'],
+        phonetic: null
+      }
     ];
 
     for (let i = 0; i < chain.length; i++) {
@@ -286,7 +395,19 @@ export default function VoiceCommandPage() {
 
       await audioEngine.playIRChime();
       await new Promise(r => setTimeout(r, 200));
-      await audioEngine.speakAnnouncement(step.text, step.lang, speechRate, speechPitch, null, null, voiceGender);
+      
+      await audioEngine.speakAnnouncement(
+        step.text,
+        step.lang,
+        speechRate,
+        speechPitch,
+        null,
+        null,
+        voiceGender,
+        selectedVoiceName,
+        step.phonetic
+      );
+      
       await new Promise(r => setTimeout(r, 400));
     }
 
@@ -315,7 +436,17 @@ export default function VoiceCommandPage() {
       await new Promise(r => setTimeout(r, 200));
     }
 
-    await audioEngine.speakAnnouncement(text, selectedLang, speechRate, speechPitch, null, null, voiceGender);
+    await audioEngine.speakAnnouncement(
+      text,
+      selectedLang,
+      speechRate,
+      speechPitch,
+      null,
+      null,
+      voiceGender,
+      selectedVoiceName,
+      null
+    );
 
     stopWaveAnimation();
     setIsPlaying(false);
@@ -323,6 +454,10 @@ export default function VoiceCommandPage() {
   };
 
   const activeStn = STATIONS[selectedStation] || STATIONS.MS;
+
+  // Filter installed voices matching the gender preference
+  const femaleVoices = availableVoices.filter(v => v.gender === 'female');
+  const maleVoices = availableVoices.filter(v => v.gender === 'male');
 
   return (
     <div className="rf-view-container space-y-6">
@@ -349,10 +484,10 @@ export default function VoiceCommandPage() {
           PRIORITY 1: ENGLISH
         </span>
         <span className="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded font-semibold">
-          PRIORITY 2: TAMIL
+          PRIORITY 2: TAMIL (தமிழ்)
         </span>
         <span className="px-2.5 py-1 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded font-semibold">
-          PRIORITY 3: HINDI
+          PRIORITY 3: HINDI (हिन्दी)
         </span>
         <span className="px-2.5 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/30 rounded font-semibold">
           8+ REGIONAL LANGUAGES
@@ -391,8 +526,134 @@ export default function VoiceCommandPage() {
           ))}
         </div>
 
+        {/* Dedicated Voice Persona, Detected Voices & Audio Engine Console */}
+        <div className="p-4 bg-slate-900/90 border border-emerald-500/30 rounded-xl space-y-4 shadow-lg shadow-emerald-500/5">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-base">🎙️</span>
+                <h3 className="text-sm font-bold text-white font-mono uppercase tracking-wider">
+                  Voice Announcer &amp; Audio Engine Settings
+                </h3>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                  {voiceGender === 'female' ? '👩 FEMALE PIS PRIORITY' : voiceGender === 'male' ? '👨 MALE PA PRIORITY' : '✨ AUTO SELECT'}
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 font-mono mt-0.5">
+                Full support for authentic Tamil (தமிழ்), Hindi, and English broadcasts with Indian Railways 4-tone acoustic chimes.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleTestVoice}
+                disabled={isPlaying}
+                className="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 shadow-md shadow-emerald-500/20 disabled:opacity-50"
+              >
+                <span>🔊</span>
+                <span>Test Voice Sample</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Persona Gender Toggle */}
+            <div>
+              <label className="text-xs font-mono text-slate-300 block mb-1.5">
+                1. Vocal Persona / Voice Gender
+              </label>
+              <div className="grid grid-cols-3 gap-1.5">
+                {[
+                  { id: 'female', label: '👩 Female', desc: 'Standard IR PIS' },
+                  { id: 'male',   label: '👨 Male',   desc: 'Station PA' },
+                  { id: 'any',    label: '✨ Auto',   desc: 'System Match' }
+                ].map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setVoiceGender(item.id);
+                      if (item.id === 'female' && femaleVoices.length > 0) {
+                        setSelectedVoiceName(femaleVoices[0].name);
+                      } else if (item.id === 'male' && maleVoices.length > 0) {
+                        setSelectedVoiceName(maleVoices[0].name);
+                      }
+                    }}
+                    className={`p-2.5 rounded-lg text-left transition-all border ${
+                      voiceGender === item.id
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/60 ring-1 ring-emerald-500/30 font-bold'
+                        : 'bg-slate-800/80 text-slate-400 border-slate-700 hover:bg-slate-800 hover:text-slate-200'
+                    }`}
+                  >
+                    <div className="text-xs font-mono">{item.label}</div>
+                    <div className="text-[10px] text-slate-400 font-mono truncate">{item.desc}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Audio Engine Mode */}
+            <div>
+              <label className="text-xs font-mono text-slate-300 block mb-1.5">
+                2. Indic Speech Engine Mode
+              </label>
+              <select
+                value={audioMode}
+                onChange={(e) => setAudioMode(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 font-mono focus:border-emerald-500 focus:outline-none"
+              >
+                <option value="cloud_hd">
+                  🌐 RailFlow Cloud HD (Native Tamil / Indic Speech)
+                </option>
+                <option value="browser_tts">
+                  💻 Device Web Speech API (Local Hardware Voices)
+                </option>
+              </select>
+              <p className="text-[11px] text-slate-400 font-mono mt-1">
+                {audioMode === 'cloud_hd'
+                  ? '✨ Fluent native Tamil & Indic pronunciation on all devices and browsers.'
+                  : '⚡ Hardware speech synthesis using local OS voices.'}
+              </p>
+            </div>
+
+            {/* Detected System Voices Dropdown */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-mono text-slate-300">
+                  3. Detected System Voices ({availableVoices.length})
+                </label>
+                {voiceGender === 'female' && (
+                  <span className="text-[10px] text-emerald-400 font-mono font-bold">
+                    👩 Female Active
+                  </span>
+                )}
+              </div>
+              <select
+                value={selectedVoiceName}
+                onChange={(e) => setSelectedVoiceName(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 font-mono focus:border-emerald-500 focus:outline-none"
+              >
+                <option value="">
+                  {voiceGender === 'female'
+                    ? '✨ Auto: Female PIS Announcer (Zira/Heera/Cloud HD)'
+                    : voiceGender === 'male'
+                    ? '✨ Auto: Male Station PA (David/Ravi)'
+                    : '✨ Auto: Best Matching Voice'}
+                </option>
+                {availableVoices.map((v, i) => (
+                  <option key={`${v.name}-${i}`} value={v.name}>
+                    {v.label}
+                  </option>
+                ))}
+              </select>
+              <p className="text-[11px] text-slate-400 font-mono mt-1 truncate">
+                {selectedVoiceName ? `Selected: ${selectedVoiceName}` : 'Default: RailFlow IR Female Announcer'}
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Audio Parameter Controls */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-slate-800">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
           <div>
             <label className="text-xs font-mono text-slate-400 block mb-1.5">
               Primary Language Preference
@@ -412,28 +673,6 @@ export default function VoiceCommandPage() {
                 </option>
               ))}
             </select>
-          </div>
-
-          {/* Voice Gender Selector */}
-          <div>
-            <label className="text-xs font-mono text-slate-400 block mb-1.5">
-              Voice Gender / PIS Voice
-            </label>
-            <div className="flex gap-2">
-              {['female', 'male', 'any'].map(g => (
-                <button
-                  key={g}
-                  onClick={() => setVoiceGender(g)}
-                  className={`flex-1 px-2 py-2 rounded-lg text-xs font-mono font-semibold border transition-all ${
-                    voiceGender === g
-                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50'
-                      : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700'
-                  }`}
-                >
-                  {g === 'female' ? '🎙️ Female' : g === 'male' ? '🔊 Male' : '🔀 Auto'}
-                </button>
-              ))}
-            </div>
           </div>
 
           <div>
@@ -469,12 +708,12 @@ export default function VoiceCommandPage() {
           </div>
         </div>
 
-        {/* Acoustic Filter & Chime - Full Row */}
+        {/* Acoustic Filter & Chime Control Buttons */}
         <div className="pt-3 border-t border-slate-800">
           <label className="text-xs font-mono text-slate-400 block mb-2">
             Acoustic Filter &amp; Chime Control
           </label>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={handlePlayChimeOnly}
               disabled={isPlaying}
@@ -486,13 +725,24 @@ export default function VoiceCommandPage() {
               onClick={handleSilence}
               className="px-4 py-2 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5"
             >
-              ⏹️ Silence
+              ⏹️ Silence / Stop
             </button>
-            <div className="ml-auto flex items-center gap-2 text-xs font-mono text-slate-500">
-              <span>Active Voice:</span>
-              <span className="text-emerald-400 font-bold">{voiceGender === 'female' ? 'Female PIS' : voiceGender === 'male' ? 'Male PA' : 'Auto Select'}</span>
+            <button
+              onClick={handleTestVoice}
+              disabled={isPlaying}
+              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5 disabled:opacity-50"
+            >
+              🔊 Test Active Voice
+            </button>
+            <div className="ml-auto flex items-center gap-2 text-xs font-mono text-slate-400">
+              <span>Persona:</span>
+              <span className="text-emerald-400 font-bold">
+                {voiceGender === 'female' ? '👩 Female PIS' : voiceGender === 'male' ? '👨 Male PA' : '✨ Auto'}
+              </span>
               <span>•</span>
-              <span className="text-amber-400">{LANGUAGES.find(l => l.code === selectedLang)?.short || 'EN'}</span>
+              <span className="text-amber-400 font-bold">{LANGUAGES.find(l => l.code === selectedLang)?.short || 'EN'}</span>
+              <span>•</span>
+              <span className="text-purple-400">{audioMode === 'cloud_hd' ? 'Cloud HD' : 'Local TTS'}</span>
             </div>
           </div>
         </div>
@@ -608,7 +858,7 @@ export default function VoiceCommandPage() {
             rows="2"
             value={customText}
             onChange={(e) => setCustomText(e.target.value)}
-            placeholder="Enter custom passenger announcement text to synthesize and broadcast across station speakers..."
+            placeholder="Enter custom passenger announcement in English or Tamil (e.g., வண்டி எண் 12638...) to synthesize and broadcast across station speakers..."
             className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-slate-200 font-mono focus:border-emerald-500 focus:outline-none"
           />
 
@@ -625,10 +875,16 @@ export default function VoiceCommandPage() {
 
             <div className="flex gap-2">
               <button
+                onClick={() => setCustomText('வண்டி எண் 12638 பாண்டியன் அதிவிரைவு வண்டி நடைமேடை 1-ல் வந்து கொண்டிருக்கிறது.')}
+                className="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-lg text-xs font-mono transition-all"
+              >
+                Sample (Tamil)
+              </button>
+              <button
                 onClick={() => setCustomText('Attention please. Special holiday express from Chennai Central to Madurai will depart at 22:30 hours from Platform 5.')}
                 className="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-lg text-xs font-mono transition-all"
               >
-                Load Sample Script
+                Sample (English)
               </button>
               <button
                 onClick={handleBroadcastCustom}
