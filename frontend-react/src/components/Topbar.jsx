@@ -37,7 +37,7 @@ export default function Topbar({ toggleSidebar, onOpenAi, onOpenPnr, onOpenGuide
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
-  // Debounced search
+  // Debounced search with live database connectivity
   const handleSearch = useCallback((query) => {
     setSearchQuery(query);
     if (!query.trim()) { setSearchResults([]); setShowSearch(false); return; }
@@ -48,7 +48,7 @@ export default function Topbar({ toggleSidebar, onOpenAi, onOpenPnr, onOpenGuide
       .map(s => ({ type: 'station', label: `🚉 ${s.name} (${s.code})`, code: s.code }));
     const trainHits = VERIFIED_TRAINS
       .filter(t => t.name.toLowerCase().includes(q) || t.number.includes(q))
-      .slice(0, 3)
+      .slice(0, 5)
       .map(t => ({ type: 'train', label: `🚆 ${t.number} — ${t.name}`, number: t.number }));
     const systemHits = [
       { term: 'dashboard', path: '/', label: '📊 Dashboard' },
@@ -70,8 +70,31 @@ export default function Topbar({ toggleSidebar, onOpenAi, onOpenPnr, onOpenGuide
     ].filter(s => s.term.includes(q) || s.label.toLowerCase().includes(q))
       .slice(0, 4)
       .map(s => ({ type: 'system', label: s.label, path: s.path }));
+
     setSearchResults([...systemHits, ...stationHits, ...trainHits]);
     setShowSearch(true);
+
+    // Dynamic backend database search lookup
+    if (q.length >= 2) {
+      fetch(`/api/trains/search?q=${encodeURIComponent(q)}&limit=5`)
+        .then(res => res.ok ? res.json() : [])
+        .then(dbTrains => {
+          if (Array.isArray(dbTrains) && dbTrains.length > 0) {
+            const extraTrains = dbTrains
+              .map(t => ({
+                type: 'train',
+                label: `🚆 ${t.trainNumber || t.number} — ${t.trainName || t.name}`,
+                number: t.trainNumber || t.number
+              }))
+              .filter(et => !trainHits.some(th => th.number === et.number));
+
+            if (extraTrains.length > 0) {
+              setSearchResults(prev => [...prev, ...extraTrains].slice(0, 10));
+            }
+          }
+        })
+        .catch(() => {});
+    }
   }, []);
 
   const handleResultClick = (result) => {

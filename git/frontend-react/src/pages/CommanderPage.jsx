@@ -34,7 +34,11 @@ export default function CommanderPage() {
 
     try {
       // 2. askRailFlowAi never throws — always returns a string
-      const reply = await askRailFlowAi(query);
+      const historyPayload = messages.map(m => ({
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: m.text
+      }));
+      const reply = await askRailFlowAi(query, historyPayload);
       setMessages((prev) => [...prev, { role: 'ai', text: reply }]);
     } finally {
       // 3. Guaranteed reset

@@ -16,6 +16,9 @@ import DatabasePage from './pages/DatabasePage';
 import FeedbackPage from './pages/FeedbackPage';
 import SettingsPage from './pages/SettingsPage';
 import AlertsPage from './pages/AlertsPage';
+import VoiceCommandPage from './pages/VoiceCommandPage';
+import AnalyticsPage from './pages/AnalyticsPage';
+import PblSpecPage from './pages/PblSpecPage';
 
 export default function App() {
   return (
@@ -30,14 +33,20 @@ export default function App() {
           <Route path="trains" element={<TrainsPage />} />
           <Route path="crowd" element={<CrowdPage />} />
           <Route path="commuter" element={<CommuterPage />} />
-          <Route path="commander" element={<CommanderPage />} />
+          <Route path="commander" element={<VoiceCommandPage />} />
+          <Route path="voice-command" element={<VoiceCommandPage />} />
+          <Route path="voice-commander" element={<VoiceCommandPage />} />
+          <Route path="voice" element={<VoiceCommandPage />} />
+          <Route path="ai-copilot" element={<CommanderPage />} />
           <Route path="quality" element={<QualityPage />} />
           <Route path="architecture" element={<ArchitecturePage />} />
           <Route path="fleet" element={<FleetPage />} />
           <Route path="database" element={<DatabasePage />} />
           <Route path="feedback" element={<FeedbackPage />} />
-          <Route path="settings" element={<SettingsPage />} />
           <Route path="alerts" element={<AlertsPage />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+          <Route path="pbl-spec" element={<PblSpecPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

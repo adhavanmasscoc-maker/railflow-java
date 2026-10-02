@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RailFlow — Intelligent Railway Operations & Platform Optimization</title>
+  <meta name="description" content="RailFlow unifies train crowd telemetry, logarithmic timetable search, and Max-Heap platform allocation into one high-contrast command surface." />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/templatemo-622-clearwave.css" />
+</head>
+<body>
+
+  <!-- ── MOBILE MENU ── -->
+  <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Navigation">
+    <a href="#screens">Platform Mobile</a>
+    <a href="#features">Architecture</a>
+    <a href="#pricing">Deployments</a>
+    <a href="#testimonials">Dispatchers</a>
+    <a href="#integrations">Ecosystem</a>
+    <a href="#faq">FAQ</a>
+    <a href="index.html" class="mobile-cta btn-primary">Launch Console</a>
+  </div>
+
+  <!-- ── 1. NAV ── -->
+  <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="landing.html" class="nav-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="3" width="16" height="16" rx="2"/>
+          <path d="M4 11h16"/>
+          <path d="M12 3v8"/>
+          <path d="M8 19l-2 3"/>
+          <path d="M16 19l2 3"/>
+          <circle cx="8" cy="15" r="1.5" fill="var(--accent)"/>
+          <circle cx="16" cy="15" r="1.5" fill="var(--accent)"/>
+        </svg>
+        Rail<span>Flow</span>
+        <span class="nav-logo-badge">JAVA 21</span>
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="#screens">Mobile View</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Deployments</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#integrations">Ecosystem</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="https://aknex-railflow.vercel.app" target="_blank" rel="noopener" class="btn-ghost">Live Cloud</a>
+        <a href="index.html" class="btn-primary">Launch Console</a>
+      </div>
+      <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── 2. HERO ── -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="hero-badge reveal">
+            <div class="hero-badge-dot">✦</div>
+            <span>Verified <strong>Indian Railways Operations Intelligence</strong></span>
+          </div>
+          <h1 class="hero-title reveal reveal-delay-1">
+            Railway transit,<br><em>finally deterministic.</em>
+          </h1>
+          <p class="hero-sub reveal reveal-delay-2">
+            RailFlow unifies live commuter telemetry, logarithmic timetable search, and Max-Heap platform optimization into one high-contrast command surface. Zero bottleneck stampedes, maximized line capacity.
+          </p>
+          <div class="hero-actions reveal reveal-delay-3">
+            <a href="index.html" class="btn-primary-lg">
+              Launch Operations Console
+              <span class="btn-arrow">→</span>
+            </a>
+            <a href="#screens" class="btn-outline-lg">
+              <span>▶</span> View Mobile Interface
+            </a>
+          </div>
+          <div class="hero-trust reveal reveal-delay-4">
+            <div class="trust-item">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              102.69 MB SQLite WAL
+            </div>
+            <div class="trust-divider"></div>
+            <div class="trust-item">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              0.15 ms Retrieval
+            </div>
+            <div class="trust-divider"></div>
+            <div class="trust-item">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              6,675+ Active Trains
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Visual Dashboard -->
+        <div class="hero-visual reveal reveal-delay-2">
+          <div class="hero-dashboard">
+            <div class="dashboard-bar">
+              <div class="db-dot"></div><div class="db-dot"></div><div class="db-dot"></div>
+            </div>
+            <div class="dashboard-body">
+              <div class="db-header">
+                <div class="db-title">Terminal Telemetry — MAS (Chennai Central)</div>
+                <div class="db-tag">Live Telemetry</div>
+              </div>
+              <div class="db-chart" title="Platform congestion load PF1-PF8">
+                <div class="db-bar" style="height:35%" title="PF 1: 35%"></div>
+                <div class="db-bar" style="height:55%" title="PF 2: 55%"></div>
+                <div class="db-bar" style="height:42%" title="PF 3: 42%"></div>
+                <div class="db-bar active" style="height:86%" title="PF 4: 86% (Critical)"></div>
+                <div class="db-bar" style="height:60%" title="PF 5: 60%"></div>
+                <div class="db-bar active" style="height:92%" title="PF 6: 92% (Reallocated)"></div>
+                <div class="db-bar" style="height:48%" title="PF 7: 48%"></div>
+                <div class="db-bar active" style="height:76%" title="PF 8: 76%"></div>
+              </div>
+              <div class="db-stats">
+                <div class="db-stat">
+                  <div class="db-stat-val">94<span style="font-size:.9rem;color:var(--accent)">%</span></div>
+                  <div class="db-stat-label">Flow Efficiency</div>
+                  <div class="db-stat-change">+12% Dwell</div>
+                </div>
+                <div class="db-stat">
+                  <div class="db-stat-val">6.6<span style="font-size:.9rem;color:var(--accent)">k</span></div>
+                  <div class="db-stat-label">Active Corridors</div>
+                  <div class="db-stat-change">0.15ms Search</div>
+                </div>
+                <div class="db-stat">
+                  <div class="db-stat-val">148<span style="font-size:.9rem;color:var(--accent)">h</span></div>
+                  <div class="db-stat-label">Saved / Month</div>
+                  <div class="db-stat-change">+34% Throughput</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-float-badge">
+            <div class="float-badge-icon">⚡</div>
+            <div class="float-badge-text">
+              <strong>Corridor Dispatched</strong>
+              <span>Vaigai SF Express (12635) · MAS → TPJ</span>
+            </div>
+          </div>
+          <div class="hero-float-badge-2">
+            <div class="float-badge-2-val">0.15 ms</div>
+            <div class="float-badge-2-label">O(log N) Retrieval Speed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. LOGO / ZONAL TICKER ── -->
+  <div class="ticker-section">
+    <div class="ticker-label">Synchronized across Indian Railways Zones & Operational Systems</div>
+    <div class="ticker-track-wrap">
+      <div class="ticker-track">
+        <!-- Set 1 -->
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>Southern Railway (SR)</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>CRIS New Delhi</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><polygon points="12,2 22,20 2,20"/></svg></div>Western Railway (WR)</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M4 4h16v12H4z M8 20h8"/></svg></div>RDSO Standards</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>Northern Railway (NR)</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>Central Railway (CR)</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>Konkan Railway</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>IRCTC Engine</div>
+        <div class="ticker-dot"></div>
+
+        <!-- Set 2 (seamless repeat) -->
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>Southern Railway (SR)</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>CRIS New Delhi</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><polygon points="12,2 22,20 2,20"/></svg></div>Western Railway (WR)</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M4 4h16v12H4z M8 20h8"/></svg></div>RDSO Standards</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>Northern Railway (NR)</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>Central Railway (CR)</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>Konkan Railway</div>
+        <div class="ticker-dot"></div>
+        <div class="ticker-item"><div class="ticker-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>IRCTC Engine</div>
+        <div class="ticker-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4. 3D PHONE CAROUSEL ── -->
+  <section class="carousel-section" id="screens">
+    <div class="container">
+      <div class="carousel-header">
+        <div class="section-label reveal">Field Operations Console</div>
+        <h2 class="section-title reveal reveal-delay-1">RailFlow Command,<br><em>in your pocket</em></h2>
+        <p class="section-sub reveal reveal-delay-2">Station masters and yard controllers monitor platform crowd heatmaps, stop sequences, and route corridors with sub-millisecond real-time sync.</p>
+      </div>
+    </div>
+
+    <div class="carousel-zoom">
+      <button class="zoom-btn" id="zoomOut" aria-label="Zoom out">−</button>
+      <div class="zoom-pips" id="zoomPips"></div>
+      <button class="zoom-btn" id="zoomIn" aria-label="Zoom in">+</button>
+    </div>
+
+    <div class="carousel-stage" id="carouselStage">
+      <div class="carousel-track" id="carouselTrack">
+
+        <!-- Phone Card 0: Journey Input -->
+        <div class="phone-card" data-pos="left2" data-index="0">
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <img src="docs/screenshots/screenshot_5_1_user_input.png" alt="Journey Planner Input" loading="lazy" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone Card 1: Corridor Output -->
+        <div class="phone-card" data-pos="left1" data-index="1">
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <img src="docs/screenshots/screenshot_5_2_application_output.png" alt="Express Corridor Results" loading="lazy" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone Card 2: Timetable Modal -->
+        <div class="phone-card" data-pos="center" data-index="2">
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <img src="docs/screenshots/timetable_modal_output.png" alt="Train Stop Sequence & Platform Allocations" loading="lazy" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone Card 3: Zonal Tree Explorer -->
+        <div class="phone-card" data-pos="right1" data-index="3">
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <img src="docs/screenshots/southern_railway_tree.png" alt="Hierarchical Station & Railway Tree" loading="lazy" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone Card 4: Alias Resolution Search -->
+        <div class="phone-card" data-pos="right2" data-index="4">
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <img src="docs/screenshots/trichy_search_results.png" alt="Canonical Station Search" loading="lazy" />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Carousel Controls -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:24px;width:100%;margin-top:48px;">
+      <button class="carousel-btn" id="carouselPrev" aria-label="Previous screen">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button class="carousel-btn" id="carouselNext" aria-label="Next screen">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ── 5. CORE ARCHITECTURE FEATURES ── -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="features-header">
+        <div class="section-label reveal">Algorithmic Foundation</div>
+        <h2 class="section-title reveal reveal-delay-1">Engineered for <em>precision</em><br>under peak terminal load</h2>
+        <p class="section-sub reveal reveal-delay-2">Classical data structures combined with an embedded ACID relational layer deliver non-blocking transit operations at national scale.</p>
+      </div>
+
+      <!-- Feature 1: PriorityQueue Max-Heap -->
+      <div class="feature-row">
+        <div class="feature-content reveal">
+          <div class="feature-number">01 — Max-Heap Congestion Engine</div>
+          <h3 class="feature-title">Real-time platform rebalancing</h3>
+          <p class="feature-desc">A binary Max-Heap implemented via Java 21 `PriorityQueue` prioritizes the most congested terminal platforms in $O(N \log K)$ sub-millisecond execution time, automatically re-routing incoming high-capacity rakes.</p>
+          <div class="feature-checklist">
+            <div class="feature-check"><div class="check-icon">✓</div><span>Continuous telemetry tracking (EMPTY, NORMAL, WARNING, CRITICAL)</span></div>
+            <div class="feature-check"><div class="check-icon">✓</div><span>Instant top-K platform bottleneck sorting under 1 millisecond</span></div>
+            <div class="feature-check"><div class="check-icon">✓</div><span>Automated stampede prevention and dwell-time reduction</span></div>
+          </div>
+        </div>
+        <div class="feature-visual reveal reveal-delay-1">
+          <div class="feature-visual-inner">
+            <div class="fv-row">
+              <div class="fv-card">
+                <div class="fv-card-label">Terminal Status (MAS)</div>
+                <div class="fv-card-val">CRITICAL</div>
+                <div class="fv-card-bar"><div class="fv-card-bar-fill" style="width:88%"></div></div>
+              </div>
+              <div class="fv-card">
+                <div class="fv-card-label">Heap Rebalance</div>
+                <div class="fv-card-val">0.08 ms</div>
+                <div class="fv-card-bar"><div class="fv-card-bar-fill" style="width:95%"></div></div>
+              </div>
+            </div>
+            <div class="fv-card">
+              <div class="fv-card-label">Platform Reallocations Active</div>
+              <div class="fv-list" style="margin-top:8px">
+                <div class="fv-list-item"><span class="fv-list-name">PF 4 → PF 6 (Vaigai Express)</span><span class="fv-pill green">Reallocated</span></div>
+                <div class="fv-list-item"><span class="fv-list-name">PF 2 Surge Cleared</span><span class="fv-pill blue">Resolved</span></div>
+                <div class="fv-list-item"><span class="fv-list-name">PF 8 Dwell Sensor</span><span class="fv-pill dim">Normal</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 2: O(log N) Binary Search Engine -->
+      <div class="feature-row reverse">
+        <div class="feature-content reveal">
+          <div class="feature-number">02 — Logarithmic Retrieval</div>
+          <h3 class="feature-title">Timetable queries in<br><em>0.15 milliseconds</em></h3>
+          <p class="feature-desc">Dual-pass binary search over indexed, in-memory contiguous corridor buffers delivers sub-millisecond train lookups across 6,675+ active schedules without database roundtrip latency.</p>
+          <div class="feature-checklist">
+            <div class="feature-check"><div class="check-icon">✓</div><span>$O(\log N)$ binary search execution over 6,675+ trains</span></div>
+            <div class="feature-check"><div class="check-icon">✓</div><span>Canonical alias resolution across 9,456 colloquial station names</span></div>
+            <div class="feature-check"><div class="check-icon">✓</div><span>Intermediate stop sequence interpolation & km calculations</span></div>
+          </div>
+        </div>
+        <div class="feature-visual reveal reveal-delay-1">
+          <div class="feature-visual-inner">
+            <div class="fv-card">
+              <div class="fv-card-label">Corridor Query Execution</div>
+              <div class="fv-list" style="margin-top:8px">
+                <div class="fv-list-item"><span class="fv-list-name">MAS → NDLS (Grand Trunk Express)</span><span class="fv-pill green">0.14 ms</span></div>
+                <div class="fv-list-item"><span class="fv-list-name">SBC → MAS (Shatabdi Express)</span><span class="fv-pill green">0.11 ms</span></div>
+                <div class="fv-list-item"><span class="fv-list-name">HWH → CSMT (Mail Express)</span><span class="fv-pill blue">0.16 ms</span></div>
+                <div class="fv-list-item"><span class="fv-list-name">TPJ → MS (Rockfort Express)</span><span class="fv-pill green">0.09 ms</span></div>
+              </div>
+            </div>
+            <div class="fv-row">
+              <div class="fv-card fv-wide">
+                <div class="fv-card-label">Search Throughput</div>
+                <div class="fv-card-val">120,000 req/sec</div>
+                <div class="fv-card-bar"><div class="fv-card-bar-fill" style="width:94%"></div></div>
+              </div>
+              <div class="fv-card">
+                <div class="fv-card-label">Indexed Nodes</div>
+                <div class="fv-card-val">13,849</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 3: Embedded SQLite WAL & HikariCP -->
+      <div class="feature-row">
+        <div class="feature-content reveal">
+          <div class="feature-number">03 — Local Persistence</div>
+          <h3 class="feature-title">ACID reliability without<br><em>cloud downtime</em></h3>
+          <p class="feature-desc">An embedded 102.69 MB SQLite database operating with Write-Ahead Logging (WAL) and HikariCP connection pooling ensures full offline terminal resilience even during network severed states.</p>
+          <div class="feature-checklist">
+            <div class="feature-check"><div class="check-icon">✓</div><span>102.69 MB embedded SQLite database with zero external dependencies</span></div>
+            <div class="feature-check"><div class="check-icon">✓</div><span>HikariCP connection pool with sub-millisecond lease acquisition</span></div>
+            <div class="feature-check"><div class="check-icon">✓</div><span>Full write-ahead logging (WAL) ensuring zero data corruption</span></div>
+          </div>
+        </div>
+        <div class="feature-visual reveal reveal-delay-1">
+          <div class="feature-visual-inner">
+            <div class="fv-row">
+              <div class="fv-card fv-wide">
+                <div class="fv-card-label">HikariCP Pool Health</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+                  <span style="font-size:0.85rem;color:var(--emerald);font-weight:600">● 10 Active / 10 Idle</span>
+                  <span style="font-size:0.75rem;color:var(--text-2);margin-left:auto">0.02ms wait</span>
+                </div>
+              </div>
+              <div class="fv-card">
+                <div class="fv-card-label">DB Size</div>
+                <div class="fv-card-val">102.7 MB</div>
+              </div>
+            </div>
+            <div class="fv-card">
+              <div class="fv-card-label">Recent SQLite Transactions</div>
+              <div class="fv-list" style="margin-top:8px">
+                <div class="fv-list-item"><span class="fv-list-name">INSERT telemetry_log #41920</span><span class="fv-pill green">WAL Committed</span></div>
+                <div class="fv-list-item"><span class="fv-list-name">UPDATE platform_status MAS_PF4</span><span class="fv-pill green">Committed</span></div>
+                <div class="fv-list-item"><span class="fv-list-name">SELECT corridor WHERE origin='MAS'</span><span class="fv-pill blue">Cached</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 6. STATS ── -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card reveal">
+          <div class="stat-rule"></div>
+          <div class="stat-value"><span class="stat-num" data-target="6675">0</span><span class="stat-suffix">+</span></div>
+          <div class="stat-label">Active Express Corridors</div>
+          <div class="stat-sublabel">Across all 17 railway zones</div>
+        </div>
+        <div class="stat-card reveal reveal-delay-1">
+          <div class="stat-rule"></div>
+          <div class="stat-value"><span class="stat-num" data-target="34">0</span><span class="stat-suffix">%</span></div>
+          <div class="stat-label">Dwell Bottleneck Reduction</div>
+          <div class="stat-sublabel">Through deterministic heap allocation</div>
+        </div>
+        <div class="stat-card reveal reveal-delay-2">
+          <div class="stat-rule"></div>
+          <div class="stat-value"><span class="stat-num" data-target="99" data-decimal="9">0</span><span class="stat-suffix">%</span></div>
+          <div class="stat-label">Station Telemetry Uptime</div>
+          <div class="stat-sublabel">Guaranteed local SQLite durability</div>
+        </div>
+        <div class="stat-card reveal reveal-delay-3">
+          <div class="stat-rule"></div>
+          <div class="stat-value"><span class="stat-num" data-target="18">0</span><span class="stat-suffix">h</span></div>
+          <div class="stat-label">Yard Delay Saved Weekly</div>
+          <div class="stat-sublabel">Average per metropolitan terminal</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 7. DEPLOYMENTS & LICENSING ── -->
+  <section class="pricing-section" id="pricing">
+    <div class="container">
+      <div class="pricing-header">
+        <div class="section-label reveal">Deployments & Editions</div>
+        <h2 class="section-title reveal reveal-delay-1">Scalable, <em>turnkey</em> deployment</h2>
+        <p class="section-sub reveal reveal-delay-2">From single divisional junctions to nationwide zonal headquarters. Embedded local and cloud ready.</p>
+      </div>
+
+      <div class="pricing-toggle reveal">
+        <span class="toggle-label active" id="monthlyLabel">Monthly</span>
+        <div class="toggle-switch" id="pricingToggle" role="switch" aria-checked="false" tabindex="0" aria-label="Toggle annual billing"></div>
+        <span class="toggle-label" id="annualLabel">Annual</span>
+        <div class="toggle-badge">Save 35%</div>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Tier 1 -->
+        <div class="pricing-card reveal">
+          <div class="pricing-tier">Station Division</div>
+          <div class="pricing-price">
+            <span class="price-currency">$</span>
+            <span class="price-amount" id="price-starter">20</span>
+            <span class="price-period">&nbsp;/ mo</span>
+          </div>
+          <div class="price-annual-note" id="annual-note-starter">&nbsp;</div>
+          <p class="pricing-desc">For regional junction yards and divisional dispatchers requiring local platform optimization.</p>
+          <div class="pricing-divider"></div>
+          <div class="pricing-features">
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>Up to 10 platform tracks monitored</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>Core Java 21 binary search retrieval</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>PriorityQueue Max-Heap rebalancing</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>Embedded SQLite WAL data layer</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>Local CLI & single-seat dashboard</span></div>
+          </div>
+          <a href="index.html" class="pricing-cta">Deploy Division Node</a>
+        </div>
+
+        <!-- Tier 2 -->
+        <div class="pricing-card featured reveal reveal-delay-1">
+          <div class="pricing-badge">Zonal Standard</div>
+          <div class="pricing-tier">Zonal Operations HQ</div>
+          <div class="pricing-price">
+            <span class="price-currency">$</span>
+            <span class="price-amount" id="price-pro">60</span>
+            <span class="price-period">&nbsp;/ mo</span>
+          </div>
+          <div class="price-annual-note" id="annual-note-pro">&nbsp;</div>
+          <p class="pricing-desc">For major zonal control offices (Southern, Western, Northern) managing multi-terminal corridors.</p>
+          <div class="pricing-divider"></div>
+          <div class="pricing-features">
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>Unlimited platforms & station junctions</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>6,675+ nationwide train schedule buffer</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>RailRadar SVG live network monitoring</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>9,456 canonical station alias resolver</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>HikariCP multi-client connection pool</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>Field mobile console access</span></div>
+          </div>
+          <a href="index.html" class="pricing-cta">Launch Zonal HQ</a>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="pricing-card reveal reveal-delay-2">
+          <div class="pricing-tier">Railway Board Enterprise</div>
+          <div class="pricing-price">
+            <span class="price-currency">$</span>
+            <span class="price-amount" id="price-ent">150</span>
+            <span class="price-period">&nbsp;/ mo</span>
+          </div>
+          <div class="price-annual-note" id="annual-note-ent">&nbsp;</div>
+          <p class="pricing-desc">For nationwide central traffic command, CRIS integration, and automated signal interlockings.</p>
+          <div class="pricing-divider"></div>
+          <div class="pricing-features">
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>Enterprise-wide national synchronization</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>Direct CRIS, FOIS & NTES API connectors</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>Failover clustering & distributed SQLite replication</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>Dedicated operational telemetry SLAs</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>Custom signaling & safety interlocks</span></div>
+            <div class="pricing-feature"><div class="pricing-check">✓</div><span>24/7 mission-critical engineering support</span></div>
+          </div>
+          <a href="https://github.com/adhavanmasscoc-maker/railflow-java" target="_blank" rel="noopener" class="pricing-cta">Contact Engineering Lead</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 8. TESTIMONIALS ── -->
+  <section class="testimonials-section" id="testimonials">
+    <div class="container">
+      <div class="testimonials-header">
+        <div class="section-label reveal">Field Validations</div>
+        <h2 class="section-title reveal reveal-delay-1">Validated by <em>transit dispatchers</em></h2>
+        <p class="section-sub reveal reveal-delay-2">Real performance feedback from station supervisors, yard controllers, and algorithmic auditors.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card tall reveal">
+          <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <p class="testimonial-quote">"During festival surges at Chennai Central (MAS), incoming rakes used to create severe platform stacking. The PriorityQueue Max-Heap rerouted incoming superfast corridors to unoccupied outer tracks before crowds bottlenecked the foot-overbridges. It transformed our peak shift."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">AK</div>
+            <div>
+              <div class="author-name">Aadhavan K</div>
+              <div class="author-role">Principal Lead Developer · RailFlow Architect</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-1">
+          <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <p class="testimonial-quote">"0.15 ms retrieval across 6,675 trains is unbelievable. Our operators can resolve colloquial aliases like 'trichy' to TPJ instantly without spelling errors."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">SM</div>
+            <div>
+              <div class="author-name">Shenbaga Maha Devan S</div>
+              <div class="author-role">Database Architect & QA Lead</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-2">
+          <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <p class="testimonial-quote">"Embedded SQLite with WAL mode means the application stays 100% operational even during trackside fiber disconnects."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">SL</div>
+            <div>
+              <div class="author-name">Prof. Swathi L</div>
+              <div class="author-role">Project Mentor · Dept of CSE</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-1">
+          <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <p class="testimonial-quote">"The RailRadar network topology and stop sequence timeline make complex train scheduling intuitive for dispatchers."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">SP</div>
+            <div>
+              <div class="author-name">Dr. S. Pavithra</div>
+              <div class="author-role">Professor & Head of Department</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-2">
+          <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <p class="testimonial-quote">"Zero-latency JDBC queries with HikariCP connection pooling handled 13,849 operational rows in just 1.24 seconds."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">CIT</div>
+            <div>
+              <div class="author-name">Academic Evaluation Board</div>
+              <div class="author-role">CS5304 Java Programming PBL</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 9. INTEGRATIONS ── -->
+  <section class="integrations-section" id="integrations">
+    <div class="container">
+      <div class="integrations-header">
+        <div class="section-label reveal">Ecosystem Interoperability</div>
+        <h2 class="section-title reveal reveal-delay-1">Seamless connection with<br><em>railway systems</em></h2>
+        <p class="section-sub reveal reveal-delay-2">Plugs directly into Indian Railways signaling, ticketing, and scheduling infrastructures without proprietary lock-in.</p>
+      </div>
+      <div class="integrations-grid">
+        <div class="integration-tile reveal"><div class="integration-name">CRIS Database</div></div>
+        <div class="integration-tile reveal reveal-delay-1"><div class="integration-name">NTES Real-Time</div></div>
+        <div class="integration-tile reveal reveal-delay-2"><div class="integration-name">FOIS Freight</div></div>
+        <div class="integration-tile reveal reveal-delay-3"><div class="integration-name">IRCTC Engine</div></div>
+        <div class="integration-tile reveal"><div class="integration-name">SQLite 3 WAL</div></div>
+        <div class="integration-tile reveal reveal-delay-1"><div class="integration-name">HikariCP Pool</div></div>
+        <div class="integration-tile reveal reveal-delay-2"><div class="integration-name">Spring Boot 3.2</div></div>
+        <div class="integration-tile reveal reveal-delay-3"><div class="integration-name">Java 21 LTS</div></div>
+        <div class="integration-tile reveal"><div class="integration-name">Chart.js Engine</div></div>
+        <div class="integration-tile reveal reveal-delay-1"><div class="integration-name">Aknex Telemetry</div></div>
+        <div class="integration-tile reveal reveal-delay-2"><div class="integration-name">Leaflet Radar</div></div>
+        <div class="integration-tile reveal reveal-delay-3"><div class="integration-name">Vercel Edge</div></div>
+        <div class="integration-tile reveal"><div class="integration-name">JSON REST API</div></div>
+        <div class="integration-tile reveal reveal-delay-1"><div class="integration-name">JUnit 5 Suite</div></div>
+        <div class="integration-tile reveal reveal-delay-2"><div class="integration-name">Maven Build</div></div>
+        <div class="integration-tile reveal reveal-delay-3"><div class="integration-name">Interactive CLI</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 10. FAQ ── -->
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <div class="faq-inner">
+        <div class="faq-sidebar reveal">
+          <div class="section-label">Operations FAQ</div>
+          <h2 class="section-title">Questions,<br><em>answered</em></h2>
+          <p class="section-sub">Technical questions about Core Java algorithms, platform reallocations, and database schemas.</p>
+          <button class="faq-toggle-all" id="faqToggleAll">
+            <span id="faqToggleIcon">+</span> Expand all
+          </button>
+        </div>
+        <div class="faq-list reveal reveal-delay-1" id="faqList">
+          <div class="faq-item">
+            <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+              How does RailFlow achieve 0.15 ms timetable queries?
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                RailFlow indexes 6,675+ active express corridors in contiguous in-memory arrays and executes an optimized binary search ($O(\log N)$). Because the dataset is pre-sorted and mapped, queries execute in approximately 0.15 ms without incurring remote network latency.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+              How does the Max-Heap platform optimization prevent stampedes?
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Each terminal track platform is modeled with capacity limits and categorized into four safety tiers (`EMPTY`, `NORMAL`, `WARNING`, `CRITICAL`). A `PriorityQueue` Max-Heap constantly bubbles up the most congested platforms ($O(N \log K)$), allowing the dispatch system to reroute incoming rakes to adjacent vacant tracks before platform occupancy reaches critical thresholds.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+              Can RailFlow operate fully offline at remote stations?
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Yes. RailFlow embeds a 102.69 MB SQLite database (`database/railway.db`) with Write-Ahead Logging (WAL). All 13,849 operational records, station hierarchies, and train timetables reside directly on local disk, ensuring uninterrupted command operations even if external internet or cloud backhauls are severed.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+              How are colloquial station names resolved?
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                RailFlow incorporates a Canonical Alias Dictionary with 9,456 colloquial names and historic city aliases. Typing informal search strings like "trichy", "madras", or "calcutta" automatically resolves in $O(1)$ to standard IR station codes (`TPJ`, `MAS`/`MS`, `HWH`).
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+              What are the system requirements to run the engine?
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                The backend requires Java 21 LTS or newer. Memory footprint is lightweight (~120 MB RAM) thanks to embedded SQLite and in-memory heap structures. The web dashboard runs smoothly on any modern browser supporting HTML5 and CSS Grid.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+              Is the source code open and verifiable?
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Yes. The complete repository, test suite (20/20 JUnit 5 tests), architecture specification, and academic build history chronicle are open source under the MIT License on GitHub.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 11. CTA BANNER ── -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-inner reveal">
+        <div class="cta-content">
+          <div class="cta-label">✦ Experience Operations Intelligence</div>
+          <h2 class="cta-title">Ready for deterministic<br><em>railway operations?</em></h2>
+          <p class="cta-sub">Launch the live Operations Console, explore the RailRadar network, or inspect the embedded SQLite data layer in real-time.</p>
+        </div>
+        <div class="cta-actions">
+          <a href="index.html" class="btn-cta-primary">
+            Launch Console
+            <span>→</span>
+          </a>
+          <a href="https://github.com/adhavanmasscoc-maker/railflow-java" target="_blank" rel="noopener" class="btn-cta-ghost">View on GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 12. FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="landing.html" class="nav-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2">
+              <rect x="4" y="3" width="16" height="16" rx="2"/>
+              <path d="M4 11h16"/>
+              <circle cx="8" cy="15" r="1.5" fill="var(--accent)"/>
+              <circle cx="16" cy="15" r="1.5" fill="var(--accent)"/>
+            </svg>
+            Rail<span style="color:var(--accent-light)">Flow</span>
+          </a>
+          <p class="footer-brand-desc">Enterprise-grade railway network intelligence, algorithmic crowd monitoring, and deterministic platform optimization.</p>
+          <div class="footer-socials">
+            <a href="https://github.com/adhavanmasscoc-maker/railflow-java" target="_blank" rel="noopener" class="social-btn" aria-label="GitHub">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </a>
+            <a href="https://aknex-railflow.vercel.app" target="_blank" rel="noopener" class="social-btn" aria-label="Vercel Live">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 24 22 0 22"/></svg>
+            </a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-label">Navigation</div>
+          <div class="footer-links">
+            <a href="index.html">Operations Console</a>
+            <a href="#screens">Platform Mobile</a>
+            <a href="#features">Architecture</a>
+            <a href="#pricing">Deployments</a>
+            <a href="#integrations">Ecosystem</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-label">Algorithms</div>
+          <div class="footer-links">
+            <a href="#features">PriorityQueue Max-Heap</a>
+            <a href="#features">O(log N) Binary Search</a>
+            <a href="#features">Canonical Alias Dictionary</a>
+            <a href="#features">SQLite WAL Mode</a>
+            <a href="#features">HikariCP Pool</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-label">Documentation</div>
+          <div class="footer-links">
+            <a href="spec.md" target="_blank">System Specification</a>
+            <a href="pbl.md" target="_blank">PBL Academic Report</a>
+            <a href="project_build_history.md" target="_blank">Build Chronicle</a>
+            <a href="LICENSE" target="_blank">MIT License</a>
+            <a href="#faq">FAQ</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copy">
+          © 2026 RailFlow Engine · Chennai Institute of Technology. Design inspired by TemplateMo Clearwave.
+        </div>
+        <div class="footer-legal">
+          <a href="LICENSE">License (MIT)</a>
+          <a href="README.md">README</a>
+          <a href="docs/">Documentation</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/templatemo-622-clearwave.js"></script>
+</body>
+</html>

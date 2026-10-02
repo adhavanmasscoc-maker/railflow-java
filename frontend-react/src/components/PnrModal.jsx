@@ -77,21 +77,28 @@ export default function PnrModal({ isOpen, onClose }) {
           }}>✕</button>
         </div>
         <div className="modal-body" style={{ padding: '20px' }}>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
             <input
-              type="text"
+              type="tel"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={pnr}
               onChange={(e) => setPnr(e.target.value.replace(/\D/g, '').slice(0, 10))}
               onKeyDown={(e) => e.key === 'Enter' && lookup()}
               placeholder="Enter 10-digit PNR…"
               className="form-input"
-              style={{ flex: 1 }}
+              style={{ flex: 1, letterSpacing: '2px', fontFamily: 'var(--font-mono)', fontSize: '16px' }}
               maxLength={10}
               autoFocus
+              autoComplete="off"
             />
             <button onClick={lookup} className="btn btn-ai-toggle" disabled={loading} style={{ padding: '8px 20px' }}>
               {loading ? '...' : 'Check'}
             </button>
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
+            <span>{pnr.length}/10 digits entered</span>
+            {pnr.length === 10 && <span style={{ color: 'var(--color-status-emerald)' }}>✓ Ready to check</span>}
           </div>
           {error && <div style={{ color: 'var(--color-live)', fontSize: '13px', marginBottom: '12px' }}>{error}</div>}
           {result && (

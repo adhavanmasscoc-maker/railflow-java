@@ -1,6 +1,12 @@
 {
   "cleanUrls": true,
   "rewrites": [
+    { "source": "/api/journey/plan", "destination": "/api/journey-plan" },
+    { "source": "/api/routes/search", "destination": "/api/journey-plan" },
+    { "source": "/api/database/status", "destination": "/api/database" },
+    { "source": "/api/database/tables", "destination": "/api/database" },
+    { "source": "/api/database/query", "destination": "/api/database" },
+    { "source": "/api/special-trains", "destination": "/api/special-trains" },
     { "source": "/api/trains/:num", "destination": "/DATA/trains/:num.json" },
     { "source": "/api/trains", "destination": "/DATA/train_catalog.json" },
     { "source": "/api/trains/search", "destination": "/DATA/train_catalog.json" },

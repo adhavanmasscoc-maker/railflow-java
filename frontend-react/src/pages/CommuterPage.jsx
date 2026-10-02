@@ -6,8 +6,8 @@ export default function CommuterPage() {
   const [status, setStatus] = useState(null);
 
   const checkPnr = () => {
-    if (pnr.length !== 10) {
-      alert('PNR must be 10 digits.');
+    if (!/^\d{10}$/.test(pnr)) {
+      alert('PNR must be exactly 10 digits (numbers only).');
       return;
     }
     // Mock response for the UI
@@ -45,14 +45,33 @@ export default function CommuterPage() {
           <div className="panel-body" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <label style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>Enter 10-Digit PNR Number</label>
-              <input 
-                type="text" 
-                maxLength="10"
-                placeholder="e.g. 4234567890" 
+              <input
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={10}
+                placeholder="e.g. 4234567890"
                 value={pnr}
-                onChange={e => setPnr(e.target.value.replace(/\D/g, ''))}
-                style={{ padding: '12px', background: 'rgba(14,20,36,0.8)', border: '1px solid var(--color-border-subtle)', borderRadius: 'var(--radius-md)', color: '#fff', fontSize: '16px', letterSpacing: '2px' }}
+                onChange={e => setPnr(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                onKeyDown={e => e.key === 'Enter' && checkPnr()}
+                autoComplete="off"
+                style={{
+                  padding: '12px',
+                  background: 'rgba(14,20,36,0.8)',
+                  border: `1px solid ${pnr.length === 10 ? 'var(--color-status-emerald)' : 'var(--color-border-subtle)'}`,
+                  borderRadius: 'var(--radius-md)',
+                  color: '#fff',
+                  fontSize: '18px',
+                  letterSpacing: '3px',
+                  fontFamily: 'var(--font-mono)',
+                  width: '100%',
+                  boxSizing: 'border-box'
+                }}
               />
+              <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', display: 'flex', justifyContent: 'space-between' }}>
+                <span>{pnr.length}/10 digits</span>
+                {pnr.length === 10 && <span style={{ color: 'var(--color-status-emerald)' }}>✓ Ready</span>}
+              </div>
             </div>
             <button className="btn btn-primary" onClick={checkPnr} style={{ width: '100%', padding: '12px', fontWeight: 600 }}>Get Live Status</button>
             <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>

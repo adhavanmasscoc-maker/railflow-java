@@ -58,8 +58,12 @@ export default function AiSlideDrawer({ isOpen, onClose }) {
     setLoading(true);
 
     try {
-      // 2. askRailFlowAi already handles timeout + fallback — it NEVER throws
-      const reply = await askRailFlowAi(text.trim());
+      // 2. askRailFlowAi with full conversation history
+      const historyPayload = messages.map(m => ({
+        role: m.sender === 'user' ? 'user' : 'assistant',
+        content: m.text
+      }));
+      const reply = await askRailFlowAi(text.trim(), historyPayload);
       audioEngine.playChime?.();
       setMessages((prev) => [
         ...prev,

@@ -66,17 +66,6 @@ export default function Layout() {
       {/* Guide Modal */}
       <GuideModal isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
 
-      {/* Floating Telemetry Badge */}
-      <div className="telemetry-badge-float" id="telemetryBadgeFloat" style={{
-        position: 'fixed', bottom: '20px', left: '20px', display: 'flex', alignItems: 'center', gap: '8px',
-        background: 'var(--bg-panel)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)',
-        padding: '6px 12px', fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)',
-        zIndex: 1000,
-      }}>
-        <span className="pulse-dot"></span>
-        <span>LIVE TELEMETRY</span>
-      </div>
-
       <div className="toast-container" id="toastContainer"></div>
     </div>
   );
