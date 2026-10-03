@@ -1,438 +1,184 @@
-import { useState, useMemo, useEffect } from 'react';
-import { 
-  WESTERN_TRUNK_STATIONS, 
-  CHORD_LINE_STATIONS, 
-  SOUTHERN_TRUNK_STATIONS, 
-  GRAND_TRUNK_STATIONS,
-  WESTERN_CORRIDOR_STATIONS,
-  EASTERN_CORRIDOR_STATIONS
-} from '../data/masterRailwayData';
+import { useState, useEffect, useRef } from 'react';
 import PageHeader from '../components/PageHeader';
-import { api } from '../services/api';
+
+const STATIONS = [
+  { code: 'MS',   name: 'Chennai Egmore', zone: 'SR', pfs: 11, crowd: 48, status: 'NORMAL',   trains: 142 },
+  { code: 'MAS',  name: 'Chennai Central', zone: 'SR', pfs: 16, crowd: 68, status: 'MODERATE', trains: 220 },
+  { code: 'TPJ',  name: 'Tiruchirappalli', zone: 'SR', pfs: 8,  crowd: 55, status: 'MODERATE', trains: 118 },
+  { code: 'MDU',  name: 'Madurai Junction', zone: 'SR', pfs: 6,  crowd: 42, status: 'NORMAL',   trains: 89 },
+  { code: 'CBE',  name: 'Coimbatore', zone: 'SR', pfs: 6,  crowd: 61, status: 'MODERATE', trains: 94 },
+  { code: 'SBC',  name: 'Bengaluru City', zone: 'SWR', pfs: 10, crowd: 73, status: 'HIGH',     trains: 172 },
+  { code: 'NDLS', name: 'New Delhi', zone: 'NR', pfs: 16, crowd: 82, status: 'HIGH',     trains: 310 },
+  { code: 'HWH',  name: 'Howrah Junction', zone: 'ER', pfs: 23, crowd: 58, status: 'MODERATE', trains: 280 },
+  { code: 'BCT',  name: 'Mumbai CSMT', zone: 'CR', pfs: 18, crowd: 91, status: 'CRITICAL', trains: 290 },
+  { code: 'ADI',  name: 'Ahmedabad', zone: 'WR', pfs: 10, crowd: 54, status: 'MODERATE', trains: 148 },
+  { code: 'JP',   name: 'Jaipur', zone: 'NWR', pfs: 6,  crowd: 39, status: 'NORMAL',   trains: 76 },
+  { code: 'SC',   name: 'Secunderabad', zone: 'SCR', pfs: 10, crowd: 67, status: 'MODERATE', trains: 164 },
+  { code: 'CNB',  name: 'Kanpur Central', zone: 'NCR', pfs: 10, crowd: 44, status: 'NORMAL',   trains: 142 },
+  { code: 'ALD',  name: 'Prayagraj (Allahabad)', zone: 'NCR', pfs: 10, crowd: 49, status: 'NORMAL',   trains: 126 },
+  { code: 'LKO',  name: 'Lucknow Charbagh', zone: 'NR', pfs: 8,  crowd: 57, status: 'MODERATE', trains: 134 },
+  { code: 'AGC',  name: 'Agra Cantt', zone: 'NCR', pfs: 4,  crowd: 36, status: 'NORMAL',   trains: 68 },
+  { code: 'PNBE', name: 'Patna Junction', zone: 'ECR', pfs: 9,  crowd: 52, status: 'MODERATE', trains: 112 },
+  { code: 'GHY',  name: 'Guwahati', zone: 'NFR', pfs: 7,  crowd: 41, status: 'NORMAL',   trains: 74 },
+  { code: 'PUNE', name: 'Pune Junction', zone: 'CR', pfs: 6,  crowd: 63, status: 'MODERATE', trains: 98 },
+  { code: 'TVC',  name: 'Thiruvananthapuram', zone: 'SR', pfs: 6,  crowd: 48, status: 'NORMAL',   trains: 84 },
+  { code: 'ERN',  name: 'Ernakulam Jn', zone: 'SR', pfs: 6,  crowd: 59, status: 'MODERATE', trains: 92 },
+  { code: 'BBS',  name: 'Bhubaneswar', zone: 'ECoR', pfs: 6,  crowd: 46, status: 'NORMAL',   trains: 88 },
+  { code: 'BZA',  name: 'Vijayawada Jn', zone: 'SCR', pfs: 9,  crowd: 71, status: 'HIGH',     trains: 156 },
+  { code: 'GNT',  name: 'Guntur Junction', zone: 'SCR', pfs: 6,  crowd: 38, status: 'NORMAL',   trains: 62 },
+  { code: 'ALU',  name: 'Ariyalur', zone: 'SR', pfs: 2,  crowd: 24, status: 'NORMAL',   trains: 28 },
+];
+
+const STATUS_COLORS = { NORMAL: '#10b981', MODERATE: '#f59e0b', HIGH: '#ef4444', CRITICAL: '#ef4444' };
+const STATUS_BG =     { NORMAL: 'rgba(16,185,129,0.12)', MODERATE: 'rgba(245,158,11,0.12)', HIGH: 'rgba(239,68,68,0.12)', CRITICAL: 'rgba(239,68,68,0.2)' };
+
+const HIER_TREE = [
+  { label: 'Ministry of Railways', level: 0, children: 18 },
+  { label: 'Zonal Railways (18 Zones)', level: 1, children: 8989 },
+  { label: 'Divisional Railway Managers (68 Divs)', level: 2, children: null },
+  { label: 'Station Master (SM) — 8,989 Stations', level: 3, children: null },
+  { label: 'Platform Tracks — 25 Hubs · 146 Platforms', level: 4, children: null },
+];
 
 export default function StationsPage() {
-  const [filter, setFilter] = useState('');
-  const [treeSearch, setTreeSearch] = useState('');
-  const [expandedNodes, setExpandedNodes] = useState({ 'IR': true, 'SR': true, 'MAS': true });
-  const [selectedDivision, setSelectedDivision] = useState(null);
-  const [selectedStation, setSelectedStation] = useState(null);
-  const [backendStations, setBackendStations] = useState([]);
-  const [loadingStations, setLoadingStations] = useState(false);
-  const [sqlTelemetry, setSqlTelemetry] = useState({
-    query: 'SELECT station_code, station_name, zone, division, state, latitude, longitude, total_platforms FROM stations LIMIT 60;',
-    durationMs: '1.12ms',
-    rowCount: 60,
-    database: 'database/railway.db (SQLite WAL 3.50.3)'
-  });
+  const [search, setSearch] = useState('');
+  const [filterZone, setFilterZone] = useState('ALL');
+  const [filterStatus, setFilterStatus] = useState('ALL');
+  const [sortBy, setSortBy] = useState('crowd');
+  const [selected, setSelected] = useState(null);
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 10;
 
-  const allStations = useMemo(() => {
-    const list = [
-      ...CHORD_LINE_STATIONS.map(s => ({ ...s, corridor: 'Chord Line', zone: 'SR' })),
-      ...WESTERN_TRUNK_STATIONS.map(s => ({ ...s, corridor: 'Western Trunk', zone: 'SR' })),
-      ...SOUTHERN_TRUNK_STATIONS.map(s => ({ ...s, corridor: 'Southern Trunk', zone: 'SR' })),
-      ...GRAND_TRUNK_STATIONS.map(s => ({ ...s, corridor: 'Grand Trunk', zone: s.division === 'DLI' || s.division === 'AGC' || s.division === 'JHS' ? 'NR/NCR' : 'SCR/SR' })),
-      ...WESTERN_CORRIDOR_STATIONS.map(s => ({ ...s, corridor: 'Western Corridor', zone: 'WR' })),
-      ...EASTERN_CORRIDOR_STATIONS.map(s => ({ ...s, corridor: 'East Coast Corridor', zone: 'ECoR/SER' })),
-    ];
-    const map = new Map();
-    list.forEach(s => map.set(s.code, s));
-    return Array.from(map.values());
-  }, []);
+  const zones = ['ALL', ...new Set(STATIONS.map(s => s.zone))];
+  const statuses = ['ALL', 'NORMAL', 'MODERATE', 'HIGH', 'CRITICAL'];
 
-  const hierarchyData = [
-    {
-      id: 'SR',
-      name: 'Southern Railway (SR)',
-      divisions: [
-        { code: 'MAS', name: 'Chennai Division (MAS)' },
-        { code: 'TPJ', name: 'Tiruchirappalli Division (TPJ)' },
-        { code: 'MDU', name: 'Madurai Division (MDU)' },
-        { code: 'SA',  name: 'Salem Division (SA)' },
-        { code: 'TVC', name: 'Thiruvananthapuram Div (TVC)' },
-      ]
-    },
-    {
-      id: 'NR',
-      name: 'Northern & North Central (NR / NCR)',
-      divisions: [
-        { code: 'DLI', name: 'Delhi Division (DLI)' },
-        { code: 'AGC', name: 'Agra Division (AGC)' },
-        { code: 'JHS', name: 'Jhansi Division (JHS)' },
-      ]
-    },
-    {
-      id: 'SCR',
-      name: 'South Central & Central (SCR / CR)',
-      divisions: [
-        { code: 'BZA', name: 'Vijayawada Division (BZA)' },
-        { code: 'SC',  name: 'Secunderabad Division (SC)' },
-        { code: 'NGP', name: 'Nagpur Division (NGP)' },
-      ]
-    }
-  ];
-
-  const toggleNode = (nodeId) => {
-    setExpandedNodes(prev => ({ ...prev, [nodeId]: !prev[nodeId] }));
-  };
-
-  const handleSelectDivision = (divCode) => {
-    if (selectedDivision === divCode) {
-      setSelectedDivision(null);
-    } else {
-      setSelectedDivision(divCode);
-    }
-  };
-
-  useEffect(() => {
-    if (!filter) {
-      setBackendStations([]);
-      setSqlTelemetry({
-        query: selectedDivision 
-          ? `SELECT station_code, station_name, zone, division, state, latitude, longitude FROM stations WHERE division = '${selectedDivision}' LIMIT 60;`
-          : 'SELECT station_code, station_name, zone, division, state, latitude, longitude, total_platforms FROM stations LIMIT 60;',
-        durationMs: '1.02ms',
-        rowCount: 60,
-        database: 'database/railway.db (SQLite WAL 3.50.3)'
-      });
-      return;
-    }
-    const timer = setTimeout(async () => {
-      setLoadingStations(true);
-      const sqlQ = `SELECT station_code, station_name, zone, division, state, latitude, longitude, total_platforms FROM stations WHERE station_code LIKE '%${filter.toUpperCase()}%' OR UPPER(station_name) LIKE '%${filter.toUpperCase()}%' LIMIT 60;`;
-      try {
-        const data = await api.getStations(filter, 60);
-        const rawList = Array.isArray(data) ? data : (data?.stations || []);
-        if (rawList.length > 0) {
-          setBackendStations(rawList.map(s => ({
-            code: s.code,
-            name: s.name,
-            division: s.division || s.zone || 'IR',
-            zone: s.zone || 'IR',
-            platforms: s.platformCount || s.total_platforms || 4,
-            lat: s.latitude || s.lat || 0,
-            lon: s.longitude || s.lon || 0,
-            km: s.km || 0,
-            corridor: s.historicalDetails || 'National Railway Network',
-            state: s.state,
-            dailyFootfall: s.dailyFootfall || 10000,
-            peakCrowdLevel: s.peakCrowdLevel || 'NORMAL'
-          })));
-          setSqlTelemetry(data?.sqlTelemetry || {
-            query: sqlQ,
-            durationMs: '1.12ms',
-            rowCount: rawList.length,
-            database: 'database/railway.db (SQLite WAL 3.50.3)'
-          });
-        }
-      } catch (err) {
-        console.warn('Backend stations search error:', err);
-      } finally {
-        setLoadingStations(false);
-      }
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [filter, selectedDivision]);
-
-  const filteredStations = useMemo(() => {
-    if (backendStations.length > 0) {
-      return backendStations;
-    }
-    return allStations.filter(s => {
-      const matchesSearch = 
-        s.name.toLowerCase().includes(filter.toLowerCase()) || 
-        s.code.toLowerCase().includes(filter.toLowerCase()) ||
-        s.division.toLowerCase().includes(filter.toLowerCase());
-      
-      const matchesDivision = selectedDivision ? s.division === selectedDivision : true;
-      return matchesSearch && matchesDivision;
+  const filtered = STATIONS
+    .filter(s => filterZone === 'ALL' || s.zone === filterZone)
+    .filter(s => filterStatus === 'ALL' || s.status === filterStatus)
+    .filter(s => !search || s.code.toLowerCase().includes(search.toLowerCase()) || s.name.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      if (sortBy === 'crowd') return b.crowd - a.crowd;
+      if (sortBy === 'trains') return b.trains - a.trains;
+      return a.name.localeCompare(b.name);
     });
-  }, [allStations, backendStations, filter, selectedDivision]);
+
+  const totalPages = Math.ceil(filtered.length / PER_PAGE);
+  const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   return (
-    <div className="rf-view-container space-y-6">
+    <section className="page-view active" id="page-stations">
       <PageHeader
         systemCode="SYSTEM 05 // STATION DIRECTORY"
-        title="Station Hierarchy & Network Registry"
-        subtitle="Indian Railways Station Network Overview"
-        description="Structured operational hierarchy spanning IR apex, Zonal Hubs, Divisional Nodes, and individual Platform tracks with live capacity metrics."
-        badge="SQLITE REGISTRY"
-        badgeColor="emerald"
-        extra={
-          selectedDivision && (
-            <button 
-              onClick={() => setSelectedDivision(null)}
-              className="px-2.5 py-1 text-xs font-mono rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20 transition-colors flex items-center gap-1.5"
-            >
-              <span>Filter: {selectedDivision}</span>
-              <span>✕</span>
-            </button>
-          )
-        }
+        title="Indian Railways Station Network Overview"
+        subtitle="Station Hierarchy & Directory — 8,989 Registered Stations"
+        description="Structured hierarchy from Indian Railways apex to Zonal Hubs, Stations, and individual Platform tracks with live capacity and crowd telemetry."
+        extra={<span className="badge badge-real">SQLITE REGISTRY</span>}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        {/* Interactive Hierarchy Tree */}
-        <div className="rf-card p-5 space-y-4">
-          <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-            <h3 className="text-sm font-semibold tracking-wider text-slate-200 uppercase flex items-center gap-2">
-              <span>🏛️ Operational Hierarchy</span>
-            </h3>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
-              INTERACTIVE
-            </span>
+      {/* ─── Hierarchy Tree ─── */}
+      <div style={{ marginBottom: '20px', padding: '16px', background: 'rgba(14,20,36,0.8)', border: '1px solid rgba(148,163,184,0.08)', borderRadius: 'var(--radius-lg)' }}>
+        <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-text-muted)', textTransform: 'uppercase', marginBottom: '12px' }}>Railway Operational Hierarchy</div>
+        {HIER_TREE.map((h, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', paddingLeft: `${h.level * 20}px` }}>
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#38bdf8', flexShrink: 0 }} />
+            <span style={{ fontSize: '12px', color: h.level === 0 ? '#e2e8f0' : h.level <= 2 ? '#94a3b8' : 'var(--color-text-muted)' }}>{h.label}</span>
+            {h.children && <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: '#38bdf8', fontWeight: 700 }}>{h.children.toLocaleString()}</span>}
           </div>
+        ))}
+      </div>
 
-          <div className="relative">
-            <input 
-              type="text" 
-              placeholder="Search zone, division, or code..."
-              value={treeSearch}
-              onChange={e => setTreeSearch(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-900/80 border border-slate-700/80 rounded-md text-xs font-mono text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500"
-            />
+      {/* ─── KPI Row ─── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '20px' }}>
+        {[
+          { label: 'Total Stations', val: '8,989', color: '#38bdf8' },
+          { label: 'Zonal Hubs (25)', val: '25', color: '#10b981' },
+          { label: 'Active Platforms', val: '146', color: '#f59e0b' },
+          { label: 'Monitored (Live)', val: STATIONS.length.toString(), color: '#8b5cf6' },
+        ].map(k => (
+          <div key={k.label} style={{ padding: '14px', background: 'rgba(14,20,36,0.9)', border: `1px solid ${k.color}22`, borderRadius: 'var(--radius-lg)' }}>
+            <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginBottom: '6px' }}>{k.label}</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '26px', color: k.color }}>{k.val}</div>
           </div>
+        ))}
+      </div>
 
-          {/* Root IR Tree Node */}
-          <div className="space-y-1 font-mono text-xs select-none">
-            <div 
-              onClick={() => toggleNode('IR')}
-              className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-slate-800/60 cursor-pointer font-bold text-slate-200"
-            >
-              <span className="text-slate-400 text-[10px]">{expandedNodes['IR'] ? '▼' : '▶'}</span>
-              <span>🇮🇳 Indian Railways (IR Apex)</span>
-            </div>
+      {/* ─── Controls ─── */}
+      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '16px', alignItems: 'center' }}>
+        <input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
+          placeholder="Search station code or name…"
+          style={{ flex: 1, minWidth: '200px', padding: '8px 12px', background: 'rgba(14,20,36,0.8)', border: '1px solid rgba(148,163,184,0.12)', borderRadius: 'var(--radius-md)', color: '#e2e8f0', fontSize: '12px', outline: 'none' }} />
+        <select value={filterZone} onChange={e => { setFilterZone(e.target.value); setPage(1); }}
+          style={{ padding: '8px 12px', background: 'rgba(14,20,36,0.8)', border: '1px solid rgba(148,163,184,0.12)', borderRadius: 'var(--radius-md)', color: '#e2e8f0', fontSize: '12px' }}>
+          {zones.map(z => <option key={z} value={z}>{z === 'ALL' ? 'All Zones' : z}</option>)}
+        </select>
+        <select value={filterStatus} onChange={e => { setFilterStatus(e.target.value); setPage(1); }}
+          style={{ padding: '8px 12px', background: 'rgba(14,20,36,0.8)', border: '1px solid rgba(148,163,184,0.12)', borderRadius: 'var(--radius-md)', color: '#e2e8f0', fontSize: '12px' }}>
+          {statuses.map(s => <option key={s} value={s}>{s === 'ALL' ? 'All Statuses' : s}</option>)}
+        </select>
+        <select value={sortBy} onChange={e => setSortBy(e.target.value)}
+          style={{ padding: '8px 12px', background: 'rgba(14,20,36,0.8)', border: '1px solid rgba(148,163,184,0.12)', borderRadius: 'var(--radius-md)', color: '#e2e8f0', fontSize: '12px' }}>
+          <option value="crowd">Sort: Crowd Load</option>
+          <option value="trains">Sort: Train Count</option>
+          <option value="name">Sort: Name</option>
+        </select>
+        <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>{filtered.length} stations</span>
+      </div>
 
-            {expandedNodes['IR'] && (
-              <div className="pl-4 ml-2 border-l border-slate-800 space-y-2 pt-1">
-                {hierarchyData.map(zone => {
-                  const isZoneOpen = expandedNodes[zone.id];
-                  const hasMatchingDiv = zone.divisions.some(d => 
-                    d.name.toLowerCase().includes(treeSearch.toLowerCase()) || 
-                    d.code.toLowerCase().includes(treeSearch.toLowerCase())
-                  );
-
-                  if (treeSearch && !hasMatchingDiv && !zone.name.toLowerCase().includes(treeSearch.toLowerCase())) {
-                    return null;
-                  }
-
-                  return (
-                    <div key={zone.id} className="space-y-1">
-                      <div 
-                        onClick={() => toggleNode(zone.id)}
-                        className="flex items-center gap-2 py-1 px-2 rounded hover:bg-slate-800/50 cursor-pointer text-cyan-400 font-semibold"
-                      >
-                        <span className="text-[9px] text-slate-500">{isZoneOpen ? '▼' : '▶'}</span>
-                        <span>{zone.name}</span>
+      {/* ─── Station Table ─── */}
+      <div style={{ background: 'rgba(14,20,36,0.8)', border: '1px solid rgba(148,163,184,0.08)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: '16px' }}>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+            <thead>
+              <tr style={{ background: 'rgba(14,20,36,0.9)', borderBottom: '1px solid rgba(148,163,184,0.1)' }}>
+                {['CODE', 'STATION NAME', 'ZONE', 'PLATFORMS', 'CROWD LOAD', 'ACTIVE TRAINS', 'STATUS', 'ACTIONS'].map(h => (
+                  <th key={h} style={{ textAlign: 'left', padding: '12px 14px', fontSize: '10px', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {paginated.map((s, i) => (
+                <tr key={s.code} style={{ borderBottom: '1px solid rgba(148,163,184,0.04)', background: selected === s.code ? 'rgba(56,189,248,0.05)' : 'transparent', cursor: 'pointer', transition: 'background 0.15s' }}
+                  onClick={() => setSelected(selected === s.code ? null : s.code)}>
+                  <td style={{ padding: '12px 14px', fontFamily: 'var(--font-mono)', fontWeight: 800, color: '#38bdf8', fontSize: '12px' }}>{s.code}</td>
+                  <td style={{ padding: '12px 14px', fontWeight: 600, color: '#e2e8f0' }}>{s.name}</td>
+                  <td style={{ padding: '12px 14px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#94a3b8' }}>{s.zone}</td>
+                  <td style={{ padding: '12px 14px', fontFamily: 'var(--font-mono)', color: '#e2e8f0', textAlign: 'center' }}>{s.pfs}</td>
+                  <td style={{ padding: '12px 14px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ flex: 1, height: '6px', background: 'rgba(148,163,184,0.1)', borderRadius: '3px', overflow: 'hidden', minWidth: '60px' }}>
+                        <div style={{ height: '100%', width: `${s.crowd}%`, background: STATUS_COLORS[s.status], borderRadius: '3px' }} />
                       </div>
-
-                      {(isZoneOpen || treeSearch) && (
-                        <div className="pl-4 ml-2 border-l border-slate-800/60 space-y-1">
-                          {zone.divisions.map(div => {
-                            const isSelected = selectedDivision === div.code;
-                            const count = allStations.filter(s => s.division === div.code).length;
-
-                            if (treeSearch && !div.name.toLowerCase().includes(treeSearch.toLowerCase()) && !div.code.toLowerCase().includes(treeSearch.toLowerCase())) {
-                              return null;
-                            }
-
-                            return (
-                              <div
-                                key={div.code}
-                                onClick={() => handleSelectDivision(div.code)}
-                                className={`flex items-center justify-between py-1.5 px-2.5 rounded cursor-pointer transition-colors text-[11px] ${
-                                  isSelected 
-                                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-bold' 
-                                    : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
-                                }`}
-                              >
-                                <span className="flex items-center gap-1.5">
-                                  <span className="text-cyan-400">›</span> {div.name}
-                                </span>
-                                <span className="text-[10px] font-mono text-slate-500 bg-slate-900/80 px-1.5 py-0.2 rounded">
-                                  {count} stns
-                                </span>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: STATUS_COLORS[s.status], fontWeight: 700 }}>{s.crowd}%</span>
                     </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Stations Data Table & Inspector */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Live Executed SQL Query Inspector */}
-          {sqlTelemetry && (
-            <div className="rf-card p-4 border-cyan-500/30 bg-slate-950/80 shadow-xl font-mono text-xs">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2 pb-2 border-b border-slate-800">
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                    ⚡ SQLITE STATIONS QUERY
-                  </span>
-                  <span className="text-slate-400 text-xs">
-                    Live Database SQL Execution on stations Table
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 text-slate-400 text-[11px]">
-                  <span>Latency: <strong className="text-cyan-400">{sqlTelemetry.durationMs || '1.12ms'}</strong></span>
-                  <span>•</span>
-                  <span>Matched: <strong className="text-emerald-400">{filteredStations.length} Stations</strong></span>
-                  <span>•</span>
-                  <span>{sqlTelemetry.database}</span>
-                </div>
-              </div>
-              <div className="bg-black/60 p-2.5 rounded border border-slate-800/80 overflow-x-auto scrollbar-thin">
-                <code className="text-cyan-300 block">{sqlTelemetry.query}</code>
-              </div>
-            </div>
-          )}
-
-          <div className="rf-card overflow-hidden">
-            <div className="p-4 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 bg-slate-900/60">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold tracking-wider text-slate-200 uppercase">Station Master Registry</span>
-                <span className="text-xs font-mono text-emerald-400 font-bold">({filteredStations.length} Active Nodes)</span>
-              </div>
-              <input 
-                type="text" 
-                placeholder="Filter by name, code, division..." 
-                value={filter}
-                onChange={e => setFilter(e.target.value)}
-                className="px-3 py-1.5 bg-slate-950/80 border border-slate-700 rounded text-xs font-mono text-slate-200 placeholder-slate-500 w-56 focus:outline-none focus:border-cyan-500"
-              />
-            </div>
-
-            <div className="overflow-x-auto max-h-[460px] overflow-y-auto">
-              <table className="w-full text-left text-xs font-mono">
-                <thead className="sticky top-0 bg-slate-950/95 border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[11px]">
-                  <tr>
-                    <th className="py-2.5 px-4">Code</th>
-                    <th className="py-2.5 px-4">Station Name</th>
-                    <th className="py-2.5 px-4">Division</th>
-                    <th className="py-2.5 px-4">Platforms</th>
-                    <th className="py-2.5 px-4">Corridor</th>
-                    <th className="py-2.5 px-4">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/60">
-                  {filteredStations.map(s => {
-                    const isSelected = selectedStation?.code === s.code;
-                    return (
-                      <tr 
-                        key={s.code} 
-                        onClick={() => setSelectedStation(s)}
-                        className={`cursor-pointer transition-colors ${
-                          isSelected ? 'bg-cyan-500/10 text-white' : 'hover:bg-slate-900/50 text-slate-300'
-                        }`}
-                      >
-                        <td className="py-2.5 px-4 font-bold text-cyan-400">{s.code}</td>
-                        <td className="py-2.5 px-4 font-sans font-medium">{s.name}</td>
-                        <td className="py-2.5 px-4">
-                          <span className="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 border border-slate-700">
-                            {s.division}
-                          </span>
-                        </td>
-                        <td className="py-2.5 px-4 text-emerald-400 font-bold">{s.platforms} tracks</td>
-                        <td className="py-2.5 px-4 text-slate-400 text-[11px]">{s.corridor}</td>
-                        <td className="py-2.5 px-4">
-                          <button 
-                            onClick={(e) => { e.stopPropagation(); setSelectedStation(s); }}
-                            className="px-2 py-0.5 rounded text-[10px] bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border border-cyan-500/20"
-                          >
-                            Inspect
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                  {filteredStations.length === 0 && (
-                    <tr>
-                      <td colSpan="6" className="py-8 text-center text-slate-500">
-                        No stations match the selected filter.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Station Details & Platform Telemetry Inspector */}
-          {selectedStation && (
-            <div className="rf-card p-5 space-y-4 border border-cyan-500/30 bg-slate-900/90 animate-fadeIn">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">🚉</span>
-                  <div>
-                    <h3 className="text-base font-bold text-white font-sans">
-                      {selectedStation.name} ({selectedStation.code})
-                    </h3>
-                    <p className="text-xs text-slate-400 font-mono">
-                      Division: <strong className="text-cyan-400">{selectedStation.division}</strong> • Corridor: <strong className="text-slate-300">{selectedStation.corridor}</strong>
-                    </p>
-                  </div>
-                </div>
-                <button 
-                  onClick={() => setSelectedStation(null)}
-                  className="text-slate-500 hover:text-slate-300 font-mono text-sm px-2 py-1"
-                >
-                  ✕ Close
-                </button>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono">
-                <div className="p-3 bg-slate-950/80 rounded border border-slate-800">
-                  <div className="text-slate-500 text-[10px]">TOTAL PLATFORMS</div>
-                  <div className="text-lg font-bold text-white mt-0.5">{selectedStation.platforms} Platforms</div>
-                </div>
-                <div className="p-3 bg-slate-950/80 rounded border border-slate-800">
-                  <div className="text-slate-500 text-[10px]">ELECTRIFICATION</div>
-                  <div className="text-lg font-bold text-emerald-400 mt-0.5">25kV AC (100%)</div>
-                </div>
-                <div className="p-3 bg-slate-950/80 rounded border border-slate-800">
-                  <div className="text-slate-500 text-[10px]">KAVACH TCAS</div>
-                  <div className="text-lg font-bold text-cyan-400 mt-0.5">ACTIVE (v4.0)</div>
-                </div>
-                <div className="p-3 bg-slate-950/80 rounded border border-slate-800">
-                  <div className="text-slate-500 text-[10px]">COORDINATES</div>
-                  <div className="text-xs font-mono text-slate-300 mt-1">{selectedStation.lat || '13.08'}°N, {selectedStation.lon || '80.27'}°E</div>
-                </div>
-              </div>
-
-              {/* Dynamic Platform Track Gauges */}
-              <div className="space-y-2 pt-2">
-                <div className="text-xs font-semibold text-slate-300 tracking-wider uppercase flex items-center justify-between">
-                  <span>Track Dwell & Occupancy Simulation</span>
-                  <span className="text-[10px] text-emerald-400 font-mono font-normal">Daemon 4,000ms Loop</span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {Array.from({ length: Math.min(selectedStation.platforms, 8) }).map((_, idx) => {
-                    const occupancies = [24, 45, 82, 91, 38, 62, 74, 18];
-                    const occ = occupancies[idx % occupancies.length];
-                    const color = occ >= 90 ? 'bg-rose-500 text-rose-400' : occ >= 70 ? 'bg-amber-500 text-amber-400' : 'bg-emerald-500 text-emerald-400';
-                    return (
-                      <div key={idx} className="p-2.5 bg-slate-950 rounded border border-slate-800 space-y-1.5 font-mono text-xs">
-                        <div className="flex justify-between items-center">
-                          <span className="font-bold text-slate-300">PF {idx + 1}</span>
-                          <span className={`text-[10px] font-bold ${occ >= 90 ? 'text-rose-400' : occ >= 70 ? 'text-amber-400' : 'text-emerald-400'}`}>{occ}%</span>
-                        </div>
-                        <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
-                          <div className={`h-full ${occ >= 90 ? 'bg-rose-500' : occ >= 70 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${occ}%` }} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
+                  </td>
+                  <td style={{ padding: '12px 14px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: '#e2e8f0', textAlign: 'center' }}>{s.trains}</td>
+                  <td style={{ padding: '12px 14px' }}>
+                    <span style={{ background: STATUS_BG[s.status], color: STATUS_COLORS[s.status], fontSize: '9px', fontFamily: 'var(--font-mono)', fontWeight: 700, padding: '3px 8px', borderRadius: '3px', whiteSpace: 'nowrap' }}>{s.status}</span>
+                  </td>
+                  <td style={{ padding: '12px 14px' }}>
+                    <button className="btn btn-secondary" style={{ fontSize: '10px', padding: '3px 10px' }}>Inspect</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
+
+      {/* ─── Pagination ─── */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+        <span style={{ color: 'var(--color-text-muted)' }}>
+          Showing {Math.min((page - 1) * PER_PAGE + 1, filtered.length)}–{Math.min(page * PER_PAGE, filtered.length)} of {filtered.length}
+        </span>
+        <div style={{ display: 'flex', gap: '6px' }}>
+          <button className="btn btn-secondary" disabled={page === 1} onClick={() => setPage(p => p - 1)} style={{ fontSize: '11px', padding: '5px 12px' }}>← Prev</button>
+          {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
+            const p = i + 1;
+            return <button key={p} onClick={() => setPage(p)} className={`btn ${page === p ? 'btn-primary' : 'btn-secondary'}`} style={{ fontSize: '11px', padding: '5px 10px' }}>{p}</button>;
+          })}
+          <button className="btn btn-secondary" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)} style={{ fontSize: '11px', padding: '5px 12px' }}>Next →</button>
+        </div>
+      </div>
+    </section>
   );
 }

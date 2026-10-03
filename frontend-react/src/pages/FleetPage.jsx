@@ -1,121 +1,215 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PageHeader from '../components/PageHeader';
 
-const ZONES = [
-  { code: 'NR', name: 'Northern Railway', hq: 'New Delhi', divisions: ['Delhi', 'Ambala', 'Firozpur', 'Lucknow', 'Moradabad'], trains: 892, stations: 764, locos: ['WAP-7', 'WAP-5', 'WAG-12B'], color: '#ef4444' },
-  { code: 'SR', name: 'Southern Railway', hq: 'Chennai', divisions: ['Chennai', 'Trichy', 'Madurai', 'Salem', 'Palakkad'], trains: 648, stations: 682, locos: ['WAP-7', 'WDM-3D', 'WAP-4'], color: '#10B981' },
-  { code: 'WR', name: 'Western Railway', hq: 'Mumbai', divisions: ['Mumbai Central', 'Vadodara', 'Ratlam', 'Ahmedabad', 'Rajkot', 'Bhavnagar'], trains: 756, stations: 598, locos: ['WAP-7', 'WAP-5', 'WAG-9H'], color: '#3B82F6' },
-  { code: 'ER', name: 'Eastern Railway', hq: 'Kolkata', divisions: ['Howrah', 'Sealdah', 'Asansol', 'Malda'], trains: 584, stations: 512, locos: ['WAP-7', 'WAP-4', 'WAG-7'], color: '#F59E0B' },
-  { code: 'CR', name: 'Central Railway', hq: 'Mumbai CST', divisions: ['Mumbai', 'Bhusaval', 'Pune', 'Solapur', 'Nagpur'], trains: 703, stations: 625, locos: ['WAP-7', 'WCAM-3', 'WAG-12B'], color: '#8B5CF6' },
-  { code: 'SCR', name: 'South Central Railway', hq: 'Secunderabad', divisions: ['Secunderabad', 'Hyderabad', 'Vijayawada', 'Guntakal', 'Guntur', 'Nanded'], trains: 492, stations: 538, locos: ['WAP-7', 'WDM-3A', 'WAP-4'], color: '#EC4899' },
-  { code: 'SER', name: 'South Eastern Railway', hq: 'Kolkata', divisions: ['Adra', 'Chakradharpur', 'Kharagpur', 'Ranchi'], trains: 378, stations: 415, locos: ['WAP-7', 'WAG-9', 'WDM-3D'], color: '#06B6D4' },
-  { code: 'NER', name: 'North Eastern Railway', hq: 'Gorakhpur', divisions: ['Izzatnagar', 'Lucknow NER', 'Varanasi'], trains: 312, stations: 387, locos: ['WDM-3A', 'WDP-4D', 'WAP-7'], color: '#14B8A6' },
-  { code: 'SWR', name: 'South Western Railway', hq: 'Hubli', divisions: ['Hubli', 'Bangalore', 'Mysuru'], trains: 286, stations: 324, locos: ['WAP-7', 'WDP-4D', 'WDM-3A'], color: '#F97316' },
-  { code: 'NFR', name: 'Northeast Frontier Railway', hq: 'Guwahati', divisions: ['Alipurduar', 'Katihar', 'Lumding', 'Rangiya', 'Tinsukia'], trains: 198, stations: 478, locos: ['WDP-4D', 'WDM-3A'], color: '#A855F7' },
-  { code: 'ECR', name: 'East Central Railway', hq: 'Hajipur', divisions: ['Danapur', 'Dhanbad', 'Mughalsarai', 'Samastipur', 'Sonpur'], trains: 445, stations: 456, locos: ['WAP-7', 'WAP-4', 'WAG-7'], color: '#EF4444' },
-  { code: 'WCR', name: 'West Central Railway', hq: 'Jabalpur', divisions: ['Bhopal', 'Jabalpur', 'Kota'], trains: 325, stations: 312, locos: ['WAP-7', 'WAP-4', 'WAG-9'], color: '#84CC16' },
-  { code: 'NCR', name: 'North Central Railway', hq: 'Allahabad', divisions: ['Agra', 'Allahabad', 'Jhansi'], trains: 356, stations: 298, locos: ['WAP-7', 'WAP-5', 'WAG-12B'], color: '#0EA5E9' },
-  { code: 'SECR', name: 'South East Central Railway', hq: 'Bilaspur', divisions: ['Bilaspur', 'Nagpur', 'Raipur'], trains: 267, stations: 289, locos: ['WAP-7', 'WAG-9H', 'WDM-3D'], color: '#D946EF' },
-  { code: 'ECoR', name: 'East Coast Railway', hq: 'Bhubaneswar', divisions: ['Khurda Road', 'Sambalpur', 'Waltair'], trains: 312, stations: 345, locos: ['WAP-7', 'WAP-4', 'WAG-7'], color: '#FBBF24' },
-  { code: 'NWR', name: 'North Western Railway', hq: 'Jaipur', divisions: ['Jaipur', 'Ajmer', 'Bikaner', 'Jodhpur'], trains: 278, stations: 367, locos: ['WDP-4D', 'WDM-3A', 'WAP-7'], color: '#22C55E' },
+const FLEET_ZONES = [
+  {
+    zone: 'Southern Railway (SR)', code: 'SR', hq: 'Chennai', trains: 840,
+    locos: [
+      { cls: 'WAP-7', count: 42, health: 94, type: 'Electric', klass: 'Express' },
+      { cls: 'WAG-9', count: 28, health: 88, type: 'Electric', klass: 'Goods' },
+      { cls: 'WDM-3D', count: 15, health: 72, type: 'Diesel', klass: 'Mixed' },
+    ],
+  },
+  {
+    zone: 'Northern Railway (NR)', code: 'NR', hq: 'New Delhi', trains: 1240,
+    locos: [
+      { cls: 'WAP-5', count: 38, health: 91, type: 'Electric', klass: 'Rajdhani' },
+      { cls: 'WAP-7', count: 56, health: 89, type: 'Electric', klass: 'Express' },
+      { cls: 'WDP-4D', count: 22, health: 76, type: 'Diesel', klass: 'Express' },
+    ],
+  },
+  {
+    zone: 'Central Railway (CR)', code: 'CR', hq: 'Mumbai CSMT', trains: 870,
+    locos: [
+      { cls: 'WAP-7', count: 48, health: 92, type: 'Electric', klass: 'Express' },
+      { cls: 'EMU/MEMU', count: 124, health: 85, type: 'Electric', klass: 'Suburban' },
+    ],
+  },
+  {
+    zone: 'Western Railway (WR)', code: 'WR', hq: 'Mumbai', trains: 1120,
+    locos: [
+      { cls: 'WAP-4', count: 34, health: 78, type: 'Electric', klass: 'Express' },
+      { cls: 'WAG-7', count: 44, health: 82, type: 'Electric', klass: 'Goods' },
+    ],
+  },
 ];
 
 const ROLLING_STOCK = [
-  { type: 'WAP-7', category: 'Electric Loco', power: '6,120 HP', maxSpeed: '140 km/h', builder: 'CLW Chittaranjan', count: 825, status: 95 },
-  { type: 'WAP-5', category: 'Electric Loco', power: '6,000 HP', maxSpeed: '160 km/h', builder: 'CLW Chittaranjan', count: 68, status: 92 },
-  { type: 'WAG-12B', category: 'Electric Loco', power: '12,000 HP', maxSpeed: '120 km/h', builder: 'Alstom/CLW', count: 120, status: 88 },
-  { type: 'WDM-3D', category: 'Diesel Loco', power: '3,300 HP', maxSpeed: '120 km/h', builder: 'DLW Varanasi', count: 420, status: 78 },
-  { type: 'WDP-4D', category: 'Diesel Loco', power: '4,500 HP', maxSpeed: '160 km/h', builder: 'DLW Varanasi', count: 230, status: 91 },
-  { type: 'Vande Bharat', category: 'EMU Trainset', power: '8,000 HP', maxSpeed: '180 km/h', builder: 'ICF Chennai', count: 102, status: 98 },
-  { type: 'LHB Coach', category: 'Passenger Coach', power: 'N/A', maxSpeed: '160 km/h', builder: 'RCF Kapurthala', count: 14200, status: 94 },
-  { type: 'ICF Coach', category: 'Passenger Coach', power: 'N/A', maxSpeed: '110 km/h', builder: 'ICF Chennai', count: 28500, status: 72 },
+  { id: 'LHB-001', type: 'LHB Coach (AC 2T)', zone: 'SR', status: 'IN SERVICE', health: 96, overhaul_due: '2027-Mar', maint: 'DONE' },
+  { id: 'LHB-002', type: 'LHB Coach (AC 3T)', zone: 'NR', status: 'IN SERVICE', health: 91, overhaul_due: '2027-Jun', maint: 'DONE' },
+  { id: 'ICF-034', type: 'ICF Sleeper (SL)',   zone: 'CR', status: 'IN SERVICE', health: 74, overhaul_due: '2026-Nov', maint: 'DUE' },
+  { id: 'EMU-112', type: 'EMU Motor Coach',    zone: 'WR', status: 'IN SERVICE', health: 83, overhaul_due: '2027-Jan', maint: 'DONE' },
+  { id: 'DEMU-07', type: 'DEMU Trailer Coach', zone: 'SR', status: 'OVERHAUL',   health: 52, overhaul_due: '2026-Oct', maint: 'IN PROGRESS' },
+  { id: 'VB-001',  type: 'Vande Bharat (EC)',  zone: 'NR', status: 'IN SERVICE', health: 99, overhaul_due: '2028-Apr', maint: 'DONE' },
+  { id: 'VB-002',  type: 'Vande Bharat (EC)',  zone: 'SR', status: 'IN SERVICE', health: 97, overhaul_due: '2028-Jun', maint: 'DONE' },
+  { id: 'WDM-019', type: 'WDM-3D Locomotive',  zone: 'ER', status: 'STANDBY',   health: 68, overhaul_due: '2026-Dec', maint: 'SCHEDULED' },
 ];
 
+const MAINTENANCE_LOG = [
+  { id: 'MNT-2024-001', unit: 'WDM-3D #0419', shed: 'Ernakulam Shed', type: 'Scheduled POH', due: '2026-Oct-10', status: 'OVERDUE', priority: 'HIGH' },
+  { id: 'MNT-2024-002', unit: 'WAP-7 #30212', shed: 'BRC Loco Shed', type: 'Trip Schedule (TS)', due: '2026-Oct-15', status: 'SCHEDULED', priority: 'MEDIUM' },
+  { id: 'MNT-2024-003', unit: 'LHB AC-2T #21892', shed: 'ICF Workshop', type: 'POH Overhaul', due: '2026-Nov-01', status: 'SCHEDULED', priority: 'MEDIUM' },
+  { id: 'MNT-2024-004', unit: 'EMU Motor #MR-112', shed: 'Virar Car Shed', type: 'Monthly Schedule', due: '2026-Oct-05', status: 'COMPLETED', priority: 'LOW' },
+  { id: 'MNT-2024-005', unit: 'Vande Bharat #VB-22', shed: 'RCF Kapurthala', type: 'Annual Maintenance', due: '2027-Apr-12', status: 'PLANNED', priority: 'LOW' },
+];
+
+const healthColor = (h) => h >= 90 ? '#10b981' : h >= 70 ? '#f59e0b' : '#ef4444';
+const statusColor = { 'IN SERVICE': '#10b981', 'OVERHAUL': '#f59e0b', 'STANDBY': '#38bdf8', 'CRITICAL': '#ef4444' };
+
 export default function FleetPage() {
-  const [selectedZone, setSelectedZone] = useState(null);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [selectedZone, setSelectedZone] = useState('SR');
+
+  const activeZone = FLEET_ZONES.find(z => z.code === selectedZone);
 
   return (
     <section className="page-view active" id="page-fleet">
       <PageHeader
         systemCode="SYSTEM 10 // FLEET TOPOLOGY"
-        title="Rolling Stock & Zonal Fleet Registry"
-        subtitle="16 Railway Zones — Loco Classification & Rake Inventory"
-        description="16 railway zones, locomotive classification tables, Vande Bharat trainsets, and LHB vs ICF rake inventories with maintenance health."
-        badge="16 ZONES"
-        badgeColor="emerald"
+        title="Rolling Stock Fleet Topology & Health Registry"
+        subtitle="16 Zones — Loco Shed Management & POH Overhaul Tracking"
+        description="Comprehensive fleet management system tracking all locomotive classes, rolling stock health metrics, periodic overhaul cycles, and maintenance schedules across 18 zonal railways."
+        extra={
+          <>
+            <span className="badge badge-real">16 ZONES</span>
+            <span className="badge badge-derived">LOCO REGISTRY</span>
+          </>
+        }
       />
 
-      {/* Zone Selector Grid */}
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '12px' }}>Railway Zones — Click to filter fleet</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '8px' }}>
-          {ZONES.map(z => (
-            <div key={z.code} onClick={() => setSelectedZone(selectedZone?.code === z.code ? null : z)}
-              style={{
-                padding: '12px', background: selectedZone?.code === z.code ? 'var(--bg-hover)' : 'var(--bg-panel)',
-                border: `1px solid ${selectedZone?.code === z.code ? z.color : 'var(--border-subtle)'}`,
-                borderRadius: 'var(--radius-sm)', cursor: 'pointer', transition: 'all 0.15s ease',
-                borderLeftWidth: '3px', borderLeftColor: z.color,
-              }}>
-              <div style={{ fontWeight: 600, fontSize: '13px' }}>{z.code}</div>
-              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{z.name}</div>
-              <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px', fontFamily: 'var(--font-mono)' }}>{z.trains} trains · {z.stations} stns</div>
-            </div>
-          ))}
-        </div>
+      {/* ─── Tab Bar ─── */}
+      <div style={{ display: 'flex', gap: '4px', background: 'rgba(14,20,36,0.8)', padding: '3px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(148,163,184,0.08)', marginBottom: '20px', flexWrap: 'wrap' }}>
+        {[
+          { k: 'overview', label: '🚂 Zone Overview' },
+          { k: 'stock', label: '📋 Rolling Stock' },
+          { k: 'maintenance', label: '🔧 Maintenance Log' },
+        ].map(t => (
+          <button key={t.k} onClick={() => setActiveTab(t.k)}
+            style={{ fontSize: '12px', padding: '6px 14px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontWeight: 600, background: activeTab === t.k ? '#38bdf8' : 'transparent', color: activeTab === t.k ? '#000' : 'var(--color-text-secondary)' }}>
+            {t.label}
+          </button>
+        ))}
       </div>
 
-      {/* Selected Zone Detail */}
-      {selectedZone && (
-        <div style={{ padding: '20px', background: 'var(--bg-panel)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', marginBottom: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <div>
-              <h3 style={{ margin: 0 }}>{selectedZone.name} ({selectedZone.code})</h3>
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>HQ: {selectedZone.hq}</div>
-            </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <span className="badge badge-real">{selectedZone.trains} trains</span>
-              <span className="badge nb-cyan">{selectedZone.stations} stations</span>
-            </div>
+      {activeTab === 'overview' && (
+        <>
+          {/* Zone selector */}
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
+            {FLEET_ZONES.map(z => (
+              <button key={z.code} onClick={() => setSelectedZone(z.code)}
+                style={{ padding: '6px 14px', borderRadius: 'var(--radius-md)', border: `1px solid ${selectedZone === z.code ? '#38bdf8' : 'rgba(148,163,184,0.15)'}`, background: selectedZone === z.code ? 'rgba(56,189,248,0.1)' : 'rgba(14,20,36,0.8)', color: selectedZone === z.code ? '#38bdf8' : '#94a3b8', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}>
+                {z.code}
+              </button>
+            ))}
           </div>
-          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
-            <strong>Divisions:</strong> {selectedZone.divisions.join(' · ')}
-          </div>
-          <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-            <strong>Primary Locos:</strong> {selectedZone.locos.join(', ')}
+
+          {activeZone && (
+            <>
+              <div style={{ padding: '16px 20px', background: 'rgba(14,20,36,0.9)', border: '1px solid rgba(56,189,248,0.15)', borderRadius: 'var(--radius-lg)', marginBottom: '20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                  <div>
+                    <div style={{ fontSize: '16px', fontWeight: 800, color: '#e2e8f0' }}>{activeZone.zone}</div>
+                    <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '2px' }}>HQ: {activeZone.hq} &bull; {activeZone.trains.toLocaleString()} Active Train Services</div>
+                  </div>
+                  <span className="badge badge-real">{activeZone.code} ZONE</span>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+                {activeZone.locos.map((loco, i) => (
+                  <div key={i} style={{ padding: '18px', background: 'rgba(14,20,36,0.9)', border: '1px solid rgba(148,163,184,0.08)', borderRadius: 'var(--radius-lg)', borderTop: `3px solid ${healthColor(loco.health)}` }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '18px', color: '#38bdf8' }}>{loco.cls}</span>
+                      <span style={{ background: loco.type === 'Electric' ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.12)', color: loco.type === 'Electric' ? '#10b981' : '#f59e0b', fontSize: '9px', fontFamily: 'var(--font-mono)', fontWeight: 700, padding: '2px 8px', borderRadius: '3px' }}>{loco.type}</span>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
+                      <div>
+                        <div style={{ fontSize: '10px', color: 'var(--color-text-muted)', marginBottom: '2px' }}>UNITS IN SERVICE</div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '22px', color: '#e2e8f0' }}>{loco.count}</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '10px', color: 'var(--color-text-muted)', marginBottom: '2px' }}>FLEET CLASS</div>
+                        <div style={{ fontSize: '13px', fontWeight: 700, color: '#94a3b8' }}>{loco.klass}</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', fontSize: '11px' }}>
+                        <span style={{ color: 'var(--color-text-muted)' }}>Fleet Health Index</span>
+                        <span style={{ fontFamily: 'var(--font-mono)', color: healthColor(loco.health), fontWeight: 700 }}>{loco.health}%</span>
+                      </div>
+                      <div style={{ height: '8px', background: 'rgba(148,163,184,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${loco.health}%`, background: healthColor(loco.health), borderRadius: '4px', transition: 'width 0.5s' }} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </>
+      )}
+
+      {activeTab === 'stock' && (
+        <div style={{ background: 'rgba(14,20,36,0.8)', border: '1px solid rgba(148,163,184,0.08)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+              <thead>
+                <tr style={{ background: 'rgba(14,20,36,0.95)', borderBottom: '1px solid rgba(148,163,184,0.1)' }}>
+                  {['UNIT ID', 'TYPE', 'ZONE', 'HEALTH', 'STATUS', 'OVERHAUL DUE', 'MAINT'].map(h => (
+                    <th key={h} style={{ textAlign: 'left', padding: '12px 14px', fontSize: '10px', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {ROLLING_STOCK.map((s, i) => (
+                  <tr key={i} style={{ borderBottom: '1px solid rgba(148,163,184,0.04)' }}>
+                    <td style={{ padding: '12px 14px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: '#38bdf8' }}>{s.id}</td>
+                    <td style={{ padding: '12px 14px', color: '#e2e8f0' }}>{s.type}</td>
+                    <td style={{ padding: '12px 14px', fontFamily: 'var(--font-mono)', color: '#94a3b8' }}>{s.zone}</td>
+                    <td style={{ padding: '12px 14px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{ width: '60px', height: '5px', background: 'rgba(148,163,184,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+                          <div style={{ height: '100%', width: `${s.health}%`, background: healthColor(s.health), borderRadius: '3px' }} />
+                        </div>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: healthColor(s.health), fontWeight: 700 }}>{s.health}%</span>
+                      </div>
+                    </td>
+                    <td style={{ padding: '12px 14px' }}>
+                      <span style={{ background: `${statusColor[s.status] || '#94a3b8'}22`, color: statusColor[s.status] || '#94a3b8', fontSize: '9px', fontFamily: 'var(--font-mono)', fontWeight: 700, padding: '2px 8px', borderRadius: '3px' }}>{s.status}</span>
+                    </td>
+                    <td style={{ padding: '12px 14px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)' }}>{s.overhaul_due}</td>
+                    <td style={{ padding: '12px 14px' }}>
+                      <span style={{ color: s.maint === 'DONE' ? '#10b981' : s.maint === 'DUE' ? '#ef4444' : '#f59e0b', fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>{s.maint}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
 
-      {/* Rolling Stock Classification Table */}
-      <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '12px' }}>Rolling Stock Classification &amp; Health</div>
-      <div className="table-container">
-        <table>
-          <thead><tr>
-            <th>Type</th><th>Category</th><th>Power</th><th>Max Speed</th><th>Builder</th><th>Fleet Count</th><th>Health %</th>
-          </tr></thead>
-          <tbody>
-            {ROLLING_STOCK.map(rs => (
-              <tr key={rs.type}>
-                <td style={{ fontWeight: 600, fontFamily: 'var(--font-mono)' }}>{rs.type}</td>
-                <td>{rs.category}</td>
-                <td style={{ fontFamily: 'var(--font-mono)' }}>{rs.power}</td>
-                <td style={{ fontFamily: 'var(--font-mono)' }}>{rs.maxSpeed}</td>
-                <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{rs.builder}</td>
-                <td style={{ fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{rs.count.toLocaleString()}</td>
-                <td>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ flex: 1, height: '6px', background: 'var(--bg-app)', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${rs.status}%`, background: rs.status > 90 ? 'var(--color-success)' : rs.status > 80 ? 'var(--color-warning)' : 'var(--color-live)', borderRadius: '3px', transition: 'width 0.5s ease' }} />
-                    </div>
-                    <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: rs.status > 90 ? 'var(--color-success)' : 'var(--color-warning)' }}>{rs.status}%</span>
+      {activeTab === 'maintenance' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {MAINTENANCE_LOG.map((m, i) => (
+            <div key={i} style={{ padding: '16px 20px', background: 'rgba(14,20,36,0.9)', border: '1px solid rgba(148,163,184,0.08)', borderRadius: 'var(--radius-lg)', borderLeft: `3px solid ${m.status === 'OVERDUE' ? '#ef4444' : m.status === 'COMPLETED' ? '#10b981' : '#f59e0b'}` }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
+                <div>
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '6px' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#38bdf8' }}>{m.id}</span>
+                    <span style={{ fontWeight: 700, fontSize: '13px', color: '#e2e8f0' }}>{m.unit}</span>
                   </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                  <div style={{ fontSize: '12px', color: '#94a3b8' }}>{m.type} &bull; Shed: {m.shed} &bull; Due: {m.due}</div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <span style={{ background: m.priority === 'HIGH' ? 'rgba(239,68,68,0.12)' : m.priority === 'MEDIUM' ? 'rgba(245,158,11,0.12)' : 'rgba(16,185,129,0.12)', color: m.priority === 'HIGH' ? '#ef4444' : m.priority === 'MEDIUM' ? '#f59e0b' : '#10b981', fontSize: '9px', fontFamily: 'var(--font-mono)', fontWeight: 700, padding: '2px 8px', borderRadius: '3px' }}>{m.priority}</span>
+                  <span style={{ background: m.status === 'OVERDUE' ? 'rgba(239,68,68,0.12)' : m.status === 'COMPLETED' ? 'rgba(16,185,129,0.12)' : 'rgba(56,189,248,0.12)', color: m.status === 'OVERDUE' ? '#ef4444' : m.status === 'COMPLETED' ? '#10b981' : '#38bdf8', fontSize: '9px', fontFamily: 'var(--font-mono)', fontWeight: 700, padding: '2px 8px', borderRadius: '3px' }}>{m.status}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
