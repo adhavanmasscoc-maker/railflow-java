@@ -3,7 +3,7 @@ import PageHeader from '../components/PageHeader';
 import NetworkTopologyGraph from '../components/NetworkTopologyGraph';
 
 export default function NetworkPage() {
-  const [activeSubView, setActiveSubView] = useState('topology'); // Default to Topology as requested
+  const [activeSubView, setActiveSubView] = useState('radar'); // Default to Radar as requested
   const [activeStation, setActiveStation] = useState('MS');
   const [sandboxLog, setSandboxLog] = useState([
     'System initialization: All 16 zonal tracking nodes connected.',
@@ -73,16 +73,16 @@ export default function NetworkPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
           <button
-            className={`btn ${activeSubView === 'topology' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveSubView('topology')}
-          >
-            <span>🌐 Inter-Hub Topology Graph</span>
-          </button>
-          <button
             className={`btn ${activeSubView === 'radar' ? 'btn-primary' : 'btn-secondary'}`}
             onClick={() => setActiveSubView('radar')}
           >
             <span>🛰️ Live Satellite RailRadar</span>
+          </button>
+          <button
+            className={`btn ${activeSubView === 'topology' ? 'btn-primary' : 'btn-secondary'}`}
+            onClick={() => setActiveSubView('topology')}
+          >
+            <span>🌐 Inter-Hub Topology Graph</span>
           </button>
           <button
             className={`btn ${activeSubView === 'dispatch' ? 'btn-primary' : 'btn-secondary'}`}
@@ -109,12 +109,7 @@ export default function NetworkPage() {
         </div>
       </div>
 
-      {/* VIEW 1: FULL INTERACTIVE SVG TOPOLOGY GRAPH (ORIGINAL RAILFLOW SPECIFICATION) */}
-      {activeSubView === 'topology' && (
-        <NetworkTopologyGraph />
-      )}
-
-      {/* VIEW 2: LIVE SATELLITE RAILRADAR STREAM */}
+      {/* VIEW 1: LIVE SATELLITE RAILRADAR STREAM */}
       {activeSubView === 'radar' && (
         <div className="network-subview" style={{ height: 'calc(100vh - 250px)', border: '1px solid var(--color-border-subtle)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 16px', background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border-subtle)' }}>
@@ -129,6 +124,11 @@ export default function NetworkPage() {
           </div>
           <iframe src="https://railradar.in/railradar" title="RailRadar Live Map" loading="lazy" allow="geolocation" style={{ flex: 1, border: 'none', width: '100%' }}></iframe>
         </div>
+      )}
+
+      {/* VIEW 2: FULL INTERACTIVE SVG TOPOLOGY GRAPH (ORIGINAL RAILFLOW SPECIFICATION) */}
+      {activeSubView === 'topology' && (
+        <NetworkTopologyGraph />
       )}
 
       {/* VIEW 3: AUTONOMOUS TERMINAL DISPATCH & SIMULATION SANDBOX */}

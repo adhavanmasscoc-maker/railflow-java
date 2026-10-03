@@ -38,6 +38,35 @@ export default function CommuterPage() {
   const [paLang, setPaLang] = useState('English');
   const [tick, setTick] = useState(0);
   const [clock, setClock] = useState(new Date().toLocaleTimeString('en-IN', { hour12: false }));
+  
+  // PNR Status State
+  const [pnr, setPnr] = useState('');
+  const [pnrLoading, setPnrLoading] = useState(false);
+  const [pnrResult, setPnrResult] = useState(null);
+
+  const handlePnrChange = (e) => {
+    const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 10);
+    setPnr(digitsOnly);
+  };
+
+  const checkPnrStatus = () => {
+    if (pnr.length !== 10) return;
+    setPnrLoading(true);
+    // Simulate API delay
+    setTimeout(() => {
+      setPnrResult({
+        pnr,
+        trainNo: '12638',
+        trainName: 'Pandian Express',
+        doj: new Date().toLocaleDateString('en-IN'),
+        chartStatus: 'PREPARED',
+        passengers: [
+          { sNo: 1, bookingStatus: 'RLWL/12', currentStatus: 'CNF', coach: 'B2', berth: 45, type: 'LB' }
+        ]
+      });
+      setPnrLoading(false);
+    }, 1000);
+  };
 
   useEffect(() => {
     const iv = setInterval(() => {
@@ -183,6 +212,80 @@ export default function CommuterPage() {
             </div>
           ))}
         </div>
+      </div>
+      
+      {/* ─── PNR Status Inquiry ─── */}
+      <div style={{ background: 'rgba(14,20,36,0.9)', border: '1px solid rgba(56,189,248,0.2)', borderRadius: 'var(--radius-lg)', padding: '20px', marginTop: '20px' }}>
+        <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#e2e8f0', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span>🎟️</span> PNR Status Inquiry
+        </h3>
+        
+        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+          <div style={{ flex: '1', minWidth: '300px' }}>
+            <input
+              type="text"
+              inputMode="numeric"
+              maxLength={10}
+              value={pnr}
+              onChange={handlePnrChange}
+              placeholder="e.g. 4234567890"
+              className="w-full bg-slate-900 border border-slate-700 text-slate-100 px-4 py-3 rounded-lg font-mono focus:outline-none focus:border-cyan-500 cursor-text pointer-events-auto select-auto"
+              style={{ width: '100%', boxSizing: 'border-box' }}
+            />
+            <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '8px', display: 'flex', justifyContent: 'space-between' }}>
+              <span>{pnr.length}/10 digits</span>
+              {pnr.length === 10 && <span style={{ color: '#10b981' }}>✓ Format Valid</span>}
+            </div>
+          </div>
+          <button 
+            onClick={checkPnrStatus}
+            disabled={pnr.length !== 10 || pnrLoading}
+            style={{ 
+              background: pnr.length === 10 ? '#38bdf8' : 'rgba(56,189,248,0.2)', 
+              color: pnr.length === 10 ? '#0f172a' : '#94a3b8', 
+              padding: '12px 24px', 
+              borderRadius: '8px', 
+              fontWeight: 700, 
+              cursor: pnr.length === 10 ? 'pointer' : 'not-allowed',
+              border: 'none',
+              transition: 'all 0.2s'
+            }}
+          >
+            {pnrLoading ? 'Fetching...' : 'Get Live Status'}
+          </button>
+        </div>
+
+        {pnrResult && (
+          <div style={{ marginTop: '20px', padding: '16px', background: 'rgba(56,189,248,0.05)', border: '1px solid rgba(56,189,248,0.15)', borderRadius: '8px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '16px' }}>
+              <div><span style={{ color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase' }}>PNR</span><div style={{ fontFamily: 'var(--font-mono)', color: '#e2e8f0', fontWeight: 700 }}>{pnrResult.pnr}</div></div>
+              <div><span style={{ color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase' }}>Train</span><div style={{ color: '#e2e8f0', fontWeight: 600 }}>{pnrResult.trainNo} - {pnrResult.trainName}</div></div>
+              <div><span style={{ color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase' }}>Journey Date</span><div style={{ color: '#e2e8f0' }}>{pnrResult.doj}</div></div>
+              <div><span style={{ color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase' }}>Chart Status</span><div><span className="badge badge-real">{pnrResult.chartStatus}</span></div></div>
+            </div>
+            
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', fontFamily: 'var(--font-mono)' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(148,163,184,0.1)' }}>
+                  <th style={{ textAlign: 'left', padding: '8px', color: '#94a3b8' }}>#</th>
+                  <th style={{ textAlign: 'left', padding: '8px', color: '#94a3b8' }}>Booking Status</th>
+                  <th style={{ textAlign: 'left', padding: '8px', color: '#94a3b8' }}>Current Status</th>
+                  <th style={{ textAlign: 'left', padding: '8px', color: '#94a3b8' }}>Coach/Berth</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pnrResult.passengers.map(p => (
+                  <tr key={p.sNo} style={{ borderBottom: '1px solid rgba(148,163,184,0.05)' }}>
+                    <td style={{ padding: '8px', color: '#e2e8f0' }}>{p.sNo}</td>
+                    <td style={{ padding: '8px', color: '#e2e8f0' }}>{p.bookingStatus}</td>
+                    <td style={{ padding: '8px', color: '#10b981', fontWeight: 700 }}>{p.currentStatus}</td>
+                    <td style={{ padding: '8px', color: '#38bdf8', fontWeight: 600 }}>{p.coach}, {p.berth} ({p.type})</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </section>
   );
