@@ -3,7 +3,7 @@ import PageHeader from '../components/PageHeader';
 import NetworkTopologyGraph from '../components/NetworkTopologyGraph';
 
 export default function NetworkPage() {
-  const [activeSubView, setActiveSubView] = useState('radar'); // Default to Radar as requested
+  const [activeView, setActiveView] = useState('radar'); // Default strictly to 'radar'
   const [activeStation, setActiveStation] = useState('MS');
   const [sandboxLog, setSandboxLog] = useState([
     'System initialization: All 16 zonal tracking nodes connected.',
@@ -73,32 +73,32 @@ export default function NetworkPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
           <button
-            className={`btn ${activeSubView === 'radar' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveSubView('radar')}
+            className={`btn ${activeView === 'radar' ? 'btn-primary' : 'btn-secondary'}`}
+            onClick={() => setActiveView('radar')}
           >
             <span>🛰️ Live Satellite RailRadar</span>
           </button>
           <button
-            className={`btn ${activeSubView === 'topology' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveSubView('topology')}
+            className={`btn ${activeView === 'topology' ? 'btn-primary' : 'btn-secondary'}`}
+            onClick={() => setActiveView('topology')}
           >
             <span>🌐 Inter-Hub Topology Graph</span>
           </button>
           <button
-            className={`btn ${activeSubView === 'dispatch' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveSubView('dispatch')}
+            className={`btn ${activeView === 'dispatch' ? 'btn-primary' : 'btn-secondary'}`}
+            onClick={() => setActiveView('dispatch')}
           >
             <span>🎮 Dynamic Dispatch Sandbox</span>
           </button>
           <button
-            className={`btn ${activeSubView === 'directory' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveSubView('directory')}
+            className={`btn ${activeView === 'directory' ? 'btn-primary' : 'btn-secondary'}`}
+            onClick={() => setActiveView('directory')}
           >
             <span>🌲 Project Topology &amp; Dirs</span>
           </button>
           <button
-            className={`btn ${activeSubView === 'provenance' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveSubView('provenance')}
+            className={`btn ${activeView === 'provenance' ? 'btn-primary' : 'btn-secondary'}`}
+            onClick={() => setActiveView('provenance')}
           >
             <span>📚 Data Sources &amp; References</span>
           </button>
@@ -110,7 +110,7 @@ export default function NetworkPage() {
       </div>
 
       {/* VIEW 1: LIVE SATELLITE RAILRADAR STREAM */}
-      {activeSubView === 'radar' && (
+      {activeView === 'radar' && (
         <div className="network-subview" style={{ height: 'calc(100vh - 250px)', border: '1px solid var(--color-border-subtle)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 16px', background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border-subtle)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--color-text-secondary)' }}>
@@ -127,12 +127,12 @@ export default function NetworkPage() {
       )}
 
       {/* VIEW 2: FULL INTERACTIVE SVG TOPOLOGY GRAPH (ORIGINAL RAILFLOW SPECIFICATION) */}
-      {activeSubView === 'topology' && (
+      {activeView === 'topology' && (
         <NetworkTopologyGraph />
       )}
 
       {/* VIEW 3: AUTONOMOUS TERMINAL DISPATCH & SIMULATION SANDBOX */}
-      {activeSubView === 'dispatch' && (
+      {activeView === 'dispatch' && (
         <div className="panel" style={{ background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)' }}>
           <div className="panel-header" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
             <div>
@@ -213,7 +213,7 @@ export default function NetworkPage() {
       )}
 
       {/* VIEW 4: WHOLE PROJECT DIRECTORY TOPOLOGY (dir.md) */}
-      {activeSubView === 'directory' && (
+      {activeView === 'directory' && (
         <div className="panel" style={{ background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)' }}>
           <div className="panel-header">
             <div>
@@ -270,7 +270,7 @@ export default function NetworkPage() {
       )}
 
       {/* VIEW 5: DATA PROVENANCE & OFFICIAL REFERENCES */}
-      {activeSubView === 'provenance' && (
+      {activeView === 'provenance' && (
         <div className="panel" style={{ background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)' }}>
           <div className="panel-header">
             <div>
